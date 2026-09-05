@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="forge">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maker Services — Pricing Studio</title>
+<style>
+/* ── DESIGN TOKENS ──────────────────────────────────────────────────── */
+:root {
+  --bg:#111318; --bg-deep:#0C0E12; --surface:#191C23; --surface-2:#21252F;
+  --border:#2E3340; --border-2:#373D4D; --border-3:#464E61;
+  --text:#E4E7F0; --text-2:#9AA3B8; --text-3:#7A8299; --text-4:#626A80; --text-5:#4A5066;
+  --accent:#F28C38; --accent-l:#FFD4A8; --accent-d:#C06820; --on-acc:#2A1400;
+  --good:#5FCC80; --good-d:#3A9A58; --warn:#F2C94C; --bad:#E05A5A; --bad-bg:#2E1A1A; --info:#5BA3E0;
+}
+[data-theme="forge"]  { --bg:#111318; --bg-deep:#0C0E12; --surface:#191C23; --surface-2:#21252F; --border:#2E3340; --border-2:#373D4D; --border-3:#464E61; --text:#E4E7F0; --text-2:#9AA3B8; --text-3:#7A8299; --text-4:#626A80; --text-5:#4A5066; --accent:#F28C38; --accent-l:#FFD4A8; --accent-d:#C06820; --on-acc:#2A1400; --good:#5FCC80; --good-d:#3A9A58; --warn:#F2C94C; --bad:#E05A5A; --bad-bg:#2E1A1A; --info:#5BA3E0; }
+[data-theme="resin"]  { --bg:#0F0E18; --bg-deep:#09080F; --surface:#17162A; --surface-2:#1F1D38; --border:#2E2B52; --border-2:#3A3668; --border-3:#4E4980; --text:#E8E4FF; --text-2:#A89EC8; --text-3:#8A80AA; --text-4:#6E6490; --text-5:#524A70; --accent:#B07EFF; --accent-l:#DCCAFF; --accent-d:#8050D0; --on-acc:#1A0840; --good:#5FCCA0; --good-d:#3A9A78; --warn:#E8C050; --bad:#E05880; --bad-bg:#2A1020; --info:#60C0F0; }
+[data-theme="laser"]  { --bg:#0E1A10; --bg-deep:#090F0A; --surface:#142018; --surface-2:#1C2E20; --border:#273D2B; --border-2:#324E38; --border-3:#426548; --text:#DFF2E2; --text-2:#96BB9C; --text-3:#7A9E80; --text-4:#617F67; --text-5:#496250; --accent:#3EE870; --accent-l:#AAFFC4; --accent-d:#28B84E; --on-acc:#04180C; --good:#60D880; --good-d:#3AAA58; --warn:#D4E040; --bad:#E06050; --bad-bg:#2A1810; --info:#50C0A0; }
+[data-theme="blueprint"] { --bg:#091520; --bg-deep:#050E17; --surface:#0F2030; --surface-2:#162B3E; --border:#1F3F58; --border-2:#27506E; --border-3:#356688; --text:#D8EEF8; --text-2:#88B4CC; --text-3:#6A94AC; --text-4:#527888; --text-5:#3C5C6A; --accent:#40C0F0; --accent-l:#A8E4FF; --accent-d:#2090C0; --on-acc:#02141E; --good:#50CC90; --good-d:#309A68; --warn:#F0C040; --bad:#E05858; --bad-bg:#2A1010; --info:#80A8E0; }
+[data-theme="titanium"] { --bg:#181818; --bg-deep:#101010; --surface:#222222; --surface-2:#2C2C2C; --border:#3C3C3C; --border-2:#4A4A4A; --border-3:#606060; --text:#F0F0F0; --text-2:#A8A8A8; --text-3:#888888; --text-4:#686868; --text-5:#4A4A4A; --accent:#D0D0D0; --accent-l:#FFFFFF; --accent-d:#A0A0A0; --on-acc:#101010; --good:#68CC80; --good-d:#409858; --warn:#E8C050; --bad:#E05858; --bad-bg:#281818; --info:#6090C8; }
+[data-theme="copper"]  { --bg:#1A1208; --bg-deep:#120C04; --surface:#241A0C; --surface-2:#302214; --border:#483318; --border-2:#5A4020; --border-3:#70522A; --text:#F8EDD8; --text-2:#C4A878; --text-3:#A88C60; --text-4:#8A7048; --text-5:#6A5432; --accent:#E09040; --accent-l:#FFCF88; --accent-d:#B06820; --on-acc:#200C00; --good:#80B850; --good-d:#589030; --warn:#E8D040; --bad:#D85040; --bad-bg:#281410; --info:#60A0C0; }
+[data-theme="void"]    { --bg:#080808; --bg-deep:#040404; --surface:#101010; --surface-2:#181818; --border:#282828; --border-2:#323232; --border-3:#424242; --text:#F8F8F8; --text-2:#A0A0A0; --text-3:#787878; --text-4:#585858; --text-5:#383838; --accent:#FF4040; --accent-l:#FF9090; --accent-d:#C82020; --on-acc:#200000; --good:#40CC60; --good-d:#209040; --warn:#FFCC20; --bad:#FF4040; --bad-bg:#200808; --info:#4080E0; }
+[data-theme="daylight"]{ --bg:#F4F2EE; --bg-deep:#E8E4DC; --surface:#FFFFFF; --surface-2:#F0EDE6; --border:#D4CFC4; --border-2:#C0BAB0; --border-3:#A8A298; --text:#1E1C18; --text-2:#4A4740; --text-3:#625E56; --text-4:#7C7870; --text-5:#989490; --accent:#B56010; --accent-l:#7A3800; --accent-d:#D07820; --on-acc:#FFF4E8; --good:#3A8040; --good-d:#296030; --warn:#986E00; --bad:#A83020; --bad-bg:#F8E8E4; --info:#2060A0; }
+[data-theme="neon"]    { --bg:#0A0A12; --bg-deep:#060608; --surface:#121220; --surface-2:#1A1A2C; --border:#28284A; --border-2:#34345C; --border-3:#444470; --text:#F0F0FF; --text-2:#9898CC; --text-3:#7878A8; --text-4:#585888; --text-5:#383860; --accent:#FF20FF; --accent-l:#FF90FF; --accent-d:#C000C0; --on-acc:#1E001E; --good:#20FF80; --good-d:#10C060; --warn:#FFFF20; --bad:#FF4060; --bad-bg:#200010; --info:#2080FF; }
+[data-theme="workshop"]{ --bg:#1C1410; --bg-deep:#140E0A; --surface:#261C16; --surface-2:#32241C; --border:#4A3628; --border-2:#5C4434; --border-3:#705644; --text:#F4E8D8; --text-2:#C4A888; --text-3:#A88C70; --text-4:#8C7058; --text-5:#6C5440; --accent:#D4901C; --accent-l:#FFD080; --accent-d:#A86C10; --on-acc:#1C0C00; --good:#78B848; --good-d:#508828; --warn:#E8C838; --bad:#D05040; --bad-bg:#2C1410; --info:#5890C0; }
+
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg-deep);color:var(--text);min-height:100vh;line-height:1.5}
+h1,h2,h3,h4{font-weight:700;line-height:1.2}
+input,select,textarea{background:var(--surface);border:1px solid var(--border-2);color:var(--text);border-radius:6px;padding:8px 12px;font-size:0.875rem;font-family:inherit;width:100%;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+input[type="checkbox"]{width:auto;cursor:pointer}
+input[type="range"]{padding:0;background:transparent;border:none}
+label{font-size:0.8rem;color:var(--text-2);display:block;margin-bottom:4px;font-weight:500}
+select option{background:var(--surface-2);color:var(--text)}
+
+/* ── LAYOUT ── */
+.app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:16px;height:56px;position:sticky;top:0;z-index:100}
+.topbar-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1rem;letter-spacing:-.5px;color:var(--text);white-space:nowrap}
+.topbar-logo svg{color:var(--accent);flex-shrink:0}
+.topbar-nav{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+.topbar-nav::-webkit-scrollbar{display:none}
+.nav-btn{background:none;border:none;cursor:pointer;color:var(--text-3);font-size:0.8rem;font-weight:600;padding:6px 12px;border-radius:6px;white-space:nowrap;transition:all .15s;font-family:inherit}
+.nav-btn:hover{background:var(--surface-2);color:var(--text)}
+.nav-btn.active{background:var(--accent);color:var(--on-acc)}
+.topbar-right{display:flex;gap:8px;align-items:center;margin-left:auto}
+.icon-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--text-2);font-size:0.8rem;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:6px}
+.icon-btn:hover{border-color:var(--accent);color:var(--accent)}
+.page{display:none;flex:1;padding:24px 20px;max-width:1200px;margin:0 auto;width:100%}
+.page.active{display:block}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.card+.card{margin-top:16px}
+.card-title{font-size:0.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:700px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+.field{margin-bottom:12px}
+.row{display:flex;gap:12px;align-items:flex-end}
+.row .field{flex:1;margin-bottom:0}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:7px;border:none;font-size:0.85rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.btn-primary{background:var(--accent);color:var(--on-acc)}
+.btn-primary:hover{background:var(--accent-d);transform:translateY(-1px)}
+.btn-secondary{background:var(--surface-2);color:var(--text);border:1px solid var(--border-2)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad)}
+.btn-sm{padding:5px 12px;font-size:0.78rem}
+.btn-ghost{background:none;color:var(--text-3);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--border-2)}
+
+/* ── BADGE ── */
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700}
+.badge-info{background:color-mix(in srgb,var(--info) 18%,transparent);color:var(--info)}
+.badge-good{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.badge-warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.badge-accent{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)}
+
+/* ── STAT TILES ── */
+.stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px}
+.stat-label{font-size:0.72rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.stat-value{font-size:1.8rem;font-weight:800;color:var(--text);line-height:1}
+.stat-sub{font-size:0.75rem;color:var(--text-3);margin-top:4px}
+
+/* ── QUOTE ── */
+.quote-section{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+@media(max-width:900px){.quote-section{grid-template-columns:1fr}}
+.machine-row{display:flex;gap:10px;align-items:flex-end;padding:12px;background:var(--surface-2);border-radius:8px;border:1px solid var(--border);margin-bottom:8px}
+.machine-row .field{margin-bottom:0;flex:1}
+.price-panel{background:var(--bg-deep);border:1px solid var(--border);border-radius:10px;padding:20px;position:sticky;top:72px}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem}
+.price-row:last-of-type{border-bottom:none}
+.price-row.total{font-size:1rem;font-weight:700;color:var(--text);border-top:2px solid var(--border-2);margin-top:4px;padding-top:12px;border-bottom:none}
+.price-row.sale-price{font-size:1.6rem;font-weight:800;color:var(--accent);border:none;padding:8px 0 0}
+.price-label{color:var(--text-3)}
+.price-val{color:var(--text);font-weight:600}
+.price-val.zero{color:var(--text-5)}
+.margin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.margin-btn{padding:6px 4px;border-radius:6px;border:1px solid var(--border-2);background:var(--surface);color:var(--text-3);font-size:0.72rem;font-weight:700;cursor:pointer;text-align:center;transition:all .15s;font-family:inherit;line-height:1.4}
+.margin-btn:hover{border-color:var(--accent);color:var(--accent)}
+.margin-btn.active{background:var(--accent);color:var(--on-acc);border-color:var(--accent)}
+.waive-row{display:flex;align-items:center;justify-content:space-between;padding:6px 0;font-size:0.82rem;color:var(--text-2)}
+.toggle{position:relative;display:inline-block;width:36px;height:20px}
+.toggle input{opacity:0;width:0;height:0}
+.slider{position:absolute;top:0;left:0;right:0;bottom:0;background:var(--border-2);border-radius:20px;cursor:pointer;transition:.2s}
+.slider::before{content:'';position:absolute;height:14px;width:14px;left:3px;bottom:3px;background:var(--text-3);border-radius:50%;transition:.2s}
+.toggle input:checked+.slider{background:var(--accent)}
+.toggle input:checked+.slider::before{transform:translateX(16px);background:var(--on-acc)}
+
+/* ── CATALOG ── */
+.catalog-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:20px}
+.catalog-toolbar input{max-width:240px}
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.catalog-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .15s}
+.catalog-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.catalog-img{width:100%;height:150px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;color:var(--text-5);font-size:2.5rem;overflow:hidden}
+.catalog-img img{width:100%;height:100%;object-fit:cover}
+.catalog-body{padding:14px}
+.catalog-name{font-weight:700;font-size:0.95rem;margin-bottom:4px}
+.catalog-price{font-size:1.3rem;font-weight:800;color:var(--accent);margin-bottom:10px}
+.catalog-stock{display:flex;gap:6px;flex-wrap:wrap}
+.stock-tag{font-size:0.68rem;font-weight:600;padding:2px 7px;border-radius:4px;background:var(--surface-2);color:var(--text-3);border:1px solid var(--border)}
+.stock-tag.on-hand{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good);border-color:transparent}
+.stock-tag.on-order{background:color-mix(in srgb,var(--info) 15%,transparent);color:var(--info);border-color:transparent}
+.stock-tag.to-make{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn);border-color:transparent}
+
+/* ── TABLES ── */
+.data-table{width:100%;border-collapse:collapse}
+.data-table th{text-align:left;padding:10px 12px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);border-bottom:1px solid var(--border-2)}
+.data-table td{padding:10px 12px;font-size:0.85rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table tr:last-child td{border-bottom:none}
+.data-table tr:hover td{background:var(--surface-2)}
+.rate-chip{background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent);padding:2px 8px;border-radius:4px;font-weight:700;font-size:0.82rem}
+
+/* ── MATERIALS ── */
+.mat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.mat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;justify-content:space-between;align-items:center}
+.mat-name{font-weight:700;font-size:0.9rem}
+.mat-type{font-size:0.72rem;color:var(--text-3);margin-top:2px}
+.mat-cost{font-size:1.1rem;font-weight:800;color:var(--accent)}
+.mat-unit{font-size:0.72rem;color:var(--text-3)}
+
+/* ── SETTINGS ── */
+.settings-section{margin-bottom:28px}
+.settings-section h3{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text-3);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* ── THEME PICKER ── */
+.theme-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+.theme-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:7px;border:1px solid var(--border);background:var(--surface);cursor:pointer;font-size:0.8rem;font-weight:600;color:var(--text-2);transition:all .15s;font-family:inherit}
+.theme-chip:hover{border-color:var(--border-2);color:var(--text)}
+.theme-chip.active{border-color:var(--accent);color:var(--accent)}
+.theme-swatch{width:22px;height:22px;border-radius:5px;flex-shrink:0;border:2px solid rgba(255,255,255,.08)}
+
+/* ── COVERAGE ── */
+.coverage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:6px}
+.coverage-btn{padding:8px;border-radius:6px;border:1px solid var(--border-2);background:var(--surface);color:var(--text-3);font-size:0.75rem;font-weight:600;cursor:pointer;text-align:center;transition:all .15s;font-family:inherit;line-height:1.3}
+.coverage-btn:hover{border-color:var(--accent);color:var(--accent)}
+.coverage-btn.active{background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent);border-color:var(--accent)}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border-2);border-radius:12px;padding:24px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(10px);transition:transform .2s}
+.modal-bg.open .modal{transform:translateY(0)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-title{font-size:1.1rem;font-weight:700}
+.modal-close{background:none;border:none;color:var(--text-3);cursor:pointer;font-size:1.3rem;padding:4px;line-height:1}
+.modal-close:hover{color:var(--text)}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+/* ── HISTORY ── */
+.history-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:12px}
+.history-row:last-child{border-bottom:none}
+.history-name{font-weight:600;font-size:0.9rem}
+.history-meta{font-size:0.75rem;color:var(--text-3);margin-top:2px}
+.history-price{font-weight:800;font-size:1rem;color:var(--accent)}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:60px 20px;color:var(--text-3)}
+.empty-icon{font-size:3rem;margin-bottom:12px;opacity:.4}
+.empty p{font-size:0.9rem;margin-bottom:16px}
+
+/* ── TOAST ── */
+.toast-rack{position:fixed;bottom:20px;right:20px;z-index:999;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--surface-2);border:1px solid var(--border-2);border-radius:8px;padding:10px 16px;font-size:0.85rem;color:var(--text);max-width:320px;animation:slideIn .2s ease}
+.toast.good{border-left:3px solid var(--good)}
+.toast.bad{border-left:3px solid var(--bad)}
+@keyframes slideIn{from{transform:translateX(20px);opacity:0}to{transform:none;opacity:1}}
+
+/* ── MISC ── */
+.divider{height:1px;background:var(--border);margin:14px 0}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:4px}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- NAV -->
+<header class="topbar">
+  <div class="topbar-logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
+    </svg>
+    Maker Services
+  </div>
+  <nav class="topbar-nav">
+    <button class="nav-btn active" onclick="goTo('quote')">💰 Quote</button>
+    <button class="nav-btn" onclick="goTo('catalog')">📦 Catalog</button>
+    <button class="nav-btn" onclick="goTo('machines')">⚙️ Machines</button>
+    <button class="nav-btn" onclick="goTo('materials')">🧱 Materials</button>
+    <button class="nav-btn" onclick="goTo('history')">📋 History</button>
+    <button class="nav-btn" onclick="goTo('settings')">⚙ Settings</button>
+  </nav>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="goTo('settings')">🎨</button>
+  </div>
+</header>
+
+<!-- ══════════ QUOTE ══════════ -->
+<main class="page active" id="page-quote">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <h2 style="font-size:1.4rem">New Quote</h2>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-secondary btn-sm" onclick="clearQuote()">Clear</button>
+      <button class="btn btn-primary btn-sm" onclick="saveQuote()">💾 Save Quote</button>
+    </div>
+  </div>
+  <div class="quote-section">
+    <!-- INPUTS -->
+    <div>
+      <div class="card">
+        <div class="card-title">Job Details</div>
+        <div class="grid-2">
+          <div class="field"><label>Job / Item Name</label><input type="text" id="q-name" placeholder="e.g. Custom Phone Stand" oninput="recalc()"></div>
+          <div class="field"><label>Quantity</label><input type="number" id="q-qty" value="1" min="1" oninput="recalc()"></div>
+        </div>
+        <div class="field"><label>Customer / Notes</label><input type="text" id="q-customer" placeholder="Customer name or job notes"></div>
+        <div class="row">
+          <div class="field">
+            <label>File Source</label>
+            <select id="q-filesource" onchange="onFileSourceChange()">
+              <option value="own">My Design</option>
+              <option value="customer">Customer File</option>
+              <option value="none">No Design Work</option>
+            </select>
+          </div>
+          <div class="field"><label>Complexity Surcharge ($)</label><input type="number" id="q-complexity" value="0" min="0" step="0.50" oninput="recalc()"></div>
+        </div>
+      </div>
+
+      <div class="card" id="design-block" style="margin-top:16px">
+        <div class="card-title">Design Time</div>
+        <div class="row">
+          <div class="field"><label>Hours (min 1 hr, then 15-min blocks)</label><input type="number" id="q-design-hrs" value="1" min="0" step="0.25" oninput="recalc()"></div>
+          <div class="field"><label>Rate ($/hr)</label><input type="number" id="q-design-rate" value="65" min="0" step="5" oninput="recalc()"></div>
+          <div class="field" style="flex:0 0 auto;min-width:80px">
+            <label>Waive</label>
+            <div class="waive-row" style="padding:8px 0">
+              <label class="toggle"><input type="checkbox" id="q-waive-design" onchange="recalc()"><span class="slider"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Machine Time</div>
+        <div id="machine-rows"></div>
+        <button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="addMachineRow()">+ Add Machine</button>
+      </div>
+
+      <div class="card" id="uv-block" style="display:none;margin-top:16px">
+        <div class="card-title">UV Print Coverage</div>
+        <div class="grid-2">
+          <div class="field"><label>Print Width (inches)</label><input type="number" id="uv-w" value="4" min="0.1" step="0.5" oninput="recalc()"></div>
+          <div class="field"><label>Print Height (inches)</label><input type="number" id="uv-h" value="4" min="0.1" step="0.5" oninput="recalc()"></div>
+        </div>
+        <div class="field">
+          <label>Ink Coverage Mode</label>
+          <div class="coverage-grid">
+            <button class="coverage-btn" data-cov="light" onclick="setCoverage('light')">Light<br><small>Line art / text</small></button>
+            <button class="coverage-btn active" data-cov="standard" onclick="setCoverage('standard')">Standard<br><small>Full color flat</small></button>
+            <button class="coverage-btn" data-cov="heavy" onclick="setCoverage('heavy')">Heavy<br><small>White base + gloss</small></button>
+            <button class="coverage-btn" data-cov="texture" onclick="setCoverage('texture')">3D Texture<br><small>Embossed / raised</small></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Materials</div>
+        <div id="material-rows"></div>
+        <button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="addMaterialRow()">+ Add Material</button>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <div class="card-title">Labor</div>
+        <div class="row">
+          <div class="field"><label>Labor Hours</label><input type="number" id="q-labor-hrs" value="0" min="0" step="0.25" oninput="recalc()"></div>
+          <div class="field"><label>Labor Rate ($/hr)</label><input type="number" id="q-labor-rate" value="25" min="0" step="5" oninput="recalc()"></div>
+          <div class="field" style="flex:0 0 auto;min-width:80px">
+            <label>Waive</label>
+            <div class="waive-row" style="padding:8px 0">
+              <label class="toggle"><input type="checkbox" id="q-waive-labor" onchange="recalc()"><span class="slider"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICE PANEL -->
+    <div>
+      <div class="price-panel">
+        <div style="font-weight:700;font-size:0.82rem;color:var(--text-2);margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em">Price Summary</div>
+        <div style="margin-bottom:14px">
+          <label style="margin-bottom:8px">Margin Tier</label>
+          <div class="margin-grid">
+            <button class="margin-btn" data-m="sale" onclick="setMargin('sale')">Sale<br><small>1.25×</small></button>
+            <button class="margin-btn" data-m="discount" onclick="setMargin('discount')">Discount<br><small>1.5×</small></button>
+            <button class="margin-btn active" data-m="standard" onclick="setMargin('standard')">Standard<br><small>2.0×</small></button>
+            <button class="margin-btn" data-m="medium" onclick="setMargin('medium')">Medium<br><small>2.5×</small></button>
+            <button class="margin-btn" data-m="high" onclick="setMargin('high')">High<br><small>3.0×</small></button>
+            <button class="margin-btn" data-m="premium" onclick="setMargin('premium')">Premium<br><small>4.0×</small></button>
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label>Custom Multiplier (overrides tier)</label>
+            <input type="number" id="q-custom-mult" placeholder="e.g. 2.2" step="0.05" min="1" oninput="onCustomMult()">
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="price-row"><span class="price-label">Machine cost</span><span class="price-val" id="pr-machine">$0.00</span></div>
+        <div class="price-row"><span class="price-label">UV ink cost</span><span class="price-val" id="pr-uv">$0.00</span></div>
+        <div class="price-row"><span class="price-label">Materials</span><span class="price-val" id="pr-mat">$0.00</span></div>
+        <div class="price-row"><span class="price-label">Labor</span><span class="price-val" id="pr-labor">$0.00</span></div>
+        <div class="price-row"><span class="price-label">Design time</span><span class="price-val" id="pr-design">$0.00</span></div>
+        <div class="price-row"><span class="price-label">Overhead (per job)</span><span class="price-val" id="pr-overhead">$0.00</span></div>
+        <div class="price-row"><span class="price-label">Complexity surcharge</span><span class="price-val" id="pr-complexity">$0.00</span></div>
+        <div class="price-row total"><span>Subtotal (cost)</span><span id="pr-subtotal">$0.00</span></div>
+        <div class="price-row total"><span>× Margin</span><span id="pr-mult">2.0×</span></div>
+        <div class="price-row sale-price"><span style="font-size:1rem;align-self:center">$</span><span id="pr-final">0.00</span></div>
+        <div style="font-size:0.72rem;color:var(--warn);text-align:center;margin-top:4px;min-height:18px" id="pr-floor-note"></div>
+        <div style="font-size:0.72rem;color:var(--text-3);text-align:center;margin-top:2px;min-height:18px" id="pr-qty-note"></div>
+        <div class="divider"></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveQuote()">💾 Save This Quote</button>
+        <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;margin-top:8px" onclick="addToCatalog()">+ Add to Catalog</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ══════════ CATALOG ══════════ -->
+<main class="page" id="page-catalog">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <h2 style="font-size:1.4rem">Item Catalog</h2>
+    <button class="btn btn-primary btn-sm" onclick="openCatalogModal()">+ New Item</button>
+  </div>
+  <div class="catalog-toolbar">
+    <input type="text" id="cat-search" placeholder="Search items…" oninput="renderCatalog()" style="max-width:220px">
+    <select id="cat-filter" onchange="renderCatalog()" style="max-width:160px">
+      <option value="">All Types</option>
+      <option value="fdm">FDM Print</option>
+      <option value="resin">Resin Print</option>
+      <option value="laser">Laser</option>
+      <option value="uv">UV Print</option>
+      <option value="multi">Multi-Machine</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+  <div class="catalog-grid" id="catalog-grid"></div>
+</main>
+
+<!-- ══════════ MACHINES ══════════ -->
+<main class="page" id="page-machines">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <h2 style="font-size:1.4rem">Machines</h2>
+    <button class="btn btn-primary btn-sm" onclick="openMachineModal()">+ Add Machine</button>
+  </div>
+  <div class="card">
+    <table class="data-table">
+      <thead><tr><th>Machine</th><th>Type</th><th>Depr/hr</th><th>Elec/hr</th><th>Consumables/hr</th><th>Rate/hr</th><th></th></tr></thead>
+      <tbody id="machines-tbody"></tbody>
+    </table>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">Rate Calculation</div>
+    <p style="font-size:0.85rem;color:var(--text-2);line-height:1.8">
+      <strong>Depreciation</strong> = Purchase Price ÷ Expected Lifespan (hrs)<br>
+      <strong>Electricity</strong> = (Watts ÷ 1000) × $/kWh<br>
+      <strong>Consumables</strong> = Amortized cost/hr (FEP films, lenses, adhesive mats, filters, etc.)<br>
+      <strong style="color:var(--accent)">Machine Rate = Depreciation + Electricity + Consumables</strong>
+    </p>
+  </div>
+</main>
+
+<!-- ══════════ MATERIALS ══════════ -->
+<main class="page" id="page-materials">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <h2 style="font-size:1.4rem">Materials Library</h2>
+    <button class="btn btn-primary btn-sm" onclick="openMaterialModal()">+ Add Material</button>
+  </div>
+  <div class="mat-grid" id="mat-grid"></div>
+</main>
+
+<!-- ══════════ HISTORY ══════════ -->
+<main class="page" id="page-history">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <h2 style="font-size:1.4rem">Quote History</h2>
+    <button class="btn btn-secondary btn-sm" onclick="clearHistory()">Clear All</button>
+  </div>
+  <div class="grid-4" style="margin-bottom:20px" id="history-stats"></div>
+  <div class="card" id="history-list"></div>
+</main>
+
+<!-- ══════════ SETTINGS ══════════ -->
+<main class="page" id="page-settings">
+  <h2 style="font-size:1.4rem;margin-bottom:20px">Settings</h2>
+
+  <div class="settings-section">
+    <h3>🎨 Theme</h3>
+    <div class="theme-picker" id="theme-picker"></div>
+  </div>
+
+  <div class="settings-section">
+    <h3>💰 Default Rates</h3>
+    <div class="grid-3">
+      <div class="field"><label>Design Rate ($/hr)</label><input type="number" id="s-design-rate" value="65" min="0" step="5" onchange="saveSettings()"></div>
+      <div class="field"><label>Labor Rate ($/hr)</label><input type="number" id="s-labor-rate" value="25" min="0" step="5" onchange="saveSettings()"></div>
+      <div class="field"><label>Electricity ($/kWh)</label><input type="number" id="s-kwh" value="0.14" min="0" step="0.01" onchange="saveSettings()"></div>
+      <div class="field"><label>Monthly Overhead ($)</label><input type="number" id="s-overhead" value="50" min="0" step="5" onchange="saveSettings()"></div>
+      <div class="field"><label>Est. Jobs / Month</label><input type="number" id="s-jobs-mo" value="20" min="1" onchange="saveSettings()"></div>
+      <div class="field"><label>Minimum Job Price ($)</label><input type="number" id="s-min-price" value="10" min="0" step="0.50" onchange="saveSettings()"></div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>📊 Margin Tier Multipliers</h3>
+    <div class="grid-3">
+      <div class="field"><label>Sale ×</label><input type="number" id="s-m-sale" value="1.25" min="1" step="0.05" onchange="saveSettings()"></div>
+      <div class="field"><label>Discount ×</label><input type="number" id="s-m-discount" value="1.5" min="1" step="0.05" onchange="saveSettings()"></div>
+      <div class="field"><label>Standard ×</label><input type="number" id="s-m-standard" value="2.0" min="1" step="0.05" onchange="saveSettings()"></div>
+      <div class="field"><label>Medium ×</label><input type="number" id="s-m-medium" value="2.5" min="1" step="0.05" onchange="saveSettings()"></div>
+      <div class="field"><label>High ×</label><input type="number" id="s-m-high" value="3.0" min="1" step="0.05" onchange="saveSettings()"></div>
+      <div class="field"><label>Premium ×</label><input type="number" id="s-m-premium" value="4.0" min="1" step="0.05" onchange="saveSettings()"></div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>♻️ Material Waste Factors</h3>
+    <div class="grid-4">
+      <div class="field"><label>FDM (%)</label><input type="number" id="s-waste-fdm" value="12" min="0" max="50" onchange="saveSettings()"></div>
+      <div class="field"><label>Resin (%)</label><input type="number" id="s-waste-resin" value="18" min="0" max="50" onchange="saveSettings()"></div>
+      <div class="field"><label>Laser (%)</label><input type="number" id="s-waste-laser" value="5" min="0" max="50" onchange="saveSettings()"></div>
+      <div class="field"><label>UV Print (%)</label><input type="number" id="s-waste-uv" value="8" min="0" max="50" onchange="saveSettings()"></div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <h3>🖨️ UV Ink — EufyMake E1</h3>
+    <div class="grid-2">
+      <div class="field"><label>Ink Cost per mL ($) — conservative ceiling</label><input type="number" id="s-uv-ml" value="0.50" min="0" step="0.01" onchange="saveSettings()"></div>
+    </div>
+    <p style="font-size:0.78rem;color:var(--text-3);margin-top:4px">Set at $0.50/mL (single cartridge rate: $29.99/100mL) to hedge against waste. Actual bulk rate is ~$0.30/mL — adjust once you have real consumption data.</p>
+  </div>
+
+  <div class="settings-section">
+    <h3>💾 Data</h3>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-secondary btn-sm" onclick="exportData()">⬇ Export JSON</button>
+      <button class="btn btn-secondary btn-sm" onclick="importData()">⬆ Import JSON</button>
+      <button class="btn btn-danger btn-sm" onclick="resetAll()">⚠ Reset All Data</button>
+    </div>
+  </div>
+</main>
+
+</div><!-- /.app -->
+<div class="toast-rack" id="toasts"></div>
+<input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<!-- ══ MACHINE MODAL ══ -->
+<div class="modal-bg" id="modal-machine">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-machine-title">Add Machine</div>
+      <button class="modal-close" onclick="closeModal('modal-machine')">×</button>
+    </div>
+    <div class="grid-2">
+      <div class="field"><label>Machine Name</label><input type="text" id="m-name" placeholder="e.g. Bambu X1C"></div>
+      <div class="field"><label>Type</label>
+        <select id="m-type">
+          <option value="fdm">FDM Printer</option><option value="resin">Resin Printer</option>
+          <option value="laser">Laser Cutter / Engraver</option><option value="uv">UV Printer</option><option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Purchase Price ($)</label><input type="number" id="m-price" placeholder="2499" min="0" oninput="updateMachinePreview()"></div>
+      <div class="field"><label>Expected Lifespan (hrs)</label><input type="number" id="m-life" placeholder="2000" min="1" oninput="updateMachinePreview()"></div>
+      <div class="field"><label>Power Draw (Watts)</label><input type="number" id="m-watts" placeholder="66" min="0" oninput="updateMachinePreview()"></div>
+      <div class="field"><label>Consumables Amort. ($/hr)</label><input type="number" id="m-cons" placeholder="0.25" min="0" step="0.05" oninput="updateMachinePreview()"></div>
+    </div>
+    <div style="background:var(--surface-2);border-radius:8px;padding:12px;margin-top:12px;font-size:0.82rem;color:var(--text-2)" id="m-rate-preview">Fill in details above to see calculated rate.</div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-machine')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMachine()">Save Machine</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MATERIAL MODAL ══ -->
+<div class="modal-bg" id="modal-material">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-material-title">Add Material</div>
+      <button class="modal-close" onclick="closeModal('modal-material')">×</button>
+    </div>
+    <div class="grid-2">
+      <div class="field"><label>Material Name</label><input type="text" id="mat-name" placeholder="e.g. PLA Black Elegoo"></div>
+      <div class="field"><label>Type</label>
+        <select id="mat-type">
+          <option value="fdm">FDM Filament</option><option value="resin">Resin</option>
+          <option value="laser-wood">Laser — Wood</option><option value="laser-acrylic">Laser — Acrylic</option>
+          <option value="laser-other">Laser — Other</option><option value="substrate">UV Substrate</option><option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Total Cost ($)</label><input type="number" id="mat-cost" placeholder="15.99" min="0" step="0.01"></div>
+      <div class="field"><label>Total Quantity</label><input type="number" id="mat-qty" placeholder="1000" min="0.01" step="0.01"></div>
+      <div class="field"><label>Unit</label>
+        <select id="mat-unit">
+          <option value="g">grams (g)</option><option value="mL">milliliters (mL)</option>
+          <option value="in²">square inches (in²)</option><option value="in">linear inches</option>
+          <option value="sheet">sheet</option><option value="piece">piece</option>
+        </select>
+      </div>
+      <div class="field"><label>Current Stock (qty units)</label><input type="number" id="mat-stock" placeholder="0" min="0" step="0.1"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-material')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMaterial()">Save Material</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CATALOG MODAL ══ -->
+<div class="modal-bg" id="modal-catalog">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-catalog-title">Catalog Item</div>
+      <button class="modal-close" onclick="closeModal('modal-catalog')">×</button>
+    </div>
+    <div class="field"><label>Item Name</label><input type="text" id="ci-name" placeholder="Product name"></div>
+    <div class="grid-2">
+      <div class="field"><label>Type</label>
+        <select id="ci-type">
+          <option value="fdm">FDM Print</option><option value="resin">Resin Print</option>
+          <option value="laser">Laser</option><option value="uv">UV Print</option>
+          <option value="multi">Multi-Machine</option><option value="other">Other</option>
+        </select>
+      </div>
+      <div class="field"><label>Sale Price ($)</label><input type="number" id="ci-price" min="0" step="0.01"></div>
+      <div class="field"><label>On Hand (qty)</label><input type="number" id="ci-onhand" value="0" min="0"></div>
+      <div class="field"><label>On Order (qty)</label><input type="number" id="ci-onorder" value="0" min="0"></div>
+      <div class="field"><label>To Make (qty)</label><input type="number" id="ci-tomake" value="0" min="0"></div>
+    </div>
+    <div class="field"><label>Photo URL (optional)</label><input type="text" id="ci-photo" placeholder="https://…"></div>
+    <div class="field"><label>Notes / Settings</label><textarea id="ci-notes" rows="2" style="resize:vertical" placeholder="Material, slicer settings, notes…"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-catalog')">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="ci-delete-btn" style="display:none" onclick="deleteCatalogCurrent()">Delete</button>
+      <button class="btn btn-primary" onclick="saveCatalogItem()">Save Item</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ STATE ═══ */
+let DB = {
+  machines:[], materials:[], catalog:[], quotes:[],
+  settings:{
+    designRate:65, laborRate:25, kwh:0.14, overhead:50, jobsPerMonth:20, minPrice:10, uvPerMl:0.50,
+    margins:{sale:1.25,discount:1.5,standard:2.0,medium:2.5,high:3.0,premium:4.0},
+    waste:{fdm:12,resin:18,laser:5,uv:8}
+  }
+};
+let QS = { machineRows:[], materialRows:[], margin:'standard', uvCoverage:'standard', editMachineIdx:null, editMaterialIdx:null, editCatalogIdx:null };
+
+/* ═══ PERSIST ═══ */
+const save = () => { try{ localStorage.setItem('ms_db', JSON.stringify(DB)); }catch(e){} };
+function load(){
+  try{ const s=localStorage.getItem('ms_db'); if(s) DB={...DB,...JSON.parse(s)}; }catch(e){}
+  if(!DB.machines.length) seedMachines();
+  if(!DB.materials.length) seedMaterials();
+}
+function getTheme(){ try{ return localStorage.getItem('ms_theme')||'forge'; }catch(e){ return 'forge'; } }
+function setTheme(id){
+  try{ localStorage.setItem('ms_theme',id); }catch(e){}
+  document.documentElement.setAttribute('data-theme',id);
+  renderThemePicker();
+}
+
+/* ═══ SEED ═══ */
+function uid(){ return Math.random().toString(36).slice(2,9); }
+function seedMachines(){
+  DB.machines=[
+    {id:uid(),name:'EufyMake E1 UV Printer',type:'uv',price:2499,life:2000,watts:66,cons:0.50},
+    {id:uid(),name:'FDM Printer (generic)',type:'fdm',price:600,life:3000,watts:200,cons:0.10},
+    {id:uid(),name:'Resin Printer (generic)',type:'resin',price:400,life:2000,watts:50,cons:0.30},
+    {id:uid(),name:'Diode Laser (generic)',type:'laser',price:500,life:2000,watts:80,cons:0.15},
+  ]; save();
+}
+function seedMaterials(){
+  DB.materials=[
+    {id:uid(),name:'PLA Black (Elegoo)',type:'fdm',cost:12.99,qty:907,unit:'g',stock:500},
+    {id:uid(),name:'PETG Black (Elegoo)',type:'fdm',cost:15.99,qty:907,unit:'g',stock:200},
+    {id:uid(),name:'Silk PLA',type:'fdm',cost:19.99,qty:907,unit:'g',stock:100},
+    {id:uid(),name:'Standard Resin',type:'resin',cost:25,qty:1000,unit:'mL',stock:500},
+    {id:uid(),name:'3mm Birch Ply 12×12',type:'laser-wood',cost:4.50,qty:1,unit:'sheet',stock:10},
+    {id:uid(),name:'Acrylic 3mm Clear 12×12',type:'laser-acrylic',cost:6.00,qty:1,unit:'sheet',stock:5},
+  ]; save();
+}
+
+/* ═══ UTILS ═══ */
+const $ = id => document.getElementById(id);
+const fmtMoney = n => '$'+n.toFixed(2);
+const roundUp = n => Math.ceil(n*2)/2;
+function machineRate(m){
+  const dep=(m.price||0)/(m.life||1);
+  const elec=((m.watts||0)/1000)*(DB.settings.kwh||0.14);
+  const cons=parseFloat(m.cons)||0;
+  return dep+elec+cons;
+}
+
+/* ═══ NAV ═══ */
+function goTo(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  $('page-'+page).classList.add('active');
+  document.querySelector(`.nav-btn[onclick="goTo('${page}')"]`).classList.add('active');
+  if(page==='machines') renderMachines();
+  if(page==='materials') renderMaterials();
+  if(page==='catalog') renderCatalog();
+  if(page==='history') renderHistory();
+  if(page==='settings'){ renderThemePicker(); loadSettings(); }
+}
+
+/* ═══ THEME ═══ */
+const THEMES=[
+  {id:'forge',    label:'Forge',     bg:'#111318',acc:'#F28C38'},
+  {id:'resin',    label:'Resin',     bg:'#0F0E18',acc:'#B07EFF'},
+  {id:'laser',    label:'Laser',     bg:'#0E1A10',acc:'#3EE870'},
+  {id:'blueprint',label:'Blueprint', bg:'#091520',acc:'#40C0F0'},
+  {id:'titanium', label:'Titanium',  bg:'#181818',acc:'#D0D0D0'},
+  {id:'copper',   label:'Copper',    bg:'#1A1208',acc:'#E09040'},
+  {id:'void',     label:'Void',      bg:'#080808',acc:'#FF4040'},
+  {id:'daylight', label:'Daylight',  bg:'#F4F2EE',acc:'#B56010'},
+  {id:'neon',     label:'Neon',      bg:'#0A0A12',acc:'#FF20FF'},
+  {id:'workshop', label:'Workshop',  bg:'#1C1410',acc:'#D4901C'},
+];
+function renderThemePicker(){
+  const cur=getTheme();
+  $('theme-picker').innerHTML=THEMES.map(t=>`
+    <button class="theme-chip ${t.id===cur?'active':''}" onclick="setTheme('${t.id}')">
+      <div class="theme-swatch" style="background:${t.bg};border-color:${t.acc}"></div>${t.label}
+    </button>`).join('');
+}
+
+/* ═══ SETTINGS ═══ */
+function loadSettings(){
+  const s=DB.settings;
+  $('s-design-rate').value=s.designRate; $('s-labor-rate').value=s.laborRate;
+  $('s-kwh').value=s.kwh; $('s-overhead').value=s.overhead;
+  $('s-jobs-mo').value=s.jobsPerMonth; $('s-min-price').value=s.minPrice;
+  $('s-uv-ml').value=s.uvPerMl;
+  $('s-m-sale').value=s.margins.sale; $('s-m-discount').value=s.margins.discount;
+  $('s-m-standard').value=s.margins.standard; $('s-m-medium').value=s.margins.medium;
+  $('s-m-high').value=s.margins.high; $('s-m-premium').value=s.margins.premium;
+  $('s-waste-fdm').value=s.waste.fdm; $('s-waste-resin').value=s.waste.resin;
+  $('s-waste-laser').value=s.waste.laser; $('s-waste-uv').value=s.waste.uv;
+  $('q-design-rate').value=s.designRate; $('q-labor-rate').value=s.laborRate;
+}
+function saveSettings(){
+  const s=DB.settings;
+  s.designRate=parseFloat($('s-design-rate').value)||65;
+  s.laborRate=parseFloat($('s-labor-rate').value)||25;
+  s.kwh=parseFloat($('s-kwh').value)||0.14;
+  s.overhead=parseFloat($('s-overhead').value)||50;
+  s.jobsPerMonth=parseInt($('s-jobs-mo').value)||20;
+  s.minPrice=parseFloat($('s-min-price').value)||10;
+  s.uvPerMl=parseFloat($('s-uv-ml').value)||0.50;
+  s.margins.sale=parseFloat($('s-m-sale').value)||1.25;
+  s.margins.discount=parseFloat($('s-m-discount').value)||1.5;
+  s.margins.standard=parseFloat($('s-m-standard').value)||2.0;
+  s.margins.medium=parseFloat($('s-m-medium').value)||2.5;
+  s.margins.high=parseFloat($('s-m-high').value)||3.0;
+  s.margins.premium=parseFloat($('s-m-premium').value)||4.0;
+  s.waste.fdm=parseFloat($('s-waste-fdm').value)||12;
+  s.waste.resin=parseFloat($('s-waste-resin').value)||18;
+  s.waste.laser=parseFloat($('s-waste-laser').value)||5;
+  s.waste.uv=parseFloat($('s-waste-uv').value)||8;
+  save(); toast('Settings saved','good'); recalc();
+}
+
+/* ═══ QUOTE — MACHINE ROWS ═══ */
+function machineOptions(sel){
+  if(!DB.machines.length) return '<option value="">No machines — add one first</option>';
+  return DB.machines.map(m=>`<option value="${m.id}" ${m.id===sel?'selected':''}>${m.name} (${fmtMoney(machineRate(m))}/hr)</option>`).join('');
+}
+function addMachineRow(mid,hrs){
+  const rowId=uid();
+  QS.machineRows.push({rowId, machineId:mid||DB.machines[0]?.id, hrs:hrs||1});
+  renderMachineRows(); checkUV(); recalc();
+}
+function removeMachineRow(rowId){
+  QS.machineRows=QS.machineRows.filter(r=>r.rowId!==rowId);
+  renderMachineRows(); checkUV(); recalc();
+}
+function renderMachineRows(){
+  $('machine-rows').innerHTML=QS.machineRows.map(r=>`
+    <div class="machine-row">
+      <div class="field"><label>Machine</label>
+        <select onchange="onMachineChange('${r.rowId}',this.value)">${machineOptions(r.machineId)}</select>
+      </div>
+      <div class="field" style="max-width:110px"><label>Hours</label>
+        <input type="number" value="${r.hrs}" min="0.05" step="0.25" onchange="onMachineHrs('${r.rowId}',this.value)">
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="removeMachineRow('${r.rowId}')" style="flex-shrink:0;align-self:flex-end;padding:7px 10px">✕</button>
+    </div>`).join('')||'<p style="color:var(--text-4);font-size:0.85rem;padding:4px 0">No machines added yet.</p>';
+}
+function onMachineChange(rowId,machineId){ const r=QS.machineRows.find(r=>r.rowId===rowId); if(r){r.machineId=machineId;} checkUV(); recalc(); }
+function onMachineHrs(rowId,v){ const r=QS.machineRows.find(r=>r.rowId===rowId); if(r){r.hrs=parseFloat(v)||0;} recalc(); }
+function checkUV(){
+  const hasUV=QS.machineRows.some(r=>{ const m=DB.machines.find(m=>m.id===r.machineId); return m&&m.type==='uv'; });
+  $('uv-block').style.display=hasUV?'block':'none';
+}
+
+/* ═══ QUOTE — MATERIAL ROWS ═══ */
+function materialOptions(sel){
+  if(!DB.materials.length) return '<option value="">No materials — add one first</option>';
+  return DB.materials.map(m=>`<option value="${m.id}" ${m.id===sel?'selected':''}>${m.name} (${fmtMoney(m.cost/m.qty)}/${m.unit})</option>`).join('');
+}
+function addMaterialRow(mid,qty){
+  const rowId=uid();
+  QS.materialRows.push({rowId, materialId:mid||DB.materials[0]?.id, qty:qty||10});
+  renderMaterialRows(); recalc();
+}
+function removeMaterialRow(rowId){
+  QS.materialRows=QS.materialRows.filter(r=>r.rowId!==rowId);
+  renderMaterialRows(); recalc();
+}
+function renderMaterialRows(){
+  $('material-rows').innerHTML=QS.materialRows.map(r=>{
+    const mat=DB.materials.find(m=>m.id===r.materialId);
+    return `<div class="machine-row">
+      <div class="field"><label>Material</label>
+        <select onchange="onMatChange('${r.rowId}',this.value)">${materialOptions(r.materialId)}</select>
+      </div>
+      <div class="field" style="max-width:130px"><label>Qty (${mat?.unit||'units'})</label>
+        <input type="number" value="${r.qty}" min="0.01" step="1" onchange="onMatQty('${r.rowId}',this.value)">
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="removeMaterialRow('${r.rowId}')" style="flex-shrink:0;align-self:flex-end;padding:7px 10px">✕</button>
+    </div>`;
+  }).join('')||'<p style="color:var(--text-4);font-size:0.85rem;padding:4px 0">No materials added yet.</p>';
+}
+function onMatChange(rowId,materialId){ const r=QS.materialRows.find(r=>r.rowId===rowId); if(r){r.materialId=materialId;} renderMaterialRows(); recalc(); }
+function onMatQty(rowId,v){ const r=QS.materialRows.find(r=>r.rowId===rowId); if(r){r.qty=parseFloat(v)||0;} recalc(); }
+
+/* ═══ QUOTE — CONTROLS ═══ */
+function onFileSourceChange(){
+  const v=$('q-filesource').value;
+  $('design-block').style.display=(v==='none')?'none':'block';
+  $('q-waive-design').checked=(v==='customer');
+  recalc();
+}
+function setMargin(id){
+  QS.margin=id;
+  document.querySelectorAll('.margin-btn').forEach(b=>b.classList.toggle('active',b.dataset.m===id));
+  $('q-custom-mult').value='';
+  recalc();
+}
+function onCustomMult(){
+  const v=parseFloat($('q-custom-mult').value);
+  if(!isNaN(v)&&v>=1){ QS.margin='custom'; document.querySelectorAll('.margin-btn').forEach(b=>b.classList.remove('active')); }
+  recalc();
+}
+function setCoverage(c){
+  QS.uvCoverage=c;
+  document.querySelectorAll('.coverage-btn').forEach(b=>b.classList.toggle('active',b.dataset.cov===c));
+  recalc();
+}
+
+/* ═══ RECALC ═══ */
+const UV_ML={light:0.01,standard:0.03,heavy:0.06,texture:0.10};
+function recalc(){
+  const s=DB.settings;
+  const qty=Math.max(1,parseInt($('q-qty')?.value)||1);
+
+  // Machine cost per unit
+  let machineCost=0;
+  QS.machineRows.forEach(r=>{
+    const m=DB.machines.find(m=>m.id===r.machineId);
+    if(m) machineCost+=machineRate(m)*(parseFloat(r.hrs)||0);
+  });
+
+  // UV ink per unit
+  let uvCost=0;
+  const hasUV=QS.machineRows.some(r=>{ const m=DB.machines.find(m=>m.id===r.machineId); return m&&m.type==='uv'; });
+  if(hasUV){
+    const w=parseFloat($('uv-w')?.value)||0, h=parseFloat($('uv-h')?.value)||0;
+    const wasteFactor=1+(s.waste.uv||8)/100;
+    uvCost=w*h*(UV_ML[QS.uvCoverage]||0.03)*s.uvPerMl*wasteFactor;
+  }
+
+  // Materials per unit with waste
+  let matCost=0;
+  QS.materialRows.forEach(r=>{
+    const mat=DB.materials.find(m=>m.id===r.materialId);
+    if(!mat) return;
+    const unitCost=mat.cost/mat.qty;
+    let wf=0;
+    if(mat.type==='fdm') wf=s.waste.fdm;
+    else if(mat.type==='resin') wf=s.waste.resin;
+    else if(mat.type.startsWith('laser')) wf=s.waste.laser;
+    matCost+=unitCost*r.qty*(1+wf/100);
+  });
+
+  // Labor per unit
+  let laborCost=0;
+  if(!$('q-waive-labor')?.checked){
+    laborCost=(parseFloat($('q-labor-hrs')?.value)||0)*(parseFloat($('q-labor-rate')?.value)||s.laborRate);
+  }
+
+  // Design flat (not per-unit)
+  let designCost=0;
+  if($('q-filesource')?.value!=='none'&&!$('q-waive-design')?.checked){
+    let hrs=parseFloat($('q-design-hrs')?.value)||0;
+    const rate=parseFloat($('q-design-rate')?.value)||s.designRate;
+    if(hrs>0&&hrs<1) hrs=1; // 1-hr minimum
+    if(hrs>1) hrs=1+Math.ceil((hrs-1)/0.25)*0.25; // 15-min blocks above 1hr
+    designCost=hrs*rate;
+  }
+
+  const overheadPerJob=(s.overhead||0)/Math.max(s.jobsPerMonth||20,1);
+  const complexity=parseFloat($('q-complexity')?.value)||0;
+  const perUnit=machineCost+uvCost+matCost+laborCost;
+  const subtotal=perUnit*qty+designCost+overheadPerJob+complexity;
+
+  let mult;
+  const cm=parseFloat($('q-custom-mult')?.value);
+  mult=(!isNaN(cm)&&cm>=1)?cm:(s.margins[QS.margin]||2.0);
+
+  let final=roundUp(Math.max(subtotal*mult, s.minPrice||10));
+
+  // update DOM
+  $('pr-machine').textContent=fmtMoney(machineCost*qty);
+  $('pr-uv').textContent=fmtMoney(uvCost*qty);
+  $('pr-mat').textContent=fmtMoney(matCost*qty);
+  $('pr-labor').textContent=fmtMoney(laborCost*qty);
+  $('pr-design').textContent=fmtMoney(designCost);
+  $('pr-overhead').textContent=fmtMoney(overheadPerJob);
+  $('pr-complexity').textContent=fmtMoney(complexity);
+  $('pr-subtotal').textContent=fmtMoney(subtotal);
+  $('pr-mult').textContent=mult.toFixed(2)+'×';
+  $('pr-final').textContent=final.toFixed(2);
+  $('pr-floor-note').textContent=(subtotal*mult)<(s.minPrice||10)?`⚠ Below minimum — floored at ${fmtMoney(s.minPrice)}`:'';
+  $('pr-qty-note').textContent=qty>1?`${qty} units · ${fmtMoney(final/qty)}/unit`:'';
+  document.querySelectorAll('.price-val').forEach(el=>el.classList.toggle('zero',el.textContent==='$0.00'));
+  return {machineCost,uvCost,matCost,laborCost,designCost,overheadPerJob,complexity,subtotal,mult,final,qty};
+}
+
+/* ═══ SAVE / CLEAR ═══ */
+function saveQuote(){
+  const c=recalc();
+  const name=$('q-name').value.trim()||'Unnamed Job';
+  DB.quotes.unshift({id:uid(),name,customer:$('q-customer').value.trim(),qty:c.qty,final:c.final,subtotal:c.subtotal,mult:c.mult,margin:QS.margin,date:new Date().toLocaleDateString(),ts:Date.now()});
+  save(); toast(`"${name}" saved — ${fmtMoney(c.final)}`,'good');
+}
+function clearQuote(){
+  QS.machineRows=[]; QS.materialRows=[]; QS.margin='standard';
+  ['q-name','q-customer'].forEach(id=>$(id).value='');
+  $('q-qty').value=1; $('q-complexity').value=0; $('q-labor-hrs').value=0;
+  $('q-design-hrs').value=1; $('q-waive-design').checked=false; $('q-waive-labor').checked=false;
+  $('q-filesource').value='own'; $('q-custom-mult').value='';
+  $('design-block').style.display='block'; $('uv-block').style.display='none';
+  renderMachineRows(); renderMaterialRows(); setMargin('standard'); recalc();
+}
+function addToCatalog(){
+  const c=recalc();
+  QS.editCatalogIdx=null;
+  $('ci-name').value=$('q-name').value.trim()||'New Item';
+  $('ci-price').value=c.final.toFixed(2);
+  $('ci-onhand').value=0; $('ci-onorder').value=0; $('ci-tomake').value=0;
+  $('ci-photo').value=''; $('ci-notes').value='';
+  $('modal-catalog-title').textContent='Add to Catalog';
+  $('ci-delete-btn').style.display='none';
+  openModal('modal-catalog');
+}
+
+/* ═══ MACHINES PAGE ═══ */
+function renderMachines(){
+  const tbody=$('machines-tbody');
+  if(!DB.machines.length){ tbody.innerHTML='<tr><td colspan="7" style="color:var(--text-4);text-align:center;padding:24px">No machines yet. Add one above.</td></tr>'; return; }
+  const TYPE={fdm:'FDM',resin:'Resin',laser:'Laser',uv:'UV',other:'Other'};
+  tbody.innerHTML=DB.machines.map((m,i)=>{
+    const dep=(m.price||0)/(m.life||1);
+    const elec=((m.watts||0)/1000)*(DB.settings.kwh||0.14);
+    const cons=parseFloat(m.cons)||0;
+    return `<tr>
+      <td><strong>${m.name}</strong></td>
+      <td><span class="badge badge-info">${TYPE[m.type]||m.type}</span></td>
+      <td>${fmtMoney(dep)}</td><td>${fmtMoney(elec)}</td><td>${fmtMoney(cons)}</td>
+      <td><span class="rate-chip">${fmtMoney(dep+elec+cons)}/hr</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-ghost btn-sm" onclick="openMachineModal(${i})">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteMachine(${i})" style="margin-left:4px">Del</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+function openMachineModal(idx){
+  QS.editMachineIdx=idx??null;
+  if(idx!==undefined){ const m=DB.machines[idx]; $('m-name').value=m.name; $('m-type').value=m.type; $('m-price').value=m.price; $('m-life').value=m.life; $('m-watts').value=m.watts; $('m-cons').value=m.cons; $('modal-machine-title').textContent='Edit Machine'; }
+  else { ['m-name','m-price','m-life','m-watts','m-cons'].forEach(id=>$(id).value=''); $('modal-machine-title').textContent='Add Machine'; }
+  updateMachinePreview(); openModal('modal-machine');
+}
+function updateMachinePreview(){
+  const dep=(parseFloat($('m-price')?.value)||0)/(parseFloat($('m-life')?.value)||1);
+  const elec=((parseFloat($('m-watts')?.value)||0)/1000)*(DB.settings.kwh||0.14);
+  const cons=parseFloat($('m-cons')?.value)||0;
+  const el=$('m-rate-preview');
+  if(el) el.innerHTML=`Depreciation: <strong>${fmtMoney(dep)}/hr</strong> &nbsp; Electricity: <strong>${fmtMoney(elec)}/hr</strong> &nbsp; Consumables: <strong>${fmtMoney(cons)}/hr</strong><br><span style="color:var(--accent);font-weight:700;font-size:1.05rem">Rate: ${fmtMoney(dep+elec+cons)}/hr</span>`;
+}
+function saveMachine(){
+  const m={id:QS.editMachineIdx!==null?DB.machines[QS.editMachineIdx].id:uid(),name:$('m-name').value.trim()||'Machine',type:$('m-type').value,price:parseFloat($('m-price').value)||0,life:parseFloat($('m-life').value)||1000,watts:parseFloat($('m-watts').value)||0,cons:parseFloat($('m-cons').value)||0};
+  if(QS.editMachineIdx!==null) DB.machines[QS.editMachineIdx]=m; else DB.machines.push(m);
+  save(); renderMachines(); renderMachineRows(); closeModal('modal-machine'); toast('Machine saved','good');
+}
+function deleteMachine(idx){ if(!confirm('Delete this machine?')) return; DB.machines.splice(idx,1); save(); renderMachines(); }
+
+/* ═══ MATERIALS PAGE ═══ */
+function renderMaterials(){
+  const grid=$('mat-grid');
+  if(!DB.materials.length){ grid.innerHTML='<div class="empty"><div class="empty-icon">🧱</div><p>No materials yet.</p><button class="btn btn-primary btn-sm" onclick="openMaterialModal()">Add Material</button></div>'; return; }
+  const TYPE={fdm:'FDM Filament',resin:'Resin','laser-wood':'Laser Wood','laser-acrylic':'Laser Acrylic','laser-other':'Laser Material',substrate:'UV Substrate',other:'Other'};
+  grid.innerHTML=DB.materials.map((m,i)=>`
+    <div class="mat-card">
+      <div>
+        <div class="mat-name">${m.name}</div>
+        <div class="mat-type">${TYPE[m.type]||m.type} · ${m.qty}${m.unit} · Stock: ${m.stock||0}${m.unit}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="mat-cost">${fmtMoney(m.cost/m.qty)}</div>
+        <div class="mat-unit">per ${m.unit}</div>
+        <div style="display:flex;gap:4px;margin-top:6px;justify-content:flex-end">
+          <button class="btn btn-ghost btn-sm" onclick="openMaterialModal(${i})">✏</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteMaterial(${i})">✕</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function openMaterialModal(idx){
+  QS.editMaterialIdx=idx??null;
+  if(idx!==undefined){ const m=DB.materials[idx]; $('mat-name').value=m.name; $('mat-type').value=m.type; $('mat-cost').value=m.cost; $('mat-qty').value=m.qty; $('mat-unit').value=m.unit; $('mat-stock').value=m.stock||0; $('modal-material-title').textContent='Edit Material'; }
+  else { ['mat-name','mat-cost','mat-qty','mat-stock'].forEach(id=>$(id).value=''); $('modal-material-title').textContent='Add Material'; }
+  openModal('modal-material');
+}
+function saveMaterial(){
+  const m={id:QS.editMaterialIdx!==null?DB.materials[QS.editMaterialIdx].id:uid(),name:$('mat-name').value.trim()||'Material',type:$('mat-type').value,cost:parseFloat($('mat-cost').value)||0,qty:parseFloat($('mat-qty').value)||1,unit:$('mat-unit').value,stock:parseFloat($('mat-stock').value)||0};
+  if(QS.editMaterialIdx!==null) DB.materials[QS.editMaterialIdx]=m; else DB.materials.push(m);
+  save(); renderMaterials(); closeModal('modal-material'); toast('Material saved','good');
+}
+function deleteMaterial(idx){ if(!confirm('Delete this material?')) return; DB.materials.splice(idx,1); save(); renderMaterials(); }
+
+/* ═══ CATALOG PAGE ═══ */
+function renderCatalog(){
+  const search=$('cat-search')?.value.toLowerCase()||'';
+  const filter=$('cat-filter')?.value||'';
+  const items=DB.catalog.filter(item=>(!search||item.name.toLowerCase().includes(search))&&(!filter||item.type===filter));
+  const grid=$('catalog-grid');
+  if(!items.length){ grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📦</div><p>${DB.catalog.length?'No items match your filter.':'No catalog items yet.'}</p><button class="btn btn-primary btn-sm" onclick="openCatalogModal()">Add First Item</button></div>`; return; }
+  grid.innerHTML=items.map(item=>{
+    const realIdx=DB.catalog.indexOf(item);
+    return `<div class="catalog-card" onclick="editCatalogItem(${realIdx})">
+      <div class="catalog-img">${item.photo?`<img src="${item.photo}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'">`:'📦'}</div>
+      <div class="catalog-body">
+        <div class="catalog-name">${item.name}</div>
+        <div class="catalog-price">${fmtMoney(item.price)}</div>
+        <div class="catalog-stock">
+          ${item.onHand?`<span class="stock-tag on-hand">✓ ${item.onHand} on hand</span>`:''}
+          ${item.onOrder?`<span class="stock-tag on-order">📦 ${item.onOrder} ordered</span>`:''}
+          ${item.toMake?`<span class="stock-tag to-make">🔨 ${item.toMake} to make</span>`:''}
+          ${!item.onHand&&!item.onOrder&&!item.toMake?`<span class="stock-tag">No stock</span>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function openCatalogModal(){
+  QS.editCatalogIdx=null;
+  ['ci-name','ci-photo','ci-notes'].forEach(id=>$(id).value='');
+  $('ci-price').value=''; $('ci-onhand').value=0; $('ci-onorder').value=0; $('ci-tomake').value=0;
+  $('modal-catalog-title').textContent='New Catalog Item';
+  $('ci-delete-btn').style.display='none';
+  openModal('modal-catalog');
+}
+function editCatalogItem(idx){
+  QS.editCatalogIdx=idx;
+  const item=DB.catalog[idx];
+  $('ci-name').value=item.name; $('ci-type').value=item.type||'other'; $('ci-price').value=item.price;
+  $('ci-onhand').value=item.onHand||0; $('ci-onorder').value=item.onOrder||0; $('ci-tomake').value=item.toMake||0;
+  $('ci-photo').value=item.photo||''; $('ci-notes').value=item.notes||'';
+  $('modal-catalog-title').textContent='Edit Item';
+  $('ci-delete-btn').style.display='inline-flex';
+  openModal('modal-catalog');
+}
+function saveCatalogItem(){
+  const item={id:QS.editCatalogIdx!==null?DB.catalog[QS.editCatalogIdx].id:uid(),name:$('ci-name').value.trim()||'Item',type:$('ci-type').value,price:parseFloat($('ci-price').value)||0,onHand:parseInt($('ci-onhand').value)||0,onOrder:parseInt($('ci-onorder').value)||0,toMake:parseInt($('ci-tomake').value)||0,photo:$('ci-photo').value.trim(),notes:$('ci-notes').value.trim()};
+  if(QS.editCatalogIdx!==null) DB.catalog[QS.editCatalogIdx]=item; else DB.catalog.push(item);
+  save(); renderCatalog(); closeModal('modal-catalog'); toast('Item saved','good');
+}
+function deleteCatalogCurrent(){
+  if(QS.editCatalogIdx===null||!confirm('Delete this item?')) return;
+  DB.catalog.splice(QS.editCatalogIdx,1);
+  save(); renderCatalog(); closeModal('modal-catalog'); toast('Item deleted');
+}
+
+/* ═══ HISTORY PAGE ═══ */
+function renderHistory(){
+  const quotes=DB.quotes;
+  const total=quotes.reduce((a,q)=>a+q.final,0);
+  $('history-stats').innerHTML=`
+    <div class="stat-tile"><div class="stat-label">Quotes Saved</div><div class="stat-value">${quotes.length}</div></div>
+    <div class="stat-tile"><div class="stat-label">Revenue Quoted</div><div class="stat-value">${fmtMoney(total)}</div></div>
+    <div class="stat-tile"><div class="stat-label">Average Quote</div><div class="stat-value">${fmtMoney(quotes.length?total/quotes.length:0)}</div></div>
+    <div class="stat-tile"><div class="stat-label">Catalog Items</div><div class="stat-value">${DB.catalog.length}</div></div>`;
+  const list=$('history-list');
+  if(!quotes.length){ list.innerHTML='<div class="empty"><div class="empty-icon">📋</div><p>No quotes saved yet. Head to the Quote tab to create one.</p></div>'; return; }
+  list.innerHTML=quotes.map((q,i)=>`
+    <div class="history-row">
+      <div>
+        <div class="history-name">${q.name}</div>
+        <div class="history-meta">${q.date}${q.customer?' · '+q.customer:''} · qty ${q.qty||1} · ${q.margin||'standard'} (${q.mult?.toFixed(2)||'?'}×)</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="history-price">${fmtMoney(q.final)}</div>
+        <button class="btn btn-danger btn-sm" onclick="deleteQuote(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+function deleteQuote(idx){ DB.quotes.splice(idx,1); save(); renderHistory(); }
+function clearHistory(){ if(!confirm('Clear all quote history?')) return; DB.quotes=[]; save(); renderHistory(); }
+
+/* ═══ MODALS ═══ */
+const openModal = id => $(id).classList.add('open');
+const closeModal = id => $(id).classList.remove('open');
+document.addEventListener('click', e => {
+  document.querySelectorAll('.modal-bg.open').forEach(m=>{ if(e.target===m) m.classList.remove('open'); });
+});
+
+/* ═══ TOAST ═══ */
+function toast(msg,type=''){
+  const el=document.createElement('div');
+  el.className='toast'+(type?' '+type:'');
+  el.textContent=msg;
+  $('toasts').appendChild(el);
+  setTimeout(()=>el.remove(),3000);
+}
+
+/* ═══ DATA I/O ═══ */
+function exportData(){
+  const blob=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='maker-services-backup.json'; a.click();
+  toast('Data exported','good');
+}
+function importData(){ $('import-file').click(); }
+function handleImport(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{ try{ DB={...DB,...JSON.parse(ev.target.result)}; save(); renderMachines(); renderMaterials(); renderCatalog(); toast('Data imported','good'); }catch(err){ toast('Import failed — invalid JSON','bad'); } };
+  reader.readAsText(file); e.target.value='';
+}
+function resetAll(){
+  if(!confirm('Reset ALL data? This cannot be undone.')) return;
+  localStorage.removeItem('ms_db');
+  DB={machines:[],materials:[],catalog:[],quotes:[],settings:DB.settings};
+  seedMachines(); seedMaterials(); clearQuote(); renderMachines(); renderMaterials(); renderCatalog(); renderHistory();
+  toast('Data reset to defaults','good');
+}
+
+/* ═══ INIT ═══ */
+load();
+setTheme(getTheme());
+loadSettings();
+addMachineRow();
+addMaterialRow();
+recalc();
+</script>
+</body>
+</html>
