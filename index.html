@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0A1628">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Maker Services">
+<meta name="description" content="Custom fabrication pricing studio for 3D printing, laser, and UV print services">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.svg">
 <title>Maker Services — Pricing Studio</title>
 <style>
 /* ── DESIGN TOKENS ──────────────────────────────────────────────────── */
@@ -1808,6 +1815,13 @@ addMaterialRow();
 recalc();
 renderDashboard();
 populateCustomerDatalist();
+
+// Register service worker for PWA
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js')
+    .then(()=>console.log('SW registered'))
+    .catch(e=>console.log('SW error:',e));
+}
 </script>
 </body>
 </html>
