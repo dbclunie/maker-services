@@ -281,7 +281,7 @@ select option{background:var(--surface-2);color:var(--text)}
     </div>
   </div>
   <div class="topbar-right">
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.0.9</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.1.0</span>
   </div>
 </header>
 
@@ -337,7 +337,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <main class="page active" id="page-dashboard">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
     <h2 style="font-size:1.4rem" style="display:flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Dashboard</h2>
-    <button class="btn btn-primary btn-sm" onclick="goTo('quote')">💰 New Quote</button>
+    <button class="btn btn-primary btn-sm" onclick="goTo('quote')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> New Quote</button>
   </div>
 
   <!-- stat tiles -->
@@ -639,7 +639,7 @@ select option{background:var(--surface-2);color:var(--text)}
   </div>
 
   <div class="settings-section">
-    <h3>📊 Margin Tier Multipliers</h3>
+    <h3><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Margin Tier Multipliers</h3>
     <div class="grid-3">
       <div class="field"><label>Sale ×</label><input type="number" id="s-m-sale" value="1.25" min="1" step="0.05" onchange="saveSettings()"></div>
       <div class="field"><label>Discount ×</label><input type="number" id="s-m-discount" value="1.5" min="1" step="0.05" onchange="saveSettings()"></div>
@@ -691,7 +691,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.0.9</span>
+          <span class="badge badge-accent">v1.1.0</span>
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
@@ -910,7 +910,7 @@ select option{background:var(--surface-2);color:var(--text)}
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Upload Photo
             <input type="file" id="ci-photo-file" accept="image/*" style="display:none" onchange="onPhotoUpload(event)">
           </label>
-          <button class="btn btn-ghost btn-sm" onclick="clearPhoto()" style="flex-shrink:0">✕ Clear</button>
+          <button class="btn btn-ghost btn-sm" onclick="clearPhoto()" style="flex-shrink:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Clear</button>
         </div>
         <input type="text" id="ci-photo" placeholder="Or paste image URL…" oninput="onPhotoUrl()" style="font-size:0.8rem">
       </div>
@@ -1167,7 +1167,7 @@ function renderDashboard(){
   // stock card
   const stockEl=$('dash-stock');
   if(!lowStock.length){
-    stockEl.innerHTML='<p style="font-size:0.85rem;color:var(--good);padding:4px 0">✓ All materials are sufficiently stocked.</p>';
+    stockEl.innerHTML='<p style="font-size:0.85rem;color:var(--good);padding:4px 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> All materials are sufficiently stocked.</p>';
     $('dash-stock-card').style.borderColor='var(--border)';
   } else {
     $('dash-stock-card').style.borderColor='var(--warn)';
@@ -1605,7 +1605,7 @@ function deleteMachine(idx){ if(!confirm('Delete this machine?')) return; DB.mac
 /* ═══ MATERIALS PAGE ═══ */
 function renderMaterials(){
   const grid=$('mat-grid');
-  if(!DB.materials.length){ grid.innerHTML='<div class="empty"><div class="empty-icon">🧱</div><p>No materials yet.</p><button class="btn btn-primary btn-sm" onclick="openMaterialModal()">Add Material</button></div>'; renderMaterialAlertBanner(); return; }
+  if(!DB.materials.length){ grid.innerHTML='<div class="empty"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><p>No materials yet.</p><button class="btn btn-primary btn-sm" onclick="openMaterialModal()">Add Material</button></div>'; renderMaterialAlertBanner(); return; }
   const TYPE={fdm:'FDM Filament',resin:'Resin','laser-wood':'Laser Wood','laser-acrylic':'Laser Acrylic','laser-other':'Laser Material',substrate:'UV Substrate',other:'Other'};
   grid.innerHTML=DB.materials.map((m,i)=>{
     const stock=m.stock||0;
@@ -1626,8 +1626,8 @@ function renderMaterials(){
         <div class="mat-cost">${fmtMoney(m.cost/m.qty)}</div>
         <div class="mat-unit">per ${m.unit}</div>
         <div style="display:flex;gap:4px;margin-top:6px;justify-content:flex-end">
-          <button class="btn btn-ghost btn-sm" onclick="openMaterialModal(${i})">✏</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteMaterial(${i})">✕</button>
+          <button class="btn btn-ghost btn-sm" onclick="openMaterialModal(${i})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="btn btn-danger btn-sm" onclick="deleteMaterial(${i})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
       </div>
     </div>`;
@@ -1689,7 +1689,7 @@ function confirmSaveTemplate(){
 function openTemplateLoadModal(){
   const list=$('tmpl-list');
   if(!DB.templates.length){
-    list.innerHTML='<div class="empty" style="padding:24px 0"><div class="empty-icon" style="font-size:2rem">📋</div><p>No templates yet. Build a quote and save it as a template.</p></div>';
+    list.innerHTML='<div class="empty" style="padding:24px 0"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><p>No templates yet. Build a quote and save it as a template.</p></div>';
   } else {
     list.innerHTML=DB.templates.map(t=>`
       <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:12px">
@@ -1704,7 +1704,7 @@ function openTemplateLoadModal(){
         </div>
         <div style="display:flex;gap:6px;flex-shrink:0">
           <button class="btn btn-primary btn-sm" onclick="loadTemplate('${t.id}')">Load</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteTemplate('${t.id}')">✕</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteTemplate('${t.id}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
         </div>
       </div>`).join('');
   }
@@ -1768,10 +1768,10 @@ let editCustomerIdx=null;
 function renderCustomers(){
   const grid=$('customers-grid');
   if(!DB.customers.length){
-    grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>No customers yet.</p><button class="btn btn-primary btn-sm" onclick="openCustomerModal()">Add First Customer</button></div>';
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><p>No customers yet.</p><button class="btn btn-primary btn-sm" onclick="openCustomerModal()">Add First Customer</button></div>';
     return;
   }
-  const CONTACT={email:'✉',phone:'📞',text:'💬',any:'📱'};
+  const CONTACT={email:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>',phone:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>',text:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',any:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>'};
   grid.innerHTML=DB.customers.map((c,i)=>{
     const cQuotes=DB.quotes.filter(q=>q.customer&&q.customer.toLowerCase()===c.name.toLowerCase());
     const total=cQuotes.reduce((a,q)=>a+q.final,0);
@@ -1779,8 +1779,8 @@ function renderCustomers(){
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
         <div>
           <div style="font-weight:700;font-size:1rem">${c.name}</div>
-          ${c.email?`<div style="font-size:0.78rem;color:var(--text-3);margin-top:2px">✉ ${c.email}</div>`:''}
-          ${c.phone?`<div style="font-size:0.78rem;color:var(--text-3)">📞 ${c.phone}</div>`:''}
+          ${c.email?`<div style="font-size:0.78rem;color:var(--text-3);margin-top:2px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> ${c.email}</div>`:''}
+          ${c.phone?`<div style="font-size:0.78rem;color:var(--text-3)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.77 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> ${c.phone}</div>`:''}
         </div>
         <span class="badge badge-info">${CONTACT[c.contact]||'📱'} ${c.contact||'any'}</span>
       </div>
@@ -1948,18 +1948,18 @@ function renderCatalog(){
   const filter=$('cat-filter')?.value||'';
   const items=DB.catalog.filter(item=>(!search||item.name.toLowerCase().includes(search))&&(!filter||item.type===filter));
   const grid=$('catalog-grid');
-  if(!items.length){ grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon">📦</div><p>${DB.catalog.length?'No items match your filter.':'No catalog items yet.'}</p><button class="btn btn-primary btn-sm" onclick="openCatalogModal()">Add First Item</button></div>`; return; }
+  if(!items.length){ grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div><p>${DB.catalog.length?'No items match your filter.':'No catalog items yet.'}</p><button class="btn btn-primary btn-sm" onclick="openCatalogModal()">Add First Item</button></div>`; return; }
   grid.innerHTML=items.map(item=>{
     const realIdx=DB.catalog.indexOf(item);
     return `<div class="catalog-card" onclick="editCatalogItem(${realIdx})">
-      <div class="catalog-img">${item.photo?`<img src="${item.photo}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'">`:'📦'}</div>
+      <div class="catalog-img">${item.photo?`<img src="${item.photo}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'">`:'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>'}</div>
       <div class="catalog-body">
         <div class="catalog-name">${item.name}</div>
         <div class="catalog-price">${fmtMoney(item.price)}</div>
         <div class="catalog-stock">
-          ${item.onHand?`<span class="stock-tag on-hand">✓ ${item.onHand} on hand</span>`:''}
-          ${item.onOrder?`<span class="stock-tag on-order">📦 ${item.onOrder} ordered</span>`:''}
-          ${item.toMake?`<span class="stock-tag to-make">🔨 ${item.toMake} to make</span>`:''}
+          ${item.onHand?`<span class="stock-tag on-hand"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> ${item.onHand} on hand</span>`:''}
+          ${item.onOrder?`<span class="stock-tag on-order"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg> ${item.onOrder} ordered</span>`:''}
+          ${item.toMake?`<span class="stock-tag to-make"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M13 13l-9 9"/><path d="M22 2l-7.5 7.5"/><path d="M14.5 5.5l4 4"/><path d="M9.5 14.5L5 19"/></svg> ${item.toMake} to make</span>`:''}
           ${!item.onHand&&!item.onOrder&&!item.toMake?`<span class="stock-tag">No stock</span>`:''}
         </div>
       </div>
@@ -2009,7 +2009,7 @@ function renderHistory(){
     <div class="stat-tile"><div class="stat-label">Average Quote</div><div class="stat-value">${fmtMoney(quotes.length?total/quotes.length:0)}</div></div>
     <div class="stat-tile"><div class="stat-label">Catalog Items</div><div class="stat-value">${DB.catalog.length}</div></div>`;
   const list=$('history-list');
-  if(!quotes.length){ list.innerHTML='<div class="empty"><div class="empty-icon">📋</div><p>No quotes saved yet. Head to the Quote tab to create one.</p></div>'; return; }
+  if(!quotes.length){ list.innerHTML='<div class="empty"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><p>No quotes saved yet. Head to the Quote tab to create one.</p></div>'; return; }
   list.innerHTML=quotes.map((q,i)=>`
     <div class="history-row">
       <div>
@@ -2020,7 +2020,7 @@ function renderHistory(){
         <div class="history-price">${fmtMoney(q.final)}</div>
         <button class="btn btn-secondary btn-sm" onclick="reopenQuote(${i})" title="Reopen in calculator"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
         <button class="btn btn-ghost btn-sm" onclick="duplicateQuote(${i})" title="Duplicate this quote"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        <button class="btn btn-danger btn-sm" onclick="deleteQuote(${i})">✕</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteQuote(${i})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
     </div>`).join('');
 }
