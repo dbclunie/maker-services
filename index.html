@@ -46,14 +46,61 @@ select option{background:var(--surface-2);color:var(--text)}
 
 /* ── LAYOUT ── */
 .app{display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:16px;height:64px;position:sticky;top:0;z-index:100}
-.topbar-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1rem;letter-spacing:-.5px;color:var(--text);white-space:nowrap}
-.topbar-logo svg{color:var(--accent);flex-shrink:0}
-.topbar-nav{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
-.topbar-nav::-webkit-scrollbar{display:none}
-.nav-btn{background:none;border:none;cursor:pointer;color:var(--text-3);font-size:0.8rem;font-weight:600;padding:6px 12px;border-radius:6px;white-space:nowrap;transition:all .15s;font-family:inherit}
-.nav-btn:hover{background:var(--surface-2);color:var(--text)}
-.nav-btn.active{background:var(--accent);color:var(--on-acc)}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+.topbar-logo svg{flex-shrink:0}
+.topbar-logo .wordmark{display:flex;flex-direction:column;line-height:1.1}
+.topbar-logo .wordmark-top{font-size:0.95rem;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.topbar-logo .wordmark-bot{font-size:0.72rem;font-weight:600;color:var(--accent);letter-spacing:.02em}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.version-badge{font-size:0.65rem;font-weight:700;color:var(--text-5);letter-spacing:.04em;padding:2px 6px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;white-space:nowrap}
+
+/* bottom tab bar */
+.tab-bar{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  display:flex;align-items:stretch;
+  height:62px;z-index:100;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+.tab-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;background:none;border:none;cursor:pointer;
+  color:var(--text-4);font-family:inherit;font-size:0.6rem;font-weight:600;
+  letter-spacing:.02em;padding:6px 2px;transition:all .15s;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
+}
+.tab-btn:hover{color:var(--text-2)}
+.tab-btn.active{color:var(--accent)}
+.tab-btn.active::before{
+  content:'';position:absolute;top:0;left:20%;right:20%;
+  height:2px;background:var(--accent);border-radius:0 0 2px 2px;
+}
+.tab-icon{font-size:1.3rem;line-height:1}
+.tab-label{font-size:0.58rem;font-weight:600}
+
+/* more menu */
+.more-menu{
+  position:fixed;bottom:62px;right:0;left:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  z-index:99;display:none;
+  padding:8px 0;
+}
+.more-menu.open{display:block}
+.more-item{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 24px;font-size:0.9rem;font-weight:600;
+  color:var(--text-2);cursor:pointer;transition:background .1s;
+  border:none;background:none;width:100%;font-family:inherit;text-align:left;
+}
+.more-item:hover,.more-item:active{background:var(--surface-2);color:var(--text)}
+.more-item.active{color:var(--accent)}
+.more-overlay{position:fixed;inset:0;z-index:98;display:none}
+.more-overlay.open{display:block}
+
+/* page bottom padding for tab bar */
+.page{padding-bottom:80px}
 .topbar-right{display:flex;gap:8px;align-items:center;margin-left:auto}
 .icon-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--text-2);font-size:0.8rem;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:6px}
 .icon-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -219,11 +266,10 @@ select option{background:var(--surface-2);color:var(--text)}
 
 <!-- NAV -->
 <header class="topbar">
-  <div class="topbar-logo" title="Maker Services">
-    <svg width="200" height="64" viewBox="0 0 680 240" role="img" aria-label="Maker Services logo" style="overflow:visible">
-      <!-- honeycomb cluster — translate(100,110) centers cluster vertically in 240px viewBox -->
-      <!-- top of cluster: 110-52=58, bottom: 110+78+52=240, fits exactly -->
-      <g transform="translate(100,110)">
+  <div class="topbar-logo" onclick="goTo('dashboard')" title="Maker Services">
+    <!-- icon-only logo: 44px tall, cluster only, no wordmark -->
+    <svg width="38" height="44" viewBox="0 0 190 220" role="img" aria-label="Maker Services">
+      <g transform="translate(95,90)">
         <g transform="translate(-46,0)">
           <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#0E7EC4" stroke="none"/>
           <polygon points="0,-43 37,-22 37,22 0,43 -37,22 -37,-22" fill="#0A4F80" stroke="none"/>
@@ -249,28 +295,46 @@ select option{background:var(--surface-2);color:var(--text)}
           <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="none" stroke="#40E0FF" stroke-width="3"/>
         </g>
       </g>
-      <!-- 3: cell C center = (100, 110+78) = (100,188), baseline +16 = 204 -->
-      <text x="100" y="204" font-family="system-ui,sans-serif" font-size="46" font-weight="700" fill="#40E0FF" text-anchor="middle">3</text>
-      <!-- wordmark: logo vertical center = 110+39=149, Maker at 149-33=116, Services at 149+33=182 -->
-      <text x="276" y="116" font-family="system-ui,sans-serif" font-size="52" font-weight="700" fill="#D8EEF8" text-anchor="middle" dominant-baseline="middle">Maker</text>
-      <text x="276" y="182" font-family="system-ui,sans-serif" font-size="52" font-weight="700" fill="#40E0FF" text-anchor="middle" dominant-baseline="middle">Services</text>
+      <text x="95" y="210" font-family="system-ui,sans-serif" font-size="46" font-weight="700" fill="#40E0FF" text-anchor="middle">3</text>
     </svg>
+    <div class="wordmark">
+      <span class="wordmark-top">Maker</span>
+      <span class="wordmark-bot">Services</span>
+    </div>
   </div>
-  <nav class="topbar-nav">
-    <button class="nav-btn active" onclick="goTo('dashboard')">🏠 Home</button>
-    <button class="nav-btn" onclick="goTo('quote')">💰 Quote</button>
-    <button class="nav-btn" onclick="goTo('catalog')">📦 Catalog</button>
-    <button class="nav-btn" onclick="goTo('customers')">👥 Customers</button>
-    <button class="nav-btn" onclick="goTo('machines')">⚙️ Machines</button>
-    <button class="nav-btn" onclick="goTo('materials')">🧱 Materials</button>
-    <button class="nav-btn" onclick="goTo('history')">📋 History</button>
-    <button class="nav-btn" onclick="goTo('settings')">⚙ Settings</button>
-  </nav>
   <div class="topbar-right">
-    <span style="font-size:0.7rem;font-weight:700;color:var(--text-4);letter-spacing:.05em;padding:2px 7px;background:var(--surface-2);border:1px solid var(--border);border-radius:4px">v1.0.0</span>
-    <button class="icon-btn" onclick="goTo('settings')">🎨</button>
+    <span class="version-badge">v1.0.1</span>
+    <button class="icon-btn" onclick="goTo('settings')" title="Settings & Theme">🎨</button>
   </div>
 </header>
+
+<!-- bottom tab bar -->
+<nav class="tab-bar" id="tab-bar">
+  <button class="tab-btn active" id="tab-dashboard" onclick="goTo('dashboard')">
+    <span class="tab-icon">🏠</span><span class="tab-label">Home</span>
+  </button>
+  <button class="tab-btn" id="tab-quote" onclick="goTo('quote')">
+    <span class="tab-icon">💰</span><span class="tab-label">Quote</span>
+  </button>
+  <button class="tab-btn" id="tab-catalog" onclick="goTo('catalog')">
+    <span class="tab-icon">📦</span><span class="tab-label">Catalog</span>
+  </button>
+  <button class="tab-btn" id="tab-history" onclick="goTo('history')">
+    <span class="tab-icon">📋</span><span class="tab-label">History</span>
+  </button>
+  <button class="tab-btn" id="tab-more" onclick="toggleMore()">
+    <span class="tab-icon">⋯</span><span class="tab-label">More</span>
+  </button>
+</nav>
+
+<!-- more menu (slides up from tab bar) -->
+<div class="more-overlay" id="more-overlay" onclick="closeMore()"></div>
+<div class="more-menu" id="more-menu">
+  <button class="more-item" id="more-customers" onclick="goTo('customers');closeMore()">👥 <span>Customers</span></button>
+  <button class="more-item" id="more-machines"  onclick="goTo('machines');closeMore()">⚙️ <span>Machines</span></button>
+  <button class="more-item" id="more-materials" onclick="goTo('materials');closeMore()">🧱 <span>Materials</span></button>
+  <button class="more-item" id="more-settings"  onclick="goTo('settings');closeMore()">⚙ <span>Settings & Theme</span></button>
+</div>
 
 <!-- ══════════ QUOTE ══════════ -->
 <!-- ══════════ DASHBOARD ══════════ -->
@@ -838,11 +902,24 @@ function machineRate(m){
 }
 
 /* ═══ NAV ═══ */
+const MORE_PAGES=['customers','machines','materials','settings'];
+const TAB_PAGES=['dashboard','quote','catalog','history'];
+
 function goTo(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   $('page-'+page).classList.add('active');
-  document.querySelector(`.nav-btn[onclick="goTo('${page}')"]`).classList.add('active');
+
+  // tab bar active state
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  if(TAB_PAGES.includes(page)){
+    const t=$('tab-'+page); if(t) t.classList.add('active');
+  } else {
+    const t=$('tab-more'); if(t) t.classList.add('active');
+    // highlight the more-item
+    document.querySelectorAll('.more-item').forEach(b=>b.classList.remove('active'));
+    const mi=$('more-'+page); if(mi) mi.classList.add('active');
+  }
+
   if(page==='dashboard') renderDashboard();
   if(page==='customers') renderCustomers();
   if(page==='machines') renderMachines();
@@ -850,6 +927,16 @@ function goTo(page){
   if(page==='catalog') renderCatalog();
   if(page==='history') renderHistory();
   if(page==='settings'){ renderThemePicker(); loadSettings(); }
+}
+function toggleMore(){
+  const menu=$('more-menu'), overlay=$('more-overlay');
+  const open=menu.classList.contains('open');
+  menu.classList.toggle('open',!open);
+  overlay.classList.toggle('open',!open);
+}
+function closeMore(){
+  $('more-menu').classList.remove('open');
+  $('more-overlay').classList.remove('open');
 }
 
 /* ═══ REVENUE CHART ═══ */
