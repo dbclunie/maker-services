@@ -1,4 +1,4 @@
-const CACHE = 'maker-services-v16';
+const CACHE = 'maker-services-v17';
 const ASSETS = [
   './manifest.json',
   './icon-192.svg',
