@@ -236,7 +236,13 @@ select option{background:var(--surface-2);color:var(--text)}
 
 /* ── MISC ── */
 .divider{height:1px;background:var(--border);margin:14px 0}
-.timer-widget{
+.search-result{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background .1s}
+.search-result:last-child{border-bottom:none}
+.search-result:hover{background:var(--surface-2);border-radius:6px;padding-left:8px;padding-right:8px;margin:0 -8px}
+.search-type{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 6px;border-radius:4px;flex-shrink:0}
+.search-name{font-weight:600;font-size:0.9rem}
+.search-meta{font-size:0.75rem;color:var(--text-3);margin-top:2px}
+.search-empty{text-align:center;padding:32px 20px;color:var(--text-4);font-size:0.85rem}
   position:fixed;bottom:16px;right:16px;z-index:200;
   background:var(--surface);border:1px solid var(--border-2);
   border-radius:12px;padding:10px 14px;
@@ -302,7 +308,10 @@ select option{background:var(--surface-2);color:var(--text)}
     </div>
   </div>
   <div class="topbar-right">
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.4.0</span>
+    <button class="icon-btn" onclick="openSearch()" title="Search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.5.0</span>
   </div>
 </header>
 
@@ -555,6 +564,8 @@ select option{background:var(--surface-2);color:var(--text)}
         <div class="price-row sale-price"><span style="font-size:1rem;align-self:center">$</span><span id="pr-final">0.00</span></div>
         <div style="font-size:0.72rem;color:var(--warn);text-align:center;margin-top:4px;min-height:18px" id="pr-floor-note"></div>
         <div style="font-size:0.72rem;color:var(--text-3);text-align:center;margin-top:2px;min-height:18px" id="pr-qty-note"></div>
+        <!-- cost breakdown mini chart -->
+        <canvas id="cost-chart" height="120" style="width:100%;display:block;margin-top:16px"></canvas>
         <div class="divider"></div>
         <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveQuote()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save This Quote</button>
         <div class="waive-row" style="margin-top:10px">
@@ -751,6 +762,18 @@ select option{background:var(--surface-2);color:var(--text)}
 
 </div><!-- /.app -->
 <div class="toast-rack" id="toasts"></div>
+<!-- ══ SEARCH MODAL ══ -->
+<div class="modal-bg" id="modal-search">
+  <div class="modal" style="max-width:560px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--text-3)"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="Search quotes, catalog, customers, materials…" oninput="runSearch()" style="border:none;background:none;font-size:1rem;flex:1;padding:0;color:var(--text)" autofocus>
+      <button class="modal-close" onclick="closeModal('modal-search')">×</button>
+    </div>
+    <div id="search-results" style="max-height:60vh;overflow-y:auto"></div>
+  </div>
+</div>
+
 <!-- ══ CHANGELOG MODAL ══ -->
 <div class="modal-bg" id="modal-changelog">
   <div class="modal" style="max-width:480px">
@@ -762,7 +785,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.4.0</span>
+          <span class="badge badge-accent">v1.5.0</span>
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
@@ -1533,6 +1556,7 @@ function recalc(){
   $('pr-floor-note').textContent=(subtotal*mult)<(s.minPrice||10)?`⚠ Below minimum — floored at ${fmtMoney(s.minPrice)}`:'';
   $('pr-qty-note').textContent=qty>1?`${qty} units · ${fmtMoney(finalWithTax/qty)}/unit`:'';
   document.querySelectorAll('.price-val').forEach(el=>el.classList.toggle('zero',el.textContent==='$0.00'));
+  drawCostChart(c);
   return {machineCost,uvCost,matCost,laborCost,designCost,overheadPerJob,complexity,subtotal,mult,final:finalWithTax,taxAmt,taxPct,qty};
 }
 
@@ -2271,6 +2295,130 @@ function resetAll(){
   toast('Data reset to defaults','good');
 }
 
+/* ═══ COST BREAKDOWN CHART ═══ */
+function drawCostChart(c){
+  const canvas=$('cost-chart');
+  if(!canvas) return;
+  const segments=[
+    {label:'Machine',  value:c.machineCost*c.qty,  color:'#0E7EC4'},
+    {label:'UV Ink',   value:c.uvCost*c.qty,        color:'#0BBFB0'},
+    {label:'Materials',value:c.matCost*c.qty,        color:'#40E0FF'},
+    {label:'Labor',    value:c.laborCost*c.qty,      color:'#50CC90'},
+    {label:'Design',   value:c.designCost,           color:'#F0C040'},
+    {label:'Overhead', value:c.overheadPerJob,        color:'#9B8AE0'},
+    {label:'Markup',   value:c.subtotal*(c.mult-1),  color:'#E05858'},
+  ].filter(s=>s.value>0.005);
+
+  if(!segments.length){ canvas.style.display='none'; return; }
+  canvas.style.display='block';
+
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.parentElement.clientWidth-40||200;
+  const H=120;
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);
+
+  const total=segments.reduce((a,s)=>a+s.value,0);
+  const cx=60, cy=H/2, r=50, ri=28;
+  let angle=-Math.PI/2;
+
+  segments.forEach(s=>{
+    const sweep=(s.value/total)*Math.PI*2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+sweep);
+    ctx.closePath();
+    ctx.fillStyle=s.color;
+    ctx.fill();
+    angle+=sweep;
+  });
+
+  // donut hole
+  ctx.beginPath();
+  ctx.arc(cx,cy,ri,0,Math.PI*2);
+  ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--bg-deep').trim()||'#060F1A';
+  ctx.fill();
+
+  // legend
+  const legendX=cx*2+10;
+  let ly=8;
+  const lineH=16;
+  ctx.font=`700 9px system-ui`;
+  segments.forEach(s=>{
+    if(ly+lineH>H) return;
+    ctx.fillStyle=s.color;
+    ctx.fillRect(legendX,ly,8,8);
+    ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim()||'#7A8299';
+    ctx.font='9px system-ui';
+    const pct=((s.value/total)*100).toFixed(0);
+    ctx.fillText(`${s.label} ${pct}%`,legendX+12,ly+8);
+    ly+=lineH;
+  });
+}
+
+/* ═══ GLOBAL SEARCH ═══ */
+function openSearch(){
+  openModal('modal-search');
+  setTimeout(()=>{ const el=$('search-input'); if(el){el.value=''; el.focus();} $('search-results').innerHTML=''; },50);
+}
+function runSearch(){
+  const q=($('search-input').value||'').toLowerCase().trim();
+  const out=$('search-results');
+  if(!q){ out.innerHTML='<p class="search-empty">Start typing to search…</p>'; return; }
+
+  const results=[];
+
+  // Quotes
+  DB.quotes.forEach((item,i)=>{
+    if(item.name.toLowerCase().includes(q)||(item.customer||'').toLowerCase().includes(q)){
+      results.push({type:'Quote',typeCls:'badge-info',name:item.name,meta:`${item.date}${item.customer?' · '+item.customer:''} · ${fmtMoney(item.final)}`,action:()=>{closeModal('modal-search');goTo('history');}});
+    }
+  });
+
+  // Catalog
+  DB.catalog.forEach((item,i)=>{
+    if(item.name.toLowerCase().includes(q)||(item.notes||'').toLowerCase().includes(q)){
+      results.push({type:'Catalog',typeCls:'badge-accent',name:item.name,meta:`${fmtMoney(item.price)} · ${item.type}`,action:()=>{closeModal('modal-search');goTo('catalog');setTimeout(()=>editCatalogItem(i),100);}});
+    }
+  });
+
+  // Customers
+  DB.customers.forEach((item,i)=>{
+    if(item.name.toLowerCase().includes(q)||(item.email||'').toLowerCase().includes(q)){
+      results.push({type:'Customer',typeCls:'badge-good',name:item.name,meta:[item.email,item.phone].filter(Boolean).join(' · ')||'No contact info',action:()=>{closeModal('modal-search');goTo('customers');setTimeout(()=>openCustomerModal(i),100);}});
+    }
+  });
+
+  // Materials
+  DB.materials.forEach((item,i)=>{
+    if(item.name.toLowerCase().includes(q)||(item.supplier||'').toLowerCase().includes(q)){
+      results.push({type:'Material',typeCls:'badge-warn',name:item.name,meta:`${fmtMoney(item.cost/item.qty)}/${item.unit} · Stock: ${item.stock||0}${item.unit}`,action:()=>{closeModal('modal-search');goTo('materials');setTimeout(()=>openMaterialModal(i),100);}});
+    }
+  });
+
+  // Machines
+  DB.machines.forEach((item,i)=>{
+    if(item.name.toLowerCase().includes(q)){
+      results.push({type:'Machine',typeCls:'badge-info',name:item.name,meta:`${fmtMoney(machineRate(item))}/hr`,action:()=>{closeModal('modal-search');goTo('machines');setTimeout(()=>openMachineModal(i),100);}});
+    }
+  });
+
+  if(!results.length){ out.innerHTML=`<p class="search-empty">No results for "<strong>${q}</strong>"</p>`; return; }
+
+  const TYPE_COLORS={Quote:'var(--info)',Catalog:'var(--accent)',Customer:'var(--good)',Material:'var(--warn)',Machine:'var(--info)'};
+  out.innerHTML=results.map(r=>`
+    <div class="search-result" onclick="(${r.action.toString()})()">
+      <span class="search-type" style="background:color-mix(in srgb,${TYPE_COLORS[r.type]||'var(--accent)'} 15%,transparent);color:${TYPE_COLORS[r.type]||'var(--accent)'}">${r.type}</span>
+      <div>
+        <div class="search-name">${r.name}</div>
+        ${r.meta?`<div class="search-meta">${r.meta}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
 /* ═══ JOB TIMER ═══ */
 let timerState = { running:false, startTs:null, elapsed:0, interval:null };
 
@@ -2348,6 +2496,10 @@ recalc();
 renderDashboard();
 populateCustomerDatalist();
 updateStockBadge();
+document.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key==='k'){ e.preventDefault(); openSearch(); }
+  if(e.key==='Escape'){ document.querySelectorAll('.modal-bg.open').forEach(m=>m.classList.remove('open')); }
+});
 
 // Register service worker for PWA
 if('serviceWorker' in navigator){
