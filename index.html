@@ -264,6 +264,8 @@ select option{background:var(--surface-2);color:var(--text)}
     <h2 style="font-size:1.4rem">New Quote</h2>
     <div style="display:flex;gap:8px">
       <button class="btn btn-secondary btn-sm" onclick="clearQuote()">Clear</button>
+      <button class="btn btn-secondary btn-sm" onclick="openTemplateLoadModal()">📋 Templates</button>
+      <button class="btn btn-ghost btn-sm" onclick="saveAsTemplate()">+ Save as Template</button>
       <button class="btn btn-primary btn-sm" onclick="saveQuote()">💾 Save Quote</button>
     </div>
   </div>
@@ -516,6 +518,37 @@ select option{background:var(--surface-2);color:var(--text)}
 
 </div><!-- /.app -->
 <div class="toast-rack" id="toasts"></div>
+<!-- ══ TEMPLATE SAVE MODAL ══ -->
+<div class="modal-bg" id="modal-template-save">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Save as Template</div>
+      <button class="modal-close" onclick="closeModal('modal-template-save')">×</button>
+    </div>
+    <p style="font-size:0.85rem;color:var(--text-2);margin-bottom:16px">Saves the current machine setup, materials, margin tier, and file source as a reusable template.</p>
+    <div class="field"><label>Template Name</label><input type="text" id="tmpl-name" placeholder="e.g. FDM Standard, Laser + UV Combo"></div>
+    <div class="field"><label>Description (optional)</label><input type="text" id="tmpl-desc" placeholder="Short note about what this template is for"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-template-save')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmSaveTemplate()">Save Template</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TEMPLATE LOAD MODAL ══ -->
+<div class="modal-bg" id="modal-template-load">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Load Template</div>
+      <button class="modal-close" onclick="closeModal('modal-template-load')">×</button>
+    </div>
+    <div id="tmpl-list" style="margin-bottom:8px"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-template-load')">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(event)">
 
 <!-- ══ MACHINE MODAL ══ -->
@@ -630,7 +663,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <script>
 /* ═══ STATE ═══ */
 let DB = {
-  machines:[], materials:[], catalog:[], quotes:[],
+  machines:[], materials:[], catalog:[], quotes:[], templates:[],
   settings:{
     designRate:65, laborRate:25, kwh:0.14, overhead:50, jobsPerMonth:20, minPrice:10, uvPerMl:0.50,
     margins:{sale:1.25,discount:1.5,standard:2.0,medium:2.5,high:3.0,premium:4.0},
@@ -1130,6 +1163,78 @@ function saveMaterial(){
   save(); renderMaterials(); closeModal('modal-material'); toast('Material saved','good');
 }
 function deleteMaterial(idx){ if(!confirm('Delete this material?')) return; DB.materials.splice(idx,1); save(); renderMaterials(); }
+
+/* ═══ TEMPLATES ═══ */
+function saveAsTemplate(){
+  $('tmpl-name').value='';
+  $('tmpl-desc').value='';
+  openModal('modal-template-save');
+}
+function confirmSaveTemplate(){
+  const name=$('tmpl-name').value.trim();
+  if(!name){ toast('Enter a template name','bad'); return; }
+  const tmpl={
+    id:uid(), name, desc:$('tmpl-desc').value.trim(),
+    machineRows:QS.machineRows.map(r=>({machineId:r.machineId,hrs:r.hrs})),
+    materialRows:QS.materialRows.map(r=>({materialId:r.materialId,qty:r.qty})),
+    margin:QS.margin, uvCoverage:QS.uvCoverage,
+    filesource:$('q-filesource').value,
+    laborRate:$('q-labor-rate').value,
+    designRate:$('q-design-rate').value,
+    ts:Date.now()
+  };
+  DB.templates.unshift(tmpl);
+  save(); closeModal('modal-template-save');
+  toast(`Template "${name}" saved`,'good');
+}
+function openTemplateLoadModal(){
+  const list=$('tmpl-list');
+  if(!DB.templates.length){
+    list.innerHTML='<div class="empty" style="padding:24px 0"><div class="empty-icon" style="font-size:2rem">📋</div><p>No templates yet. Build a quote and save it as a template.</p></div>';
+  } else {
+    list.innerHTML=DB.templates.map(t=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:12px">
+        <div>
+          <div style="font-weight:600;font-size:0.9rem">${t.name}</div>
+          ${t.desc?`<div style="font-size:0.75rem;color:var(--text-3);margin-top:2px">${t.desc}</div>`:''}
+          <div style="font-size:0.72rem;color:var(--text-4);margin-top:2px">
+            ${t.machineRows.length} machine${t.machineRows.length!==1?'s':''} · 
+            ${t.materialRows.length} material${t.materialRows.length!==1?'s':''} · 
+            ${t.margin} margin
+          </div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="btn btn-primary btn-sm" onclick="loadTemplate('${t.id}')">Load</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteTemplate('${t.id}')">✕</button>
+        </div>
+      </div>`).join('');
+  }
+  openModal('modal-template-load');
+}
+function loadTemplate(id){
+  const t=DB.templates.find(t=>t.id===id);
+  if(!t) return;
+  // restore machine rows
+  QS.machineRows=t.machineRows.map(r=>({rowId:uid(),machineId:r.machineId,hrs:r.hrs}));
+  // restore material rows
+  QS.materialRows=t.materialRows.map(r=>({rowId:uid(),materialId:r.materialId,qty:r.qty}));
+  // restore settings
+  setMargin(t.margin);
+  QS.uvCoverage=t.uvCoverage||'standard';
+  document.querySelectorAll('.coverage-btn').forEach(b=>b.classList.toggle('active',b.dataset.cov===QS.uvCoverage));
+  $('q-filesource').value=t.filesource||'own';
+  if(t.laborRate) $('q-labor-rate').value=t.laborRate;
+  if(t.designRate) $('q-design-rate').value=t.designRate;
+  onFileSourceChange();
+  renderMachineRows(); renderMaterialRows(); checkUV(); recalc();
+  closeModal('modal-template-load');
+  toast(`Template "${t.name}" loaded`,'good');
+}
+function deleteTemplate(id){
+  if(!confirm('Delete this template?')) return;
+  DB.templates=DB.templates.filter(t=>t.id!==id);
+  save(); openTemplateLoadModal();
+}
 
 /* ═══ PHOTO UPLOAD ═══ */
 function onPhotoUpload(e){
