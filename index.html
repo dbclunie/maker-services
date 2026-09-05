@@ -441,6 +441,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <main class="page" id="page-catalog">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
     <h2 style="font-size:1.4rem">Item Catalog</h2>
+    <button class="btn btn-secondary btn-sm" onclick="exportCatalogCSV()">⬇ Export CSV</button>
     <button class="btn btn-primary btn-sm" onclick="openCatalogModal()">+ New Item</button>
   </div>
   <div class="catalog-toolbar">
@@ -1410,6 +1411,28 @@ function clearPhoto(){
   $('ci-photo').value='';
   $('ci-photo-file').value='';
   $('ci-photo-preview').innerHTML='<span style="color:var(--text-4);font-size:2rem">📦</span>';
+}
+
+/* ═══ CSV EXPORT ═══ */
+function exportCatalogCSV(){
+  if(!DB.catalog.length){ toast('No catalog items to export','bad'); return; }
+  const headers=['Name','Type','Sale Price','On Hand','On Order','To Make','Notes'];
+  const rows=DB.catalog.map(item=>[
+    `"${item.name.replace(/"/g,'""')}"`,
+    item.type,
+    item.price.toFixed(2),
+    item.onHand||0,
+    item.onOrder||0,
+    item.toMake||0,
+    `"${(item.notes||'').replace(/"/g,'""')}"`
+  ].join(','));
+  const csv=[headers.join(','),...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`maker-services-catalog-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('Catalog exported as CSV','good');
 }
 
 /* ═══ CATALOG PAGE ═══ */
