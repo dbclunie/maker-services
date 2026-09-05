@@ -236,7 +236,21 @@ select option{background:var(--surface-2);color:var(--text)}
 
 /* ── MISC ── */
 .divider{height:1px;background:var(--border);margin:14px 0}
-.chart-range-btn{background:var(--surface-2);color:var(--text-3);border:1px solid var(--border-2);padding:5px 14px;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.timer-widget{
+  position:fixed;bottom:16px;right:16px;z-index:200;
+  background:var(--surface);border:1px solid var(--border-2);
+  border-radius:12px;padding:10px 14px;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+  font-family:inherit;cursor:default;
+  transition:all .2s;
+}
+.timer-widget.running{border-color:var(--accent)}
+.timer-display{font-size:1.1rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;min-width:64px;text-align:center}
+.timer-display.running{color:var(--accent)}
+.timer-btn{background:none;border:none;cursor:pointer;padding:4px;color:var(--text-3);font-family:inherit;border-radius:6px;transition:all .15s;display:flex;align-items:center}
+.timer-btn:hover{background:var(--surface-2);color:var(--text)}
+.timer-label{font-size:0.7rem;color:var(--text-3);font-weight:600;max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chart-range-btn:hover{border-color:var(--accent);color:var(--accent)}
 .chart-range-btn.active-range{background:var(--accent);color:var(--on-acc);border-color:var(--accent)}
 ::-webkit-scrollbar{width:6px;height:6px}
@@ -288,7 +302,7 @@ select option{background:var(--surface-2);color:var(--text)}
     </div>
   </div>
   <div class="topbar-right">
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.2.0</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.3.0</span>
   </div>
 </header>
 
@@ -457,7 +471,11 @@ select option{background:var(--surface-2);color:var(--text)}
       </div>
 
       <div class="card" style="margin-top:16px">
-        <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><rect x="2" y="19" width="20" height="3" rx="1"/><line x1="2" y1="19" x2="2" y2="3"/><line x1="22" y1="19" x2="22" y2="3"/><line x1="2" y1="3" x2="22" y2="3"/><rect x="9" y="0" width="6" height="4" rx="1"/><line x1="12" y1="4" x2="12" y2="9"/><rect x="6" y="12" width="12" height="7" rx="1"/><line x1="6" y1="15.5" x2="18" y2="15.5"/></svg>Machine Time</div>
+        <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><rect x="2" y="19" width="20" height="3" rx="1"/><line x1="2" y1="19" x2="2" y2="3"/><line x1="22" y1="19" x2="22" y2="3"/><line x1="2" y1="3" x2="22" y2="3"/><rect x="9" y="0" width="6" height="4" rx="1"/><line x1="12" y1="4" x2="12" y2="9"/><rect x="6" y="12" width="12" height="7" rx="1"/><line x1="6" y1="15.5" x2="18" y2="15.5"/></svg>Machine Time
+          <button class="btn btn-ghost btn-sm" onclick="startJobTimer()" style="margin-left:auto;font-size:0.72rem;padding:3px 10px;display:flex;align-items:center;gap:4px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Timer
+          </button>
+        </div>
         <div id="machine-rows"></div>
         <button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="addMachineRow()">+ Add Machine</button>
       </div>
@@ -700,6 +718,26 @@ select option{background:var(--surface-2);color:var(--text)}
   </div>
 </main>
 
+<div class="timer-widget" id="timer-widget" style="display:none">
+  <div>
+    <div class="timer-label" id="timer-label">Job Timer</div>
+    <div class="timer-display" id="timer-display">00:00:00</div>
+  </div>
+  <button class="timer-btn" id="timer-toggle" onclick="toggleTimer()" title="Start/Stop">
+    <svg id="timer-icon-play" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    <svg id="timer-icon-pause" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+  </button>
+  <button class="timer-btn" onclick="sendTimerToQuote()" title="Send to quote">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+  </button>
+  <button class="timer-btn" onclick="resetTimer()" title="Reset">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg>
+  </button>
+  <button class="timer-btn" onclick="closeTimer()" title="Close">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
 </div><!-- /.app -->
 <div class="toast-rack" id="toasts"></div>
 <!-- ══ CHANGELOG MODAL ══ -->
@@ -713,7 +751,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.2.0</span>
+          <span class="badge badge-accent">v1.3.0</span>
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
@@ -1709,9 +1747,16 @@ function openMaterialModal(idx){
   openModal('modal-material');
 }
 function saveMaterial(){
+  const oldCost = QS.editMaterialIdx!==null ? DB.materials[QS.editMaterialIdx]?.cost : null;
   const m={id:QS.editMaterialIdx!==null?DB.materials[QS.editMaterialIdx].id:uid(),name:$('mat-name').value.trim()||'Material',type:$('mat-type').value,cost:parseFloat($('mat-cost').value)||0,qty:parseFloat($('mat-qty').value)||1,unit:$('mat-unit').value,stock:parseFloat($('mat-stock').value)||0,reorder:parseFloat($('mat-reorder').value)||null};
   if(QS.editMaterialIdx!==null) DB.materials[QS.editMaterialIdx]=m; else DB.materials.push(m);
-  save(); renderMaterials(); closeModal('modal-material'); toast('Material saved','good');
+  // flag catalog items as stale if cost changed
+  if(oldCost!==null && oldCost!==m.cost){
+    DB.catalog.forEach(item=>{ item.stale=true; });
+    toast(`Cost changed — ${DB.catalog.length} catalog item${DB.catalog.length!==1?'s':''} flagged for repricing`,'good');
+  }
+  save(); renderMaterials(); closeModal('modal-material');
+  if(oldCost===null||oldCost===m.cost) toast('Material saved','good');
 }
 function deleteMaterial(idx){ if(!confirm('Delete this material?')) return; DB.materials.splice(idx,1); save(); renderMaterials(); }
 
@@ -2006,9 +2051,10 @@ function renderCatalog(){
   if(!items.length){ grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div><p>${DB.catalog.length?'No items match your filter.':'No catalog items yet.'}</p><button class="btn btn-primary btn-sm" onclick="openCatalogModal()">Add First Item</button></div>`; return; }
   grid.innerHTML=items.map(item=>{
     const realIdx=DB.catalog.indexOf(item);
-    return `<div class="catalog-card" onclick="editCatalogItem(${realIdx})">
+    return `<div class="catalog-card" style="${item.stale?'border-color:var(--warn)':''}" onclick="editCatalogItem(${realIdx})">
       <div class="catalog-img">${item.photo?`<img src="${item.photo}" alt="${item.name}" loading="lazy" onerror="this.style.display='none'">`:'<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>'}</div>
       <div class="catalog-body">
+        ${item.stale?`<div style="font-size:0.7rem;font-weight:700;color:var(--warn);margin-bottom:6px;display:flex;align-items:center;gap:4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Needs repricing <button class="btn btn-sm" onclick="event.stopPropagation();clearStale(${realIdx})" style="padding:1px 6px;font-size:0.65rem;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;color:var(--text-3);cursor:pointer;font-family:inherit">Mark OK</button></div>`:''}
         <div class="catalog-name">${item.name}</div>
         <div class="catalog-price">${fmtMoney(item.price)}</div>
         <div class="catalog-stock">
@@ -2021,6 +2067,8 @@ function renderCatalog(){
     </div>`;
   }).join('');
 }
+function clearStale(idx){ DB.catalog[idx].stale=false; save(); renderCatalog(); }
+function clearAllStale(){ DB.catalog.forEach(i=>i.stale=false); save(); renderCatalog(); toast('All items marked up to date','good'); }
 function openCatalogModal(){
   QS.editCatalogIdx=null;
   ['ci-name','ci-photo','ci-notes'].forEach(id=>$(id).value='');
@@ -2174,6 +2222,73 @@ function resetAll(){
   DB={machines:[],materials:[],catalog:[],quotes:[],settings:DB.settings};
   seedMachines(); seedMaterials(); clearQuote(); renderMachines(); renderMaterials(); renderCatalog(); renderHistory();
   toast('Data reset to defaults','good');
+}
+
+/* ═══ JOB TIMER ═══ */
+let timerState = { running:false, startTs:null, elapsed:0, interval:null };
+
+function startJobTimer(){
+  $('timer-widget').style.display='flex';
+  $('timer-label').textContent = $('q-name').value.trim() || 'Job Timer';
+  if(!timerState.running) toggleTimer();
+}
+function toggleTimer(){
+  if(timerState.running){
+    // pause
+    timerState.elapsed += Date.now() - timerState.startTs;
+    clearInterval(timerState.interval);
+    timerState.running = false;
+    $('timer-icon-play').style.display='block';
+    $('timer-icon-pause').style.display='none';
+    $('timer-widget').classList.remove('running');
+    $('timer-display').classList.remove('running');
+  } else {
+    // start
+    timerState.startTs = Date.now();
+    timerState.running = true;
+    timerState.interval = setInterval(updateTimerDisplay, 1000);
+    $('timer-icon-play').style.display='none';
+    $('timer-icon-pause').style.display='block';
+    $('timer-widget').classList.add('running');
+    $('timer-display').classList.add('running');
+  }
+}
+function updateTimerDisplay(){
+  const total = timerState.elapsed + (timerState.running ? Date.now() - timerState.startTs : 0);
+  const h = Math.floor(total/3600000);
+  const m = Math.floor((total%3600000)/60000);
+  const s = Math.floor((total%60000)/1000);
+  $('timer-display').textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+function sendTimerToQuote(){
+  const total = timerState.elapsed + (timerState.running ? Date.now() - timerState.startTs : 0);
+  const hrs = (total/3600000).toFixed(2);
+  // pause timer
+  if(timerState.running) toggleTimer();
+  // send to first machine row or labor
+  if(QS.machineRows.length>0){
+    QS.machineRows[0].hrs = parseFloat(hrs);
+    renderMachineRows(); recalc();
+    toast(`Timer sent — ${hrs}hrs applied to machine time`,'good');
+  } else {
+    $('q-labor-hrs').value = hrs;
+    recalc();
+    toast(`Timer sent — ${hrs}hrs applied to labor`,'good');
+  }
+  goTo('quote');
+}
+function resetTimer(){
+  if(timerState.running){ clearInterval(timerState.interval); timerState.running=false; }
+  timerState = { running:false, startTs:null, elapsed:0, interval:null };
+  $('timer-display').textContent='00:00:00';
+  $('timer-icon-play').style.display='block';
+  $('timer-icon-pause').style.display='none';
+  $('timer-widget').classList.remove('running');
+  $('timer-display').classList.remove('running');
+}
+function closeTimer(){
+  resetTimer();
+  $('timer-widget').style.display='none';
 }
 
 /* ═══ INIT ═══ */
