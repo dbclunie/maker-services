@@ -1,4 +1,4 @@
-const CACHE = 'maker-services-v2';
+const CACHE = 'maker-services-v3';
 const ASSETS = [
   './',
   './index.html',
