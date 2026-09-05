@@ -69,6 +69,13 @@ select option{background:var(--surface-2);color:var(--text)}
   transition:all .15s;position:relative;
   -webkit-tap-highlight-color:transparent;
 }
+.nav-badge{
+  position:absolute;top:6px;right:calc(50% - 16px);
+  width:8px;height:8px;border-radius:50%;
+  background:var(--bad);border:2px solid var(--surface);
+  display:none;
+}
+.nav-badge.show{display:block}
 .nav-btn:hover{color:var(--text);background:var(--surface-2)}
 .nav-btn.active{color:var(--accent)}
 .nav-btn.active::after{
@@ -281,7 +288,7 @@ select option{background:var(--surface-2);color:var(--text)}
     </div>
   </div>
   <div class="topbar-right">
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.1.0</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.2.0</span>
   </div>
 </header>
 
@@ -317,6 +324,7 @@ select option{background:var(--surface-2);color:var(--text)}
     <span class="nav-label">Machines</span>
   </button>
   <button class="nav-btn" id="nav-materials" onclick="goTo('materials')">
+    <span class="nav-badge" id="nav-materials-badge"></span>
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
     <span class="nav-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>Materials</span>
   </button>
@@ -621,6 +629,20 @@ select option{background:var(--surface-2);color:var(--text)}
 <main class="page" id="page-settings">
   <h2 style="font-size:1.4rem;margin-bottom:20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</h2>
 
+  <!-- Branding -->
+  <div class="settings-section">
+    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Your Branding</h3>
+    <div class="grid-2">
+      <div class="field"><label>Your Name</label><input type="text" id="s-brand-name" placeholder="Jane Smith" onchange="saveSettings()"></div>
+      <div class="field"><label>Business Name</label><input type="text" id="s-brand-biz" placeholder="Smith Fabrication" onchange="saveSettings()"></div>
+      <div class="field"><label>Email</label><input type="email" id="s-brand-email" placeholder="jane@example.com" onchange="saveSettings()"></div>
+      <div class="field"><label>Phone</label><input type="tel" id="s-brand-phone" placeholder="555-000-0000" onchange="saveSettings()"></div>
+      <div class="field"><label>Website</label><input type="text" id="s-brand-web" placeholder="www.example.com" onchange="saveSettings()"></div>
+      <div class="field"><label>Quote Valid (days)</label><input type="number" id="s-brand-validity" value="30" min="1" max="365" onchange="saveSettings()"></div>
+    </div>
+    <div class="field"><label>Tagline / Footer Message on Quotes</label><input type="text" id="s-brand-tagline" placeholder="Thank you for your business!" onchange="saveSettings()"></div>
+  </div>
+
   <div class="settings-section">
     <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Theme</h3>
     <div class="theme-picker" id="theme-picker"></div>
@@ -691,7 +713,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.1.0</span>
+          <span class="badge badge-accent">v1.2.0</span>
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
@@ -931,7 +953,8 @@ let DB = {
   settings:{
     designRate:65, laborRate:25, kwh:0.14, overhead:50, jobsPerMonth:20, minPrice:10, uvPerMl:0.50,
     margins:{sale:1.25,discount:1.5,standard:2.0,medium:2.5,high:3.0,premium:4.0},
-    waste:{fdm:12,resin:18,laser:5,uv:8}
+    waste:{fdm:12,resin:18,laser:5,uv:8},
+    brand:{name:'',biz:'',email:'',phone:'',web:'',tagline:'Thank you for your business!',validity:30}
   }
 };
 let QS = { machineRows:[], materialRows:[], margin:'standard', uvCoverage:'standard', editMachineIdx:null, editMaterialIdx:null, editCatalogIdx:null, pendingPhoto:null };
@@ -1221,6 +1244,14 @@ function loadSettings(){
   $('s-waste-fdm').value=s.waste.fdm; $('s-waste-resin').value=s.waste.resin;
   $('s-waste-laser').value=s.waste.laser; $('s-waste-uv').value=s.waste.uv;
   $('q-design-rate').value=s.designRate; $('q-labor-rate').value=s.laborRate;
+  if(!s.brand) s.brand={name:'',biz:'',email:'',phone:'',web:'',tagline:'Thank you for your business!',validity:30};
+  $('s-brand-name').value=s.brand.name||'';
+  $('s-brand-biz').value=s.brand.biz||'';
+  $('s-brand-email').value=s.brand.email||'';
+  $('s-brand-phone').value=s.brand.phone||'';
+  $('s-brand-web').value=s.brand.web||'';
+  $('s-brand-validity').value=s.brand.validity||30;
+  $('s-brand-tagline').value=s.brand.tagline||'Thank you for your business!';
 }
 function saveSettings(){
   const s=DB.settings;
@@ -1241,6 +1272,14 @@ function saveSettings(){
   s.waste.resin=parseFloat($('s-waste-resin').value)||18;
   s.waste.laser=parseFloat($('s-waste-laser').value)||5;
   s.waste.uv=parseFloat($('s-waste-uv').value)||8;
+  if(!s.brand) s.brand={};
+  s.brand.name=$('s-brand-name').value.trim();
+  s.brand.biz=$('s-brand-biz').value.trim();
+  s.brand.email=$('s-brand-email').value.trim();
+  s.brand.phone=$('s-brand-phone').value.trim();
+  s.brand.web=$('s-brand-web').value.trim();
+  s.brand.validity=parseInt($('s-brand-validity').value)||30;
+  s.brand.tagline=$('s-brand-tagline').value.trim();
   save(); toast('Settings saved','good'); recalc();
 }
 
@@ -1430,7 +1469,11 @@ function printQuote(){
   const customer=$('q-customer').value.trim();
   const date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
   const quoteNum='QT-'+Date.now().toString().slice(-6);
-  const rows=[
+  const b=DB.settings.brand||{};
+  const bizName=b.biz||b.name||'Maker Services';
+  const validity=b.validity||30;
+  const tagline=b.tagline||'Thank you for your business!';
+  const contactLine=[b.name,b.email,b.phone,b.web].filter(Boolean).join(' · ');
     ['Machine time',$('pr-machine').textContent],
     ['UV ink',$('pr-uv').textContent],
     ['Materials',$('pr-mat').textContent],
@@ -1450,6 +1493,7 @@ body{font-family:system-ui,-apple-system,sans-serif;background:#fff;color:#1a1a1
 .header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:3px solid #0E7EC4}
 .brand-name{font-size:24px;font-weight:800;color:#0E7EC4}
 .brand-sub{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.brand-contact{font-size:12px;color:#555;margin-top:4px}
 .quote-num{font-size:18px;font-weight:700;text-align:right}
 .quote-date{font-size:12px;color:#888;text-align:right;margin-top:2px}
 .section{margin-bottom:24px}
@@ -1471,7 +1515,7 @@ td:last-child{text-align:right;font-weight:600}
 @media print{.print-btn{display:none}.total-box{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style></head><body>
 <div class="header">
-  <div><div class="brand-name">Maker Services</div><div class="brand-sub">Custom Fabrication Quote</div></div>
+  <div><div class="brand-name">${bizName}</div><div class="brand-sub">Custom Fabrication Quote</div>${contactLine?`<div class="brand-contact">${contactLine}</div>`:''}</div>
   <div><div class="quote-num">${quoteNum}</div><div class="quote-date">${date}</div></div>
 </div>
 <div class="section">
@@ -1497,7 +1541,7 @@ td:last-child{text-align:right;font-weight:600}
   </div>
   <div class="total-price">${fmtMoney(c.final)}</div>
 </div>
-<div class="validity">📋 This quote is valid for 30 days from the date issued. Final price may vary based on material costs and job complexity at time of production.</div>
+<div class="validity">This quote is valid for ${validity} days from the date issued. ${tagline}</div>
 <div class="print-btn"><button onclick="window.print()">🖨 Print or Save as PDF</button></div>
 <div class="footer">Generated by Maker Services Pricing Studio</div>
 </body></html>`;
@@ -1513,6 +1557,7 @@ function saveQuote(){
     id:uid(), name, customer:$('q-customer').value.trim(),
     qty:c.qty, final:c.final, subtotal:c.subtotal, mult:c.mult,
     margin:QS.margin, date:new Date().toLocaleDateString(), ts:Date.now(),
+    status:'draft',
     // full state for reopening
     machineRows:QS.machineRows.map(r=>({machineId:r.machineId,hrs:r.hrs})),
     materialRows:QS.materialRows.map(r=>({materialId:r.materialId,qty:r.qty})),
@@ -1603,6 +1648,12 @@ function saveMachine(){
 function deleteMachine(idx){ if(!confirm('Delete this machine?')) return; DB.machines.splice(idx,1); save(); renderMachines(); }
 
 /* ═══ MATERIALS PAGE ═══ */
+function updateStockBadge(){
+  const hasAlert=DB.materials.some(m=>(m.stock||0)===0||(m.reorder!=null&&(m.stock||0)<=m.reorder));
+  const badge=$('nav-materials-badge');
+  if(badge) badge.classList.toggle('show', hasAlert);
+}
+
 function renderMaterials(){
   const grid=$('mat-grid');
   if(!DB.materials.length){ grid.innerHTML='<div class="empty"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></div><p>No materials yet.</p><button class="btn btn-primary btn-sm" onclick="openMaterialModal()">Add Material</button></div>'; renderMaterialAlertBanner(); return; }
@@ -1633,6 +1684,7 @@ function renderMaterials(){
     </div>`;
   }).join('');
   renderMaterialAlertBanner();
+  updateStockBadge();
 }
 function renderMaterialAlertBanner(){
   const alerts=DB.materials.filter(m=>{
@@ -1860,6 +1912,9 @@ function exportCatalogCSV(){
 
 function printPriceList(){
   if(!DB.catalog.length){ toast('No catalog items to export','bad'); return; }
+  const b=DB.settings.brand||{};
+  const bizName=b.biz||b.name||'Maker Services';
+  const contactLine=[b.name,b.email,b.phone,b.web].filter(Boolean).join(' · ');
   const date=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
   const TYPE={fdm:'FDM Print',resin:'Resin Print',laser:'Laser',uv:'UV Print',multi:'Multi-Machine',other:'Other'};
   const groups={};
@@ -1923,7 +1978,7 @@ td:not(:first-child){text-align:center}
 @media print{.print-btn{display:none}body{padding:20px}}
 </style></head><body>
 <div class="header">
-  <div><div class="brand-name">Maker Services</div><div class="brand-sub">Custom Fabrication</div></div>
+  <div><div class="brand-name">${bizName}</div><div class="brand-sub">Custom Fabrication</div>${contactLine?`<div style="font-size:12px;color:#555;margin-top:4px">${contactLine}</div>`:''}</div>
   <div><div class="doc-title">Price List</div><div class="doc-date">${date}</div></div>
 </div>
 ${groupHTML}
@@ -2010,19 +2065,32 @@ function renderHistory(){
     <div class="stat-tile"><div class="stat-label">Catalog Items</div><div class="stat-value">${DB.catalog.length}</div></div>`;
   const list=$('history-list');
   if(!quotes.length){ list.innerHTML='<div class="empty"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><p>No quotes saved yet. Head to the Quote tab to create one.</p></div>'; return; }
-  list.innerHTML=quotes.map((q,i)=>`
-    <div class="history-row">
-      <div>
+  list.innerHTML=quotes.map((q,i)=>{
+    const STATUS={draft:{label:'Draft',cls:'badge-info'},sent:{label:'Sent',cls:'badge-accent'},accepted:{label:'Accepted',cls:'badge-good'},declined:{label:'Declined',cls:'badge-bad'},completed:{label:'Completed',cls:'badge-good'}};
+    const st=STATUS[q.status||'draft']||STATUS.draft;
+    return `<div class="history-row" style="align-items:flex-start">
+      <div style="flex:1;min-width:0">
         <div class="history-name">${q.name}</div>
         <div class="history-meta">${q.date}${q.customer?' · '+q.customer:''} · qty ${q.qty||1} · ${q.margin||'standard'} (${q.mult?.toFixed(2)||'?'}×)</div>
+        <div style="margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span class="badge ${st.cls}">${st.label}</span>
+          <select onchange="setQuoteStatus(${i},this.value)" style="font-size:0.72rem;padding:2px 6px;border-radius:4px;background:var(--surface-2);border:1px solid var(--border-2);color:var(--text-2);font-family:inherit;cursor:pointer">
+            <option value="draft"      ${ (q.status||'draft')==='draft'      ?'selected':''}>Draft</option>
+            <option value="sent"       ${ q.status==='sent'                   ?'selected':''}>Sent</option>
+            <option value="accepted"   ${ q.status==='accepted'               ?'selected':''}>Accepted</option>
+            <option value="declined"   ${ q.status==='declined'               ?'selected':''}>Declined</option>
+            <option value="completed"  ${ q.status==='completed'              ?'selected':''}>Completed</option>
+          </select>
+        </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;padding-top:2px">
         <div class="history-price">${fmtMoney(q.final)}</div>
-        <button class="btn btn-secondary btn-sm" onclick="reopenQuote(${i})" title="Reopen in calculator"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit</button>
-        <button class="btn btn-ghost btn-sm" onclick="duplicateQuote(${i})" title="Duplicate this quote"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-        <button class="btn btn-danger btn-sm" onclick="deleteQuote(${i})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        <button class="btn btn-secondary btn-sm" onclick="reopenQuote(${i})" title="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+        <button class="btn btn-ghost btn-sm" onclick="duplicateQuote(${i})" title="Duplicate"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        <button class="btn btn-danger btn-sm" onclick="deleteQuote(${i})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 function reopenQuote(idx){
   const q=DB.quotes[idx];
@@ -2063,6 +2131,10 @@ function duplicateQuote(idx){
   DB.quotes.unshift(copy);
   save(); renderHistory();
   toast(`Duplicated "${q.name}"`,'good');
+}
+function setQuoteStatus(idx, status){
+  if(DB.quotes[idx]) DB.quotes[idx].status=status;
+  save(); renderHistory();
 }
 function deleteQuote(idx){ DB.quotes.splice(idx,1); save(); renderHistory(); }
 function clearHistory(){ if(!confirm('Clear all quote history?')) return; DB.quotes=[]; save(); renderHistory(); }
@@ -2113,6 +2185,7 @@ addMaterialRow();
 recalc();
 renderDashboard();
 populateCustomerDatalist();
+updateStockBadge();
 
 // Register service worker for PWA
 if('serviceWorker' in navigator){
