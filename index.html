@@ -46,7 +46,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
 /* ── LAYOUT ── */
 .app{display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:16px;height:56px;position:sticky;top:0;z-index:100}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:16px;height:64px;position:sticky;top:0;z-index:100}
 .topbar-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1rem;letter-spacing:-.5px;color:var(--text);white-space:nowrap}
 .topbar-logo svg{color:var(--accent);flex-shrink:0}
 .topbar-nav{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
@@ -104,7 +104,7 @@ select option{background:var(--surface-2);color:var(--text)}
 @media(max-width:900px){.quote-section{grid-template-columns:1fr}}
 .machine-row{display:flex;gap:10px;align-items:flex-end;padding:12px;background:var(--surface-2);border-radius:8px;border:1px solid var(--border);margin-bottom:8px}
 .machine-row .field{margin-bottom:0;flex:1}
-.price-panel{background:var(--bg-deep);border:1px solid var(--border);border-radius:10px;padding:20px;position:sticky;top:72px}
+.price-panel{background:var(--bg-deep);border:1px solid var(--border);border-radius:10px;padding:20px;position:sticky;top:80px}
 .price-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem}
 .price-row:last-of-type{border-bottom:none}
 .price-row.total{font-size:1rem;font-weight:700;color:var(--text);border-top:2px solid var(--border-2);margin-top:4px;padding-top:12px;border-bottom:none}
@@ -220,9 +220,10 @@ select option{background:var(--surface-2);color:var(--text)}
 <!-- NAV -->
 <header class="topbar">
   <div class="topbar-logo" title="Maker Services">
-    <svg width="180" height="56" viewBox="0 0 680 210" role="img" aria-label="Maker Services logo">
-      <!-- honeycomb cluster -->
-      <g transform="translate(100,100)">
+    <svg width="200" height="64" viewBox="0 0 680 240" role="img" aria-label="Maker Services logo" style="overflow:visible">
+      <!-- honeycomb cluster — translate(100,110) centers cluster vertically in 240px viewBox -->
+      <!-- top of cluster: 110-52=58, bottom: 110+78+52=240, fits exactly -->
+      <g transform="translate(100,110)">
         <g transform="translate(-46,0)">
           <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#0E7EC4" stroke="none"/>
           <polygon points="0,-43 37,-22 37,22 0,43 -37,22 -37,-22" fill="#0A4F80" stroke="none"/>
@@ -248,11 +249,11 @@ select option{background:var(--surface-2);color:var(--text)}
           <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="none" stroke="#40E0FF" stroke-width="3"/>
         </g>
       </g>
-      <!-- 3 positioned absolutely at cell C center -->
-      <text x="100" y="194" font-family="system-ui,sans-serif" font-size="46" font-weight="700" fill="#40E0FF" text-anchor="middle">3</text>
-      <!-- wordmark -->
-      <text x="276" y="106" font-family="system-ui,sans-serif" font-size="52" font-weight="700" fill="#D8EEF8" text-anchor="middle" dominant-baseline="middle">Maker</text>
-      <text x="276" y="172" font-family="system-ui,sans-serif" font-size="52" font-weight="700" fill="#40E0FF" text-anchor="middle" dominant-baseline="middle">Services</text>
+      <!-- 3: cell C center = (100, 110+78) = (100,188), baseline +16 = 204 -->
+      <text x="100" y="204" font-family="system-ui,sans-serif" font-size="46" font-weight="700" fill="#40E0FF" text-anchor="middle">3</text>
+      <!-- wordmark: logo vertical center = 110+39=149, Maker at 149-33=116, Services at 149+33=182 -->
+      <text x="276" y="116" font-family="system-ui,sans-serif" font-size="52" font-weight="700" fill="#D8EEF8" text-anchor="middle" dominant-baseline="middle">Maker</text>
+      <text x="276" y="182" font-family="system-ui,sans-serif" font-size="52" font-weight="700" fill="#40E0FF" text-anchor="middle" dominant-baseline="middle">Services</text>
     </svg>
   </div>
   <nav class="topbar-nav">
