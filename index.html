@@ -302,7 +302,7 @@ select option{background:var(--surface-2);color:var(--text)}
     </div>
   </div>
   <div class="topbar-right">
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.3.0</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.4.0</span>
   </div>
 </header>
 
@@ -674,7 +674,18 @@ select option{background:var(--surface-2);color:var(--text)}
       <div class="field"><label>Electricity ($/kWh)</label><input type="number" id="s-kwh" value="0.14" min="0" step="0.01" onchange="saveSettings()"></div>
       <div class="field"><label>Monthly Overhead ($)</label><input type="number" id="s-overhead" value="50" min="0" step="5" onchange="saveSettings()"></div>
       <div class="field"><label>Est. Jobs / Month</label><input type="number" id="s-jobs-mo" value="20" min="1" onchange="saveSettings()"></div>
-      <div class="field"><label>Minimum Job Price ($)</label><input type="number" id="s-min-price" value="10" min="0" step="0.50" onchange="saveSettings()"></div>
+      <div class="field"><label>Minimum Job Price</label><input type="number" id="s-min-price" value="10" min="0" step="0.50" onchange="saveSettings()"></div>
+      <div class="field"><label>Currency</label>
+        <select id="s-currency" onchange="saveSettings()">
+          <option value="USD">USD — US Dollar ($)</option>
+          <option value="CAD">CAD — Canadian Dollar (CA$)</option>
+          <option value="EUR">EUR — Euro (€)</option>
+          <option value="GBP">GBP — British Pound (£)</option>
+          <option value="AUD">AUD — Australian Dollar (A$)</option>
+          <option value="MXN">MXN — Mexican Peso (MX$)</option>
+          <option value="JPY">JPY — Japanese Yen (¥)</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -751,14 +762,14 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.3.0</span>
+          <span class="badge badge-accent">v1.4.0</span>
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
-          <li>Frozen top nav bar with icon + label buttons</li>
-          <li>Logo rebuilt with correct geometry — 3 centered in bottom hex</li>
-          <li>Version badge added to topbar (tap to see this changelog)</li>
-          <li>Service worker cache busted for clean update</li>
+          <li>Multi-currency support — USD, CAD, EUR, GBP, AUD, MXN, JPY</li>
+          <li>Supplier/vendor tracker on materials — name, purchase URL, one-tap reorder link</li>
+          <li>Slicer settings per catalog item — layer height, infill, speed, supports, machine, print time</li>
+          <li>Slicer info shown on catalog cards</li>
         </ul>
       </div>
 
@@ -930,6 +941,8 @@ select option{background:var(--surface-2);color:var(--text)}
       </div>
       <div class="field"><label>Current Stock (qty units)</label><input type="number" id="mat-stock" placeholder="0" min="0" step="0.1"></div>
       <div class="field"><label>Reorder Alert Threshold (qty units)</label><input type="number" id="mat-reorder" placeholder="e.g. 100" min="0" step="0.1"></div>
+      <div class="field"><label>Supplier / Vendor</label><input type="text" id="mat-supplier" placeholder="e.g. Amazon, Elegoo, MatterHackers"></div>
+      <div class="field"><label>Purchase URL</label><input type="text" id="mat-url" placeholder="https://…"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-material')">Cancel</button>
@@ -976,6 +989,25 @@ select option{background:var(--surface-2);color:var(--text)}
       </div>
     </div>
     <div class="field"><label>Notes / Settings</label><textarea id="ci-notes" rows="2" style="resize:vertical" placeholder="Material, slicer settings, notes…"></textarea></div>
+    <div class="card" style="margin-top:12px;background:var(--surface-2)">
+      <div class="card-title">Slicer / Production Settings</div>
+      <div class="grid-2">
+        <div class="field"><label>Layer Height (mm)</label><input type="number" id="ci-layer" placeholder="0.2" min="0" step="0.05"></div>
+        <div class="field"><label>Infill (%)</label><input type="number" id="ci-infill" placeholder="15" min="0" max="100"></div>
+        <div class="field"><label>Print Speed (mm/s)</label><input type="number" id="ci-speed" placeholder="60" min="0"></div>
+        <div class="field"><label>Supports</label>
+          <select id="ci-supports">
+            <option value="">—</option>
+            <option value="none">None</option>
+            <option value="normal">Normal</option>
+            <option value="tree">Tree</option>
+            <option value="organic">Organic</option>
+          </select>
+        </div>
+        <div class="field"><label>Machine Used</label><input type="text" id="ci-machine" placeholder="e.g. Bambu X1C"></div>
+        <div class="field"><label>Print Time (hrs)</label><input type="number" id="ci-printtime" placeholder="2.5" min="0" step="0.25"></div>
+      </div>
+    </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-catalog')">Cancel</button>
       <button class="btn btn-danger btn-sm" id="ci-delete-btn" style="display:none" onclick="deleteCatalogCurrent()">Delete</button>
@@ -992,7 +1024,8 @@ let DB = {
     designRate:65, laborRate:25, kwh:0.14, overhead:50, jobsPerMonth:20, minPrice:10, uvPerMl:0.50,
     margins:{sale:1.25,discount:1.5,standard:2.0,medium:2.5,high:3.0,premium:4.0},
     waste:{fdm:12,resin:18,laser:5,uv:8},
-    brand:{name:'',biz:'',email:'',phone:'',web:'',tagline:'Thank you for your business!',validity:30}
+    brand:{name:'',biz:'',email:'',phone:'',web:'',tagline:'Thank you for your business!',validity:30},
+    currency:'USD'
   }
 };
 let QS = { machineRows:[], materialRows:[], margin:'standard', uvCoverage:'standard', editMachineIdx:null, editMaterialIdx:null, editCatalogIdx:null, pendingPhoto:null };
@@ -1034,7 +1067,8 @@ function seedMaterials(){
 
 /* ═══ UTILS ═══ */
 const $ = id => document.getElementById(id);
-const fmtMoney = n => '$'+n.toFixed(2);
+const CURRENCIES={USD:{symbol:'$',code:'USD'},CAD:{symbol:'CA$',code:'CAD'},EUR:{symbol:'€',code:'EUR'},GBP:{symbol:'£',code:'GBP'},AUD:{symbol:'A$',code:'AUD'},MXN:{symbol:'MX$',code:'MXN'},JPY:{symbol:'¥',code:'JPY'}};
+const fmtMoney = n => { const c=CURRENCIES[DB.settings.currency||'USD']||CURRENCIES.USD; return c.symbol+n.toFixed(2); };
 const roundUp = n => Math.ceil(n*2)/2;
 function machineRate(m){
   const dep=(m.price||0)/(m.life||1);
@@ -1275,6 +1309,7 @@ function loadSettings(){
   $('s-design-rate').value=s.designRate; $('s-labor-rate').value=s.laborRate;
   $('s-kwh').value=s.kwh; $('s-overhead').value=s.overhead;
   $('s-jobs-mo').value=s.jobsPerMonth; $('s-min-price').value=s.minPrice;
+  $('s-currency').value=s.currency||'USD';
   $('s-uv-ml').value=s.uvPerMl;
   $('s-m-sale').value=s.margins.sale; $('s-m-discount').value=s.margins.discount;
   $('s-m-standard').value=s.margins.standard; $('s-m-medium').value=s.margins.medium;
@@ -1299,6 +1334,7 @@ function saveSettings(){
   s.overhead=parseFloat($('s-overhead').value)||50;
   s.jobsPerMonth=parseInt($('s-jobs-mo').value)||20;
   s.minPrice=parseFloat($('s-min-price').value)||10;
+  s.currency=$('s-currency').value||'USD';
   s.uvPerMl=parseFloat($('s-uv-ml').value)||0.50;
   s.margins.sale=parseFloat($('s-m-sale').value)||1.25;
   s.margins.discount=parseFloat($('s-m-discount').value)||1.5;
@@ -1706,6 +1742,8 @@ function renderMaterials(){
       <div>
         <div class="mat-name">${m.name}</div>
         <div class="mat-type">${TYPE[m.type]||m.type} · ${m.qty}${m.unit} total</div>
+        ${m.supplier?`<div style="font-size:0.72rem;color:var(--text-3);margin-top:2px">${m.url?`<a href="${m.url}" target="_blank" style="color:var(--accent);text-decoration:none">${m.supplier} ↗</a>`:m.supplier}</div>`:''}
+        ${(m.stock||0)===0||(m.reorder!=null&&(m.stock||0)<=m.reorder)?m.url?`<a href="${m.url}" target="_blank" onclick="event.stopPropagation()" style="margin-top:6px;padding:3px 10px;font-size:0.7rem;background:var(--accent);color:var(--on-acc);border-radius:4px;text-decoration:none;display:inline-block;font-weight:600">Reorder ↗</a>`:'':''}
         <div style="font-size:0.78rem;color:${empty?'var(--bad)':low?'var(--warn)':'var(--text-3)'};margin-top:2px">
           Stock: <strong>${stock}${m.unit}</strong>${m.reorder!=null?' · Alert at: '+m.reorder+m.unit:''}
         </div>
@@ -1742,13 +1780,13 @@ function renderMaterialAlertBanner(){
 }
 function openMaterialModal(idx){
   QS.editMaterialIdx=idx??null;
-  if(idx!==undefined){ const m=DB.materials[idx]; $('mat-name').value=m.name; $('mat-type').value=m.type; $('mat-cost').value=m.cost; $('mat-qty').value=m.qty; $('mat-unit').value=m.unit; $('mat-stock').value=m.stock||0; $('mat-reorder').value=m.reorder||''; $('modal-material-title').textContent='Edit Material'; }
-  else { ['mat-name','mat-cost','mat-qty','mat-stock','mat-reorder'].forEach(id=>$(id).value=''); $('modal-material-title').textContent='Add Material'; }
+  if(idx!==undefined){ const m=DB.materials[idx]; $('mat-name').value=m.name; $('mat-type').value=m.type; $('mat-cost').value=m.cost; $('mat-qty').value=m.qty; $('mat-unit').value=m.unit; $('mat-stock').value=m.stock||0; $('mat-reorder').value=m.reorder||''; $('mat-supplier').value=m.supplier||''; $('mat-url').value=m.url||''; $('modal-material-title').textContent='Edit Material'; }
+  else { ['mat-name','mat-cost','mat-qty','mat-stock','mat-reorder','mat-supplier','mat-url'].forEach(id=>$(id).value=''); $('modal-material-title').textContent='Add Material'; }
   openModal('modal-material');
 }
 function saveMaterial(){
   const oldCost = QS.editMaterialIdx!==null ? DB.materials[QS.editMaterialIdx]?.cost : null;
-  const m={id:QS.editMaterialIdx!==null?DB.materials[QS.editMaterialIdx].id:uid(),name:$('mat-name').value.trim()||'Material',type:$('mat-type').value,cost:parseFloat($('mat-cost').value)||0,qty:parseFloat($('mat-qty').value)||1,unit:$('mat-unit').value,stock:parseFloat($('mat-stock').value)||0,reorder:parseFloat($('mat-reorder').value)||null};
+  const m={id:QS.editMaterialIdx!==null?DB.materials[QS.editMaterialIdx].id:uid(),name:$('mat-name').value.trim()||'Material',type:$('mat-type').value,cost:parseFloat($('mat-cost').value)||0,qty:parseFloat($('mat-qty').value)||1,unit:$('mat-unit').value,stock:parseFloat($('mat-stock').value)||0,reorder:parseFloat($('mat-reorder').value)||null,supplier:$('mat-supplier').value.trim(),url:$('mat-url').value.trim()};
   if(QS.editMaterialIdx!==null) DB.materials[QS.editMaterialIdx]=m; else DB.materials.push(m);
   // flag catalog items as stale if cost changed
   if(oldCost!==null && oldCost!==m.cost){
@@ -2057,6 +2095,7 @@ function renderCatalog(){
         ${item.stale?`<div style="font-size:0.7rem;font-weight:700;color:var(--warn);margin-bottom:6px;display:flex;align-items:center;gap:4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Needs repricing <button class="btn btn-sm" onclick="event.stopPropagation();clearStale(${realIdx})" style="padding:1px 6px;font-size:0.65rem;background:var(--surface-2);border:1px solid var(--border);border-radius:4px;color:var(--text-3);cursor:pointer;font-family:inherit">Mark OK</button></div>`:''}
         <div class="catalog-name">${item.name}</div>
         <div class="catalog-price">${fmtMoney(item.price)}</div>
+        ${item.slicer&&(item.slicer.layer||item.slicer.infill||item.slicer.machine)?`<div style="font-size:0.68rem;color:var(--text-4);margin-bottom:6px">${[item.slicer.machine,item.slicer.layer?item.slicer.layer+'mm':'',item.slicer.infill?item.slicer.infill+'% infill':'',item.slicer.printtime?item.slicer.printtime+'hr':''].filter(Boolean).join(' · ')}</div>`:''}
         <div class="catalog-stock">
           ${item.onHand?`<span class="stock-tag on-hand"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> ${item.onHand} on hand</span>`:''}
           ${item.onOrder?`<span class="stock-tag on-order"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg> ${item.onOrder} ordered</span>`:''}
@@ -2071,8 +2110,9 @@ function clearStale(idx){ DB.catalog[idx].stale=false; save(); renderCatalog(); 
 function clearAllStale(){ DB.catalog.forEach(i=>i.stale=false); save(); renderCatalog(); toast('All items marked up to date','good'); }
 function openCatalogModal(){
   QS.editCatalogIdx=null;
-  ['ci-name','ci-photo','ci-notes'].forEach(id=>$(id).value='');
+  ['ci-name','ci-photo','ci-notes','ci-machine'].forEach(id=>$(id).value='');
   $('ci-price').value=''; $('ci-onhand').value=0; $('ci-onorder').value=0; $('ci-tomake').value=0;
+  $('ci-layer').value=''; $('ci-infill').value=''; $('ci-speed').value=''; $('ci-supports').value=''; $('ci-printtime').value='';
   $('modal-catalog-title').textContent='New Catalog Item';
   $('ci-delete-btn').style.display='none';
   clearPhoto();
@@ -2085,6 +2125,12 @@ function editCatalogItem(idx){
   $('ci-onhand').value=item.onHand||0; $('ci-onorder').value=item.onOrder||0; $('ci-tomake').value=item.toMake||0;
   $('ci-photo').value=(item.photo&&!item.photo.startsWith('data:'))?item.photo:'';
   $('ci-notes').value=item.notes||'';
+  $('ci-layer').value=item.slicer?.layer||'';
+  $('ci-infill').value=item.slicer?.infill||'';
+  $('ci-speed').value=item.slicer?.speed||'';
+  $('ci-supports').value=item.slicer?.supports||'';
+  $('ci-machine').value=item.slicer?.machine||'';
+  $('ci-printtime').value=item.slicer?.printtime||'';
   QS.pendingPhoto=item.photo||null;
   if(item.photo) updatePhotoPreview(item.photo); else clearPhoto();
   $('modal-catalog-title').textContent='Edit Item';
@@ -2092,7 +2138,8 @@ function editCatalogItem(idx){
   openModal('modal-catalog');
 }
 function saveCatalogItem(){
-  const item={id:QS.editCatalogIdx!==null?DB.catalog[QS.editCatalogIdx].id:uid(),name:$('ci-name').value.trim()||'Item',type:$('ci-type').value,price:parseFloat($('ci-price').value)||0,onHand:parseInt($('ci-onhand').value)||0,onOrder:parseInt($('ci-onorder').value)||0,toMake:parseInt($('ci-tomake').value)||0,photo:QS.pendingPhoto||'',notes:$('ci-notes').value.trim()};
+  const item={id:QS.editCatalogIdx!==null?DB.catalog[QS.editCatalogIdx].id:uid(),name:$('ci-name').value.trim()||'Item',type:$('ci-type').value,price:parseFloat($('ci-price').value)||0,onHand:parseInt($('ci-onhand').value)||0,onOrder:parseInt($('ci-onorder').value)||0,toMake:parseInt($('ci-tomake').value)||0,photo:QS.pendingPhoto||'',notes:$('ci-notes').value.trim(),
+    slicer:{layer:$('ci-layer').value,infill:$('ci-infill').value,speed:$('ci-speed').value,supports:$('ci-supports').value,machine:$('ci-machine').value,printtime:$('ci-printtime').value}};
   if(QS.editCatalogIdx!==null) DB.catalog[QS.editCatalogIdx]=item; else DB.catalog.push(item);
   save(); renderCatalog(); closeModal('modal-catalog'); toast('Item saved','good');
 }
