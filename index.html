@@ -249,6 +249,7 @@ select option{background:var(--surface-2);color:var(--text)}
     <button class="nav-btn active" onclick="goTo('dashboard')">🏠 Home</button>
     <button class="nav-btn" onclick="goTo('quote')">💰 Quote</button>
     <button class="nav-btn" onclick="goTo('catalog')">📦 Catalog</button>
+    <button class="nav-btn" onclick="goTo('customers')">👥 Customers</button>
     <button class="nav-btn" onclick="goTo('machines')">⚙️ Machines</button>
     <button class="nav-btn" onclick="goTo('materials')">🧱 Materials</button>
     <button class="nav-btn" onclick="goTo('history')">📋 History</button>
@@ -285,6 +286,7 @@ select option{background:var(--surface-2);color:var(--text)}
       <div class="card-title">Quick Actions</div>
       <div style="display:flex;flex-direction:column;gap:10px">
         <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('quote')">💰 New Quote</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('customers');openCustomerModal()">👥 Add Customer</button>
         <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('catalog');openCatalogModal()">📦 Add Catalog Item</button>
         <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('machines');openMachineModal()">⚙️ Add Machine</button>
         <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('materials');openMaterialModal()">🧱 Add Material</button>
@@ -319,7 +321,10 @@ select option{background:var(--surface-2);color:var(--text)}
           <div class="field"><label>Job / Item Name</label><input type="text" id="q-name" placeholder="e.g. Custom Phone Stand" oninput="recalc()"></div>
           <div class="field"><label>Quantity</label><input type="number" id="q-qty" value="1" min="1" oninput="recalc()"></div>
         </div>
-        <div class="field"><label>Customer / Notes</label><input type="text" id="q-customer" placeholder="Customer name or job notes"></div>
+        <div class="field"><label>Customer / Notes</label>
+          <input type="text" id="q-customer" placeholder="Customer name or job notes" list="customer-list" oninput="recalc()">
+          <datalist id="customer-list"></datalist>
+        </div>
         <div class="row">
           <div class="field">
             <label>File Source</label>
@@ -459,6 +464,15 @@ select option{background:var(--surface-2);color:var(--text)}
   <div class="catalog-grid" id="catalog-grid"></div>
 </main>
 
+<!-- ══════════ CUSTOMERS ══════════ -->
+<main class="page" id="page-customers">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <h2 style="font-size:1.4rem">Customers</h2>
+    <button class="btn btn-primary btn-sm" onclick="openCustomerModal()">+ Add Customer</button>
+  </div>
+  <div class="grid-2" id="customers-grid"></div>
+</main>
+
 <!-- ══════════ MACHINES ══════════ -->
 <main class="page" id="page-machines">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
@@ -565,6 +579,35 @@ select option{background:var(--surface-2);color:var(--text)}
 
 </div><!-- /.app -->
 <div class="toast-rack" id="toasts"></div>
+<!-- ══ CUSTOMER MODAL ══ -->
+<div class="modal-bg" id="modal-customer">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-customer-title">Add Customer</div>
+      <button class="modal-close" onclick="closeModal('modal-customer')">×</button>
+    </div>
+    <div class="grid-2">
+      <div class="field"><label>Name</label><input type="text" id="cust-name" placeholder="Full name or business name"></div>
+      <div class="field"><label>Email</label><input type="email" id="cust-email" placeholder="email@example.com"></div>
+      <div class="field"><label>Phone</label><input type="tel" id="cust-phone" placeholder="555-000-0000"></div>
+      <div class="field"><label>Preferred Contact</label>
+        <select id="cust-contact">
+          <option value="email">Email</option>
+          <option value="phone">Phone</option>
+          <option value="text">Text</option>
+          <option value="any">Any</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Notes</label><textarea id="cust-notes" rows="2" style="resize:vertical" placeholder="Notes about this customer, preferences, etc."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-customer')">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="cust-delete-btn" style="display:none" onclick="deleteCustomerCurrent()">Delete</button>
+      <button class="btn btn-primary" onclick="saveCustomer()">Save Customer</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ TEMPLATE SAVE MODAL ══ -->
 <div class="modal-bg" id="modal-template-save">
   <div class="modal">
@@ -710,7 +753,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <script>
 /* ═══ STATE ═══ */
 let DB = {
-  machines:[], materials:[], catalog:[], quotes:[], templates:[],
+  machines:[], materials:[], catalog:[], quotes:[], templates:[], customers:[],
   settings:{
     designRate:65, laborRate:25, kwh:0.14, overhead:50, jobsPerMonth:20, minPrice:10, uvPerMl:0.50,
     margins:{sale:1.25,discount:1.5,standard:2.0,medium:2.5,high:3.0,premium:4.0},
@@ -772,6 +815,7 @@ function goTo(page){
   $('page-'+page).classList.add('active');
   document.querySelector(`.nav-btn[onclick="goTo('${page}')"]`).classList.add('active');
   if(page==='dashboard') renderDashboard();
+  if(page==='customers') renderCustomers();
   if(page==='machines') renderMachines();
   if(page==='materials') renderMaterials();
   if(page==='catalog') renderCatalog();
@@ -795,7 +839,7 @@ function renderDashboard(){
   $('dash-stats').innerHTML=`
     <div class="stat-tile"><div class="stat-label">This Month</div><div class="stat-value">${fmtMoney(monthTotal)}</div><div class="stat-sub">${thisMonth.length} quote${thisMonth.length!==1?'s':''}</div></div>
     <div class="stat-tile"><div class="stat-label">All Time Quoted</div><div class="stat-value">${fmtMoney(allTotal)}</div><div class="stat-sub">${quotes.length} total quotes</div></div>
-    <div class="stat-tile"><div class="stat-label">Catalog Items</div><div class="stat-value">${DB.catalog.length}</div><div class="stat-sub">${DB.templates.length} template${DB.templates.length!==1?'s':''}</div></div>
+    <div class="stat-tile"><div class="stat-label">Catalog Items</div><div class="stat-value">${DB.catalog.length}</div><div class="stat-sub">${DB.customers.length} customer${DB.customers.length!==1?'s':''}</div></div>
     <div class="stat-tile" style="${lowStock.length?'border-color:var(--warn)':''}"><div class="stat-label">Stock Alerts</div><div class="stat-value" style="${lowStock.length?'color:var(--warn)':''}">${lowStock.length}</div><div class="stat-sub">${lowStock.length?'materials need attention':'all good'}</div></div>
   `;
 
@@ -1413,6 +1457,79 @@ function clearPhoto(){
   $('ci-photo-preview').innerHTML='<span style="color:var(--text-4);font-size:2rem">📦</span>';
 }
 
+/* ═══ CUSTOMERS ═══ */
+let editCustomerIdx=null;
+function renderCustomers(){
+  const grid=$('customers-grid');
+  if(!DB.customers.length){
+    grid.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>No customers yet.</p><button class="btn btn-primary btn-sm" onclick="openCustomerModal()">Add First Customer</button></div>';
+    return;
+  }
+  const CONTACT={email:'✉',phone:'📞',text:'💬',any:'📱'};
+  grid.innerHTML=DB.customers.map((c,i)=>{
+    const cQuotes=DB.quotes.filter(q=>q.customer&&q.customer.toLowerCase()===c.name.toLowerCase());
+    const total=cQuotes.reduce((a,q)=>a+q.final,0);
+    return `<div class="card" style="cursor:pointer" onclick="openCustomerModal(${i})">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div>
+          <div style="font-weight:700;font-size:1rem">${c.name}</div>
+          ${c.email?`<div style="font-size:0.78rem;color:var(--text-3);margin-top:2px">✉ ${c.email}</div>`:''}
+          ${c.phone?`<div style="font-size:0.78rem;color:var(--text-3)">📞 ${c.phone}</div>`:''}
+        </div>
+        <span class="badge badge-info">${CONTACT[c.contact]||'📱'} ${c.contact||'any'}</span>
+      </div>
+      ${c.notes?`<div style="font-size:0.78rem;color:var(--text-3);margin-bottom:10px;font-style:italic">${c.notes}</div>`:''}
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border)">
+        <div style="font-size:0.78rem;color:var(--text-3)">${cQuotes.length} quote${cQuotes.length!==1?'s':''}</div>
+        <div style="font-weight:700;color:var(--accent)">${total>0?fmtMoney(total):''}</div>
+      </div>
+    </div>`;
+  }).join('');
+  populateCustomerDatalist();
+}
+function populateCustomerDatalist(){
+  const dl=$('customer-list');
+  if(dl) dl.innerHTML=DB.customers.map(c=>`<option value="${c.name}">`).join('');
+}
+function openCustomerModal(idx){
+  editCustomerIdx=idx??null;
+  if(idx!==undefined){
+    const c=DB.customers[idx];
+    $('cust-name').value=c.name; $('cust-email').value=c.email||'';
+    $('cust-phone').value=c.phone||''; $('cust-contact').value=c.contact||'any';
+    $('cust-notes').value=c.notes||'';
+    $('modal-customer-title').textContent='Edit Customer';
+    $('cust-delete-btn').style.display='inline-flex';
+  } else {
+    ['cust-name','cust-email','cust-phone','cust-notes'].forEach(id=>$(id).value='');
+    $('cust-contact').value='any';
+    $('modal-customer-title').textContent='Add Customer';
+    $('cust-delete-btn').style.display='none';
+  }
+  openModal('modal-customer');
+}
+function saveCustomer(){
+  const name=$('cust-name').value.trim();
+  if(!name){ toast('Enter a customer name','bad'); return; }
+  const c={
+    id:editCustomerIdx!==null?DB.customers[editCustomerIdx].id:uid(),
+    name, email:$('cust-email').value.trim(),
+    phone:$('cust-phone').value.trim(),
+    contact:$('cust-contact').value,
+    notes:$('cust-notes').value.trim()
+  };
+  if(editCustomerIdx!==null) DB.customers[editCustomerIdx]=c;
+  else DB.customers.push(c);
+  save(); renderCustomers(); closeModal('modal-customer');
+  toast(`Customer "${name}" saved`,'good');
+}
+function deleteCustomerCurrent(){
+  if(editCustomerIdx===null||!confirm('Delete this customer?')) return;
+  DB.customers.splice(editCustomerIdx,1);
+  save(); renderCustomers(); closeModal('modal-customer');
+  toast('Customer deleted');
+}
+
 /* ═══ CSV EXPORT ═══ */
 function exportCatalogCSV(){
   if(!DB.catalog.length){ toast('No catalog items to export','bad'); return; }
@@ -1605,6 +1722,7 @@ addMachineRow();
 addMaterialRow();
 recalc();
 renderDashboard();
+populateCustomerDatalist();
 </script>
 </body>
 </html>
