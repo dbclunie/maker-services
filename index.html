@@ -286,7 +286,7 @@ select option{background:var(--surface-2);color:var(--text)}
     </div>
   </div>
   <div class="topbar-right">
-    <span class="version-badge">v1.0.2</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.0.2</span>
     <button class="icon-btn" onclick="goTo('settings')" title="Settings & Theme">🎨</button>
   </div>
 </header>
@@ -657,6 +657,79 @@ select option{background:var(--surface-2);color:var(--text)}
 
 </div><!-- /.app -->
 <div class="toast-rack" id="toasts"></div>
+<!-- ══ CHANGELOG MODAL ══ -->
+<div class="modal-bg" id="modal-changelog">
+  <div class="modal" style="max-width:480px">
+    <div class="modal-header">
+      <div class="modal-title">Version History</div>
+      <button class="modal-close" onclick="closeModal('modal-changelog')">×</button>
+    </div>
+    <div style="max-height:60vh;overflow-y:auto">
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-accent">v1.0.2</span>
+          <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>Frozen top nav bar with icon + label buttons</li>
+          <li>Logo rebuilt with correct geometry — 3 centered in bottom hex</li>
+          <li>Version badge added to topbar (tap to see this changelog)</li>
+          <li>Service worker cache busted for clean update</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v1.0.1</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>Bottom tab bar navigation (replaced squished top nav)</li>
+          <li>PWA icons and service worker improvements</li>
+          <li>Logo clipping fix attempt</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v1.0.0</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>PWA — installable on iOS and Android, works offline</li>
+          <li>Revenue analytics chart on dashboard (week/month/year)</li>
+          <li>Material consumption tracking — auto-deduct stock on quote save</li>
+          <li>Customer management CRM with quote linking and autocomplete</li>
+          <li>Printable price list PDF export from catalog</li>
+          <li>Quote duplication and reopen from history</li>
+          <li>Catalog CSV export</li>
+          <li>Dashboard home page with stats, alerts, recent quotes</li>
+          <li>Sales tax field on quote calculator</li>
+          <li>Job templates — save and reuse machine/material setups</li>
+          <li>Printable/shareable quote output</li>
+          <li>Material reorder threshold alerts</li>
+          <li>Base64 photo upload for catalog items</li>
+          <li>Ocean theme set as default</li>
+          <li>Honeycomb cluster logo with ocean palette</li>
+          <li>10 color themes with theme switcher</li>
+          <li>Quote calculator — machine time, UV ink, materials, labor, design, overhead, margin tiers, tax</li>
+          <li>Multi-machine job support</li>
+          <li>UV ink cost tracking by coverage mode (EufyMake E1)</li>
+          <li>Design time billing — $65/hr, 1hr minimum, 15-min blocks</li>
+          <li>Catalog with inventory states (on hand / on order / to make)</li>
+          <li>Machines rate card with auto-calculated depreciation + electricity</li>
+          <li>Materials library with per-unit cost and stock tracking</li>
+          <li>Quote history with stats</li>
+          <li>GitHub Pages deployment with push skill</li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-changelog')">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ CUSTOMER MODAL ══ -->
 <div class="modal-bg" id="modal-customer">
   <div class="modal">
