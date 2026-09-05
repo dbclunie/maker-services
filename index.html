@@ -438,6 +438,7 @@ select option{background:var(--surface-2);color:var(--text)}
     <h2 style="font-size:1.4rem">Materials Library</h2>
     <button class="btn btn-primary btn-sm" onclick="openMaterialModal()">+ Add Material</button>
   </div>
+  <div id="mat-alert-banner" style="display:none;background:var(--surface);border:1px solid var(--warn);border-left:4px solid var(--warn);border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:0.85rem;color:var(--text-2);line-height:1.6"></div>
   <div class="mat-grid" id="mat-grid"></div>
 </main>
 
@@ -570,6 +571,7 @@ select option{background:var(--surface-2);color:var(--text)}
         </select>
       </div>
       <div class="field"><label>Current Stock (qty units)</label><input type="number" id="mat-stock" placeholder="0" min="0" step="0.1"></div>
+      <div class="field"><label>Reorder Alert Threshold (qty units)</label><input type="number" id="mat-reorder" placeholder="e.g. 100" min="0" step="0.1"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-material')">Cancel</button>
@@ -992,13 +994,22 @@ function deleteMachine(idx){ if(!confirm('Delete this machine?')) return; DB.mac
 /* ═══ MATERIALS PAGE ═══ */
 function renderMaterials(){
   const grid=$('mat-grid');
-  if(!DB.materials.length){ grid.innerHTML='<div class="empty"><div class="empty-icon">🧱</div><p>No materials yet.</p><button class="btn btn-primary btn-sm" onclick="openMaterialModal()">Add Material</button></div>'; return; }
+  if(!DB.materials.length){ grid.innerHTML='<div class="empty"><div class="empty-icon">🧱</div><p>No materials yet.</p><button class="btn btn-primary btn-sm" onclick="openMaterialModal()">Add Material</button></div>'; renderMaterialAlertBanner(); return; }
   const TYPE={fdm:'FDM Filament',resin:'Resin','laser-wood':'Laser Wood','laser-acrylic':'Laser Acrylic','laser-other':'Laser Material',substrate:'UV Substrate',other:'Other'};
-  grid.innerHTML=DB.materials.map((m,i)=>`
-    <div class="mat-card">
+  grid.innerHTML=DB.materials.map((m,i)=>{
+    const stock=m.stock||0;
+    const low=m.reorder!==null&&m.reorder!==undefined&&stock<=m.reorder;
+    const empty=stock===0;
+    const borderColor=empty?'var(--bad)':low?'var(--warn)':'var(--border)';
+    const alertBadge=empty?`<span class="badge badge-bad" style="margin-top:4px;display:inline-block">⚠ Out of stock</span>`:low?`<span class="badge badge-warn" style="margin-top:4px;display:inline-block">⚠ Low stock</span>`:'';
+    return `<div class="mat-card" style="border-color:${borderColor}">
       <div>
         <div class="mat-name">${m.name}</div>
-        <div class="mat-type">${TYPE[m.type]||m.type} · ${m.qty}${m.unit} · Stock: ${m.stock||0}${m.unit}</div>
+        <div class="mat-type">${TYPE[m.type]||m.type} · ${m.qty}${m.unit} total</div>
+        <div style="font-size:0.78rem;color:${empty?'var(--bad)':low?'var(--warn)':'var(--text-3)'};margin-top:2px">
+          Stock: <strong>${stock}${m.unit}</strong>${m.reorder!=null?' · Alert at: '+m.reorder+m.unit:''}
+        </div>
+        ${alertBadge}
       </div>
       <div style="text-align:right;flex-shrink:0">
         <div class="mat-cost">${fmtMoney(m.cost/m.qty)}</div>
@@ -1008,16 +1019,34 @@ function renderMaterials(){
           <button class="btn btn-danger btn-sm" onclick="deleteMaterial(${i})">✕</button>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+  renderMaterialAlertBanner();
+}
+function renderMaterialAlertBanner(){
+  const alerts=DB.materials.filter(m=>{
+    const stock=m.stock||0;
+    return stock===0||(m.reorder!=null&&stock<=m.reorder);
+  });
+  const banner=$('mat-alert-banner');
+  if(!banner) return;
+  if(!alerts.length){ banner.style.display='none'; return; }
+  const outOf=alerts.filter(m=>(m.stock||0)===0);
+  const low=alerts.filter(m=>(m.stock||0)>0);
+  let msg='';
+  if(outOf.length) msg+=`<strong style="color:var(--bad)">⚠ Out of stock:</strong> ${outOf.map(m=>m.name).join(', ')}. `;
+  if(low.length) msg+=`<strong style="color:var(--warn)">⚠ Low stock:</strong> ${low.map(m=>m.name).join(', ')}.`;
+  banner.innerHTML=msg;
+  banner.style.display='block';
 }
 function openMaterialModal(idx){
   QS.editMaterialIdx=idx??null;
-  if(idx!==undefined){ const m=DB.materials[idx]; $('mat-name').value=m.name; $('mat-type').value=m.type; $('mat-cost').value=m.cost; $('mat-qty').value=m.qty; $('mat-unit').value=m.unit; $('mat-stock').value=m.stock||0; $('modal-material-title').textContent='Edit Material'; }
-  else { ['mat-name','mat-cost','mat-qty','mat-stock'].forEach(id=>$(id).value=''); $('modal-material-title').textContent='Add Material'; }
+  if(idx!==undefined){ const m=DB.materials[idx]; $('mat-name').value=m.name; $('mat-type').value=m.type; $('mat-cost').value=m.cost; $('mat-qty').value=m.qty; $('mat-unit').value=m.unit; $('mat-stock').value=m.stock||0; $('mat-reorder').value=m.reorder||''; $('modal-material-title').textContent='Edit Material'; }
+  else { ['mat-name','mat-cost','mat-qty','mat-stock','mat-reorder'].forEach(id=>$(id).value=''); $('modal-material-title').textContent='Add Material'; }
   openModal('modal-material');
 }
 function saveMaterial(){
-  const m={id:QS.editMaterialIdx!==null?DB.materials[QS.editMaterialIdx].id:uid(),name:$('mat-name').value.trim()||'Material',type:$('mat-type').value,cost:parseFloat($('mat-cost').value)||0,qty:parseFloat($('mat-qty').value)||1,unit:$('mat-unit').value,stock:parseFloat($('mat-stock').value)||0};
+  const m={id:QS.editMaterialIdx!==null?DB.materials[QS.editMaterialIdx].id:uid(),name:$('mat-name').value.trim()||'Material',type:$('mat-type').value,cost:parseFloat($('mat-cost').value)||0,qty:parseFloat($('mat-qty').value)||1,unit:$('mat-unit').value,stock:parseFloat($('mat-stock').value)||0,reorder:parseFloat($('mat-reorder').value)||null};
   if(QS.editMaterialIdx!==null) DB.materials[QS.editMaterialIdx]=m; else DB.materials.push(m);
   save(); renderMaterials(); closeModal('modal-material'); toast('Material saved','good');
 }
