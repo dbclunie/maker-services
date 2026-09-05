@@ -281,7 +281,7 @@ select option{background:var(--surface-2);color:var(--text)}
     </div>
   </div>
   <div class="topbar-right">
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.0.8</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.0.9</span>
   </div>
 </header>
 
@@ -318,7 +318,7 @@ select option{background:var(--surface-2);color:var(--text)}
   </button>
   <button class="nav-btn" id="nav-materials" onclick="goTo('materials')">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-    <span class="nav-label">Materials</span>
+    <span class="nav-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>Materials</span>
   </button>
   <button class="nav-btn" id="nav-history" onclick="goTo('history')">
     <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -336,7 +336,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <!-- ══════════ DASHBOARD ══════════ -->
 <main class="page active" id="page-dashboard">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-    <h2 style="font-size:1.4rem">Dashboard</h2>
+    <h2 style="font-size:1.4rem" style="display:flex;align-items:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Dashboard</h2>
     <button class="btn btn-primary btn-sm" onclick="goTo('quote')">💰 New Quote</button>
   </div>
 
@@ -348,7 +348,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
   <!-- revenue chart -->
   <div class="card" style="margin-bottom:20px">
-    <div class="card-title">Quoted Revenue</div>
+    <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Quoted Revenue</div>
     <div style="display:flex;gap:8px;margin-bottom:16px" id="chart-btns">
       <button onclick="setChartRange('week')"  id="chart-btn-week"  class="chart-range-btn active-range">Week</button>
       <button onclick="setChartRange('month')" id="chart-btn-month" class="chart-range-btn">Month</button>
@@ -361,13 +361,13 @@ select option{background:var(--surface-2);color:var(--text)}
   <div class="grid-2">
     <!-- recent quotes -->
     <div class="card">
-      <div class="card-title">Recent Quotes</div>
+      <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Recent Quotes</div>
       <div id="dash-recent-quotes"></div>
       <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%;justify-content:center" onclick="goTo('history')">View All →</button>
     </div>
     <!-- quick actions -->
     <div class="card">
-      <div class="card-title">Quick Actions</div>
+      <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Quick Actions</div>
       <div style="display:flex;flex-direction:column;gap:10px">
         <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('quote')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> New Quote
@@ -393,14 +393,14 @@ select option{background:var(--surface-2);color:var(--text)}
 
   <!-- low stock -->
   <div class="card" style="margin-top:16px" id="dash-stock-card">
-    <div class="card-title">Stock Alerts</div>
+    <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Stock Alerts</div>
     <div id="dash-stock"></div>
   </div>
 </main>
 
 <main class="page" id="page-quote">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-    <h2 style="font-size:1.4rem">New Quote</h2>
+    <h2 style="font-size:1.4rem"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>New Quote</h2>
     <div style="display:flex;gap:8px">
       <button class="btn btn-secondary btn-sm" onclick="clearQuote()">Clear</button>
       <button class="btn btn-secondary btn-sm" onclick="openTemplateLoadModal()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg> Templates</button>
@@ -412,7 +412,7 @@ select option{background:var(--surface-2);color:var(--text)}
     <!-- INPUTS -->
     <div>
       <div class="card">
-        <div class="card-title">Job Details</div>
+        <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Job Details</div>
         <div class="grid-2">
           <div class="field"><label>Job / Item Name</label><input type="text" id="q-name" placeholder="e.g. Custom Phone Stand" oninput="recalc()"></div>
           <div class="field"><label>Quantity</label><input type="number" id="q-qty" value="1" min="1" oninput="recalc()"></div>
@@ -435,7 +435,7 @@ select option{background:var(--surface-2);color:var(--text)}
       </div>
 
       <div class="card" id="design-block" style="margin-top:16px">
-        <div class="card-title">Design Time</div>
+        <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Design Time</div>
         <div class="row">
           <div class="field"><label>Hours (min 1 hr, then 15-min blocks)</label><input type="number" id="q-design-hrs" value="1" min="0" step="0.25" oninput="recalc()"></div>
           <div class="field"><label>Rate ($/hr)</label><input type="number" id="q-design-rate" value="65" min="0" step="5" oninput="recalc()"></div>
@@ -449,13 +449,13 @@ select option{background:var(--surface-2);color:var(--text)}
       </div>
 
       <div class="card" style="margin-top:16px">
-        <div class="card-title">Machine Time</div>
+        <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><rect x="2" y="19" width="20" height="3" rx="1"/><line x1="2" y1="19" x2="2" y2="3"/><line x1="22" y1="19" x2="22" y2="3"/><line x1="2" y1="3" x2="22" y2="3"/><rect x="9" y="0" width="6" height="4" rx="1"/><line x1="12" y1="4" x2="12" y2="9"/><rect x="6" y="12" width="12" height="7" rx="1"/><line x1="6" y1="15.5" x2="18" y2="15.5"/></svg>Machine Time</div>
         <div id="machine-rows"></div>
         <button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="addMachineRow()">+ Add Machine</button>
       </div>
 
       <div class="card" id="uv-block" style="display:none;margin-top:16px">
-        <div class="card-title">UV Print Coverage</div>
+        <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>UV Print Coverage</div>
         <div class="grid-2">
           <div class="field"><label>Print Width (inches)</label><input type="number" id="uv-w" value="4" min="0.1" step="0.5" oninput="recalc()"></div>
           <div class="field"><label>Print Height (inches)</label><input type="number" id="uv-h" value="4" min="0.1" step="0.5" oninput="recalc()"></div>
@@ -472,13 +472,13 @@ select option{background:var(--surface-2);color:var(--text)}
       </div>
 
       <div class="card" style="margin-top:16px">
-        <div class="card-title">Materials</div>
+        <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>Materials</div>
         <div id="material-rows"></div>
         <button class="btn btn-secondary btn-sm" style="margin-top:10px" onclick="addMaterialRow()">+ Add Material</button>
       </div>
 
       <div class="card" style="margin-top:16px">
-        <div class="card-title">Labor</div>
+        <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Labor</div>
         <div class="row">
           <div class="field"><label>Labor Hours</label><input type="number" id="q-labor-hrs" value="0" min="0" step="0.25" oninput="recalc()"></div>
           <div class="field"><label>Labor Rate ($/hr)</label><input type="number" id="q-labor-rate" value="25" min="0" step="5" oninput="recalc()"></div>
@@ -518,8 +518,8 @@ select option{background:var(--surface-2);color:var(--text)}
         <div class="divider"></div>
         <div class="price-row"><span class="price-label">Machine cost</span><span class="price-val" id="pr-machine">$0.00</span></div>
         <div class="price-row"><span class="price-label">UV ink cost</span><span class="price-val" id="pr-uv">$0.00</span></div>
-        <div class="price-row"><span class="price-label">Materials</span><span class="price-val" id="pr-mat">$0.00</span></div>
-        <div class="price-row"><span class="price-label">Labor</span><span class="price-val" id="pr-labor">$0.00</span></div>
+        <div class="price-row"><span class="price-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>Materials</span><span class="price-val" id="pr-mat">$0.00</span></div>
+        <div class="price-row"><span class="price-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Labor</span><span class="price-val" id="pr-labor">$0.00</span></div>
         <div class="price-row"><span class="price-label">Design time</span><span class="price-val" id="pr-design">$0.00</span></div>
         <div class="price-row"><span class="price-label">Overhead (per job)</span><span class="price-val" id="pr-overhead">$0.00</span></div>
         <div class="price-row"><span class="price-label">Complexity surcharge</span><span class="price-val" id="pr-complexity">$0.00</span></div>
@@ -545,7 +545,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <!-- ══════════ CATALOG ══════════ -->
 <main class="page" id="page-catalog">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-    <h2 style="font-size:1.4rem">Item Catalog</h2>
+    <h2 style="font-size:1.4rem"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>Item Catalog</h2>
     <button class="btn btn-secondary btn-sm" onclick="exportCatalogCSV()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</button>
     <button class="btn btn-secondary btn-sm" onclick="printPriceList()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Price List</button>
     <button class="btn btn-primary btn-sm" onclick="openCatalogModal()">+ New Item</button>
@@ -568,7 +568,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <!-- ══════════ CUSTOMERS ══════════ -->
 <main class="page" id="page-customers">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-    <h2 style="font-size:1.4rem">Customers</h2>
+    <h2 style="font-size:1.4rem"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Customers</h2>
     <button class="btn btn-primary btn-sm" onclick="openCustomerModal()">+ Add Customer</button>
   </div>
   <div class="grid-2" id="customers-grid"></div>
@@ -577,7 +577,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <!-- ══════════ MACHINES ══════════ -->
 <main class="page" id="page-machines">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-    <h2 style="font-size:1.4rem">Machines</h2>
+    <h2 style="font-size:1.4rem"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><rect x="2" y="19" width="20" height="3" rx="1"/><line x1="2" y1="19" x2="2" y2="3"/><line x1="22" y1="19" x2="22" y2="3"/><line x1="2" y1="3" x2="22" y2="3"/><rect x="9" y="0" width="6" height="4" rx="1"/><line x1="12" y1="4" x2="12" y2="9"/><rect x="6" y="12" width="12" height="7" rx="1"/><line x1="6" y1="15.5" x2="18" y2="15.5"/></svg>Machines</h2>
     <button class="btn btn-primary btn-sm" onclick="openMachineModal()">+ Add Machine</button>
   </div>
   <div class="card">
@@ -587,7 +587,7 @@ select option{background:var(--surface-2);color:var(--text)}
     </table>
   </div>
   <div class="card" style="margin-top:16px">
-    <div class="card-title">Rate Calculation</div>
+    <div class="card-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Rate Calculation</div>
     <p style="font-size:0.85rem;color:var(--text-2);line-height:1.8">
       <strong>Depreciation</strong> = Purchase Price ÷ Expected Lifespan (hrs)<br>
       <strong>Electricity</strong> = (Watts ÷ 1000) × $/kWh<br>
@@ -600,7 +600,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <!-- ══════════ MATERIALS ══════════ -->
 <main class="page" id="page-materials">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-    <h2 style="font-size:1.4rem">Materials Library</h2>
+    <h2 style="font-size:1.4rem"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>Materials Library</h2>
     <button class="btn btn-primary btn-sm" onclick="openMaterialModal()">+ Add Material</button>
   </div>
   <div id="mat-alert-banner" style="display:none;background:var(--surface);border:1px solid var(--warn);border-left:4px solid var(--warn);border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:0.85rem;color:var(--text-2);line-height:1.6"></div>
@@ -610,7 +610,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <!-- ══════════ HISTORY ══════════ -->
 <main class="page" id="page-history">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-    <h2 style="font-size:1.4rem">Quote History</h2>
+    <h2 style="font-size:1.4rem"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Quote History</h2>
     <button class="btn btn-secondary btn-sm" onclick="clearHistory()">Clear All</button>
   </div>
   <div class="grid-4" style="margin-bottom:20px" id="history-stats"></div>
@@ -619,15 +619,15 @@ select option{background:var(--surface-2);color:var(--text)}
 
 <!-- ══════════ SETTINGS ══════════ -->
 <main class="page" id="page-settings">
-  <h2 style="font-size:1.4rem;margin-bottom:20px">Settings</h2>
+  <h2 style="font-size:1.4rem;margin-bottom:20px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</h2>
 
   <div class="settings-section">
-    <h3>Theme</h3>
+    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Theme</h3>
     <div class="theme-picker" id="theme-picker"></div>
   </div>
 
   <div class="settings-section">
-    <h3>Default Rates</h3>
+    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Default Rates</h3>
     <div class="grid-3">
       <div class="field"><label>Design Rate ($/hr)</label><input type="number" id="s-design-rate" value="65" min="0" step="5" onchange="saveSettings()"></div>
       <div class="field"><label>Labor Rate ($/hr)</label><input type="number" id="s-labor-rate" value="25" min="0" step="5" onchange="saveSettings()"></div>
@@ -661,7 +661,7 @@ select option{background:var(--surface-2);color:var(--text)}
   </div>
 
   <div class="settings-section">
-    <h3>UV Ink — EufyMake E1</h3>
+    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>UV Ink — EufyMake E1</h3>
     <div class="grid-2">
       <div class="field"><label>Ink Cost per mL ($) — conservative ceiling</label><input type="number" id="s-uv-ml" value="0.50" min="0" step="0.01" onchange="saveSettings()"></div>
     </div>
@@ -669,7 +669,7 @@ select option{background:var(--surface-2);color:var(--text)}
   </div>
 
   <div class="settings-section">
-    <h3>Data</h3>
+    <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>Data</h3>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <button class="btn btn-secondary btn-sm" onclick="exportData()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export JSON</button>
       <button class="btn btn-secondary btn-sm" onclick="importData()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Import JSON</button>
@@ -691,7 +691,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.0.8</span>
+          <span class="badge badge-accent">v1.0.9</span>
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
@@ -903,7 +903,7 @@ select option{background:var(--surface-2);color:var(--text)}
       <label>Photo</label>
       <div style="display:flex;flex-direction:column;gap:8px">
         <div style="width:100%;height:120px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative" id="ci-photo-preview">
-          <span style="color:var(--text-4);font-size:2rem">📦</span>
+          <span style="color:var(--text-4);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
         </div>
         <div style="display:flex;gap:8px">
           <label style="flex:1;margin:0;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:6px;cursor:pointer;font-size:0.82rem;font-weight:600;color:var(--text-2)">
@@ -1130,7 +1130,7 @@ function renderDashboard(){
     <div class="stat-tile"><div class="stat-label">This Month</div><div class="stat-value">${fmtMoney(monthTotal)}</div><div class="stat-sub">${thisMonth.length} quote${thisMonth.length!==1?'s':''}</div></div>
     <div class="stat-tile"><div class="stat-label">All Time Quoted</div><div class="stat-value">${fmtMoney(allTotal)}</div><div class="stat-sub">${quotes.length} total quotes</div></div>
     <div class="stat-tile"><div class="stat-label">Catalog Items</div><div class="stat-value">${DB.catalog.length}</div><div class="stat-sub">${DB.customers.length} customer${DB.customers.length!==1?'s':''}</div></div>
-    <div class="stat-tile" style="${lowStock.length?'border-color:var(--warn)':''}"><div class="stat-label">Stock Alerts</div><div class="stat-value" style="${lowStock.length?'color:var(--warn)':''}">${lowStock.length}</div><div class="stat-sub">${lowStock.length?'materials need attention':'all good'}</div></div>
+    <div class="stat-tile" style="${lowStock.length?'border-color:var(--warn)':''}"><div class="stat-label"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Stock Alerts</div><div class="stat-value" style="${lowStock.length?'color:var(--warn)':''}">${lowStock.length}</div><div class="stat-sub">${lowStock.length?'materials need attention':'all good'}</div></div>
   `;
 
   // alerts
@@ -1475,7 +1475,7 @@ td:last-child{text-align:right;font-weight:600}
   <div><div class="quote-num">${quoteNum}</div><div class="quote-date">${date}</div></div>
 </div>
 <div class="section">
-  <div class="section-title">Job Details</div>
+  <div class="section-title"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>Job Details</div>
   <div class="job-name">${name}</div>
   ${customer?`<div class="job-meta">Prepared for: <strong>${customer}</strong></div>`:''}
   ${c.qty>1?`<div class="job-meta">Quantity: <strong>${c.qty} units</strong></div>`:''}
@@ -1760,7 +1760,7 @@ function clearPhoto(){
   QS.pendingPhoto=null;
   $('ci-photo').value='';
   $('ci-photo-file').value='';
-  $('ci-photo-preview').innerHTML='<span style="color:var(--text-4);font-size:2rem">📦</span>';
+  $('ci-photo-preview').innerHTML='<span style="color:var(--text-4);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>';
 }
 
 /* ═══ CUSTOMERS ═══ */
