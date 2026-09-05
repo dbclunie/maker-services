@@ -457,6 +457,10 @@ select option{background:var(--surface-2);color:var(--text)}
         <div style="font-size:0.72rem;color:var(--text-3);text-align:center;margin-top:2px;min-height:18px" id="pr-qty-note"></div>
         <div class="divider"></div>
         <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="saveQuote()">💾 Save This Quote</button>
+        <div class="waive-row" style="margin-top:10px">
+          <span style="font-size:0.78rem">Deduct materials from stock on save</span>
+          <label class="toggle"><input type="checkbox" id="q-deduct-stock" checked><span class="slider"></span></label>
+        </div>
         <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;margin-top:8px" onclick="printQuote()">🖨 Print / Share Quote</button>
         <button class="btn btn-secondary btn-sm" style="width:100%;justify-content:center;margin-top:8px" onclick="addToCatalog()">+ Add to Catalog</button>
       </div>
@@ -1373,7 +1377,21 @@ function saveQuote(){
     complexity:$('q-complexity').value, tax:$('q-tax').value,
     customMult:$('q-custom-mult').value
   });
-  save(); toast(`"${name}" saved — ${fmtMoney(c.final)}`,'good');
+  save();
+  // deduct material stock if toggle is on
+  if($('q-deduct-stock')?.checked){
+    const qty=parseInt($('q-qty').value)||1;
+    let deducted=[];
+    QS.materialRows.forEach(r=>{
+      const matIdx=DB.materials.findIndex(m=>m.id===r.materialId);
+      if(matIdx===-1) return;
+      const deductQty=r.qty*qty;
+      DB.materials[matIdx].stock=Math.max(0,(DB.materials[matIdx].stock||0)-deductQty);
+      deducted.push(`${DB.materials[matIdx].name} −${deductQty}${DB.materials[matIdx].unit}`);
+    });
+    if(deducted.length){ save(); toast(`"${name}" saved · Stock deducted: ${deducted.join(', ')}`,'good'); return; }
+  }
+  toast(`"${name}" saved — ${fmtMoney(c.final)}`,'good');
 }
 function clearQuote(){
   QS.machineRows=[]; QS.materialRows=[]; QS.margin='standard';
