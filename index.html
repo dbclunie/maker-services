@@ -246,7 +246,8 @@ select option{background:var(--surface-2);color:var(--text)}
     </svg>
   </div>
   <nav class="topbar-nav">
-    <button class="nav-btn active" onclick="goTo('quote')">💰 Quote</button>
+    <button class="nav-btn active" onclick="goTo('dashboard')">🏠 Home</button>
+    <button class="nav-btn" onclick="goTo('quote')">💰 Quote</button>
     <button class="nav-btn" onclick="goTo('catalog')">📦 Catalog</button>
     <button class="nav-btn" onclick="goTo('machines')">⚙️ Machines</button>
     <button class="nav-btn" onclick="goTo('materials')">🧱 Materials</button>
@@ -259,7 +260,47 @@ select option{background:var(--surface-2);color:var(--text)}
 </header>
 
 <!-- ══════════ QUOTE ══════════ -->
-<main class="page active" id="page-quote">
+<!-- ══════════ DASHBOARD ══════════ -->
+<main class="page active" id="page-dashboard">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <h2 style="font-size:1.4rem">Dashboard</h2>
+    <button class="btn btn-primary btn-sm" onclick="goTo('quote')">💰 New Quote</button>
+  </div>
+
+  <!-- stat tiles -->
+  <div class="grid-4" style="margin-bottom:20px" id="dash-stats"></div>
+
+  <!-- alerts -->
+  <div id="dash-alerts" style="margin-bottom:20px"></div>
+
+  <div class="grid-2">
+    <!-- recent quotes -->
+    <div class="card">
+      <div class="card-title">Recent Quotes</div>
+      <div id="dash-recent-quotes"></div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:12px;width:100%;justify-content:center" onclick="goTo('history')">View All →</button>
+    </div>
+    <!-- quick actions -->
+    <div class="card">
+      <div class="card-title">Quick Actions</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('quote')">💰 New Quote</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('catalog');openCatalogModal()">📦 Add Catalog Item</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('machines');openMachineModal()">⚙️ Add Machine</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('materials');openMaterialModal()">🧱 Add Material</button>
+        <button class="btn btn-secondary" style="justify-content:flex-start;gap:12px" onclick="goTo('settings')">🎨 Settings & Theme</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- low stock -->
+  <div class="card" style="margin-top:16px" id="dash-stock-card">
+    <div class="card-title">Stock Alerts</div>
+    <div id="dash-stock"></div>
+  </div>
+</main>
+
+<main class="page" id="page-quote">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
     <h2 style="font-size:1.4rem">New Quote</h2>
     <div style="display:flex;gap:8px">
@@ -729,11 +770,83 @@ function goTo(page){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   $('page-'+page).classList.add('active');
   document.querySelector(`.nav-btn[onclick="goTo('${page}')"]`).classList.add('active');
+  if(page==='dashboard') renderDashboard();
   if(page==='machines') renderMachines();
   if(page==='materials') renderMaterials();
   if(page==='catalog') renderCatalog();
   if(page==='history') renderHistory();
   if(page==='settings'){ renderThemePicker(); loadSettings(); }
+}
+
+function renderDashboard(){
+  const s=DB.settings;
+  const quotes=DB.quotes;
+  const now=new Date();
+  const thisMonth=quotes.filter(q=>{
+    const d=new Date(q.ts);
+    return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+  });
+  const monthTotal=thisMonth.reduce((a,q)=>a+q.final,0);
+  const allTotal=quotes.reduce((a,q)=>a+q.final,0);
+  const lowStock=DB.materials.filter(m=>(m.stock||0)===0||(m.reorder!=null&&(m.stock||0)<=m.reorder));
+
+  // stat tiles
+  $('dash-stats').innerHTML=`
+    <div class="stat-tile"><div class="stat-label">This Month</div><div class="stat-value">${fmtMoney(monthTotal)}</div><div class="stat-sub">${thisMonth.length} quote${thisMonth.length!==1?'s':''}</div></div>
+    <div class="stat-tile"><div class="stat-label">All Time Quoted</div><div class="stat-value">${fmtMoney(allTotal)}</div><div class="stat-sub">${quotes.length} total quotes</div></div>
+    <div class="stat-tile"><div class="stat-label">Catalog Items</div><div class="stat-value">${DB.catalog.length}</div><div class="stat-sub">${DB.templates.length} template${DB.templates.length!==1?'s':''}</div></div>
+    <div class="stat-tile" style="${lowStock.length?'border-color:var(--warn)':''}"><div class="stat-label">Stock Alerts</div><div class="stat-value" style="${lowStock.length?'color:var(--warn)':''}">${lowStock.length}</div><div class="stat-sub">${lowStock.length?'materials need attention':'all good'}</div></div>
+  `;
+
+  // alerts
+  const alertEl=$('dash-alerts');
+  if(lowStock.length){
+    const out=lowStock.filter(m=>(m.stock||0)===0);
+    const low=lowStock.filter(m=>(m.stock||0)>0);
+    let msg='';
+    if(out.length) msg+=`<strong style="color:var(--bad)">⚠ Out of stock:</strong> ${out.map(m=>m.name).join(', ')}. `;
+    if(low.length) msg+=`<strong style="color:var(--warn)">⚠ Low stock:</strong> ${low.map(m=>m.name).join(', ')}.`;
+    alertEl.innerHTML=`<div style="background:var(--surface);border:1px solid var(--warn);border-left:4px solid var(--warn);border-radius:8px;padding:10px 16px;font-size:0.85rem;color:var(--text-2);line-height:1.6;display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <span>${msg}</span>
+      <button class="btn btn-secondary btn-sm" onclick="goTo('materials')" style="flex-shrink:0">View →</button>
+    </div>`;
+  } else {
+    alertEl.innerHTML='';
+  }
+
+  // recent quotes
+  const recentQ=$('dash-recent-quotes');
+  if(!quotes.length){
+    recentQ.innerHTML='<p style="font-size:0.85rem;color:var(--text-4);padding:8px 0">No quotes yet.</p>';
+  } else {
+    recentQ.innerHTML=quotes.slice(0,5).map(q=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);gap:8px">
+        <div>
+          <div style="font-weight:600;font-size:0.88rem">${q.name}</div>
+          <div style="font-size:0.72rem;color:var(--text-3)">${q.date}${q.customer?' · '+q.customer:''}</div>
+        </div>
+        <div style="font-weight:700;color:var(--accent);font-size:0.95rem;flex-shrink:0">${fmtMoney(q.final)}</div>
+      </div>`).join('');
+  }
+
+  // stock card
+  const stockEl=$('dash-stock');
+  if(!lowStock.length){
+    stockEl.innerHTML='<p style="font-size:0.85rem;color:var(--good);padding:4px 0">✓ All materials are sufficiently stocked.</p>';
+    $('dash-stock-card').style.borderColor='var(--border)';
+  } else {
+    $('dash-stock-card').style.borderColor='var(--warn)';
+    stockEl.innerHTML=lowStock.map(m=>{
+      const empty=(m.stock||0)===0;
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);gap:8px">
+        <div>
+          <div style="font-weight:600;font-size:0.88rem">${m.name}</div>
+          <div style="font-size:0.72rem;color:${empty?'var(--bad)':'var(--warn)'}">${empty?'Out of stock':`${m.stock}${m.unit} remaining · alert at ${m.reorder}${m.unit}`}</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="goTo('materials');openMaterialModal(${DB.materials.indexOf(m)})">Edit</button>
+      </div>`;
+    }).join('');
+  }
 }
 
 /* ═══ THEME ═══ */
@@ -1412,6 +1525,7 @@ loadSettings();
 addMachineRow();
 addMaterialRow();
 recalc();
+renderDashboard();
 </script>
 </body>
 </html>
