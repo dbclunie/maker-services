@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="forge">
+<html lang="en" data-theme="ocean">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +13,7 @@
   --accent:#F28C38; --accent-l:#FFD4A8; --accent-d:#C06820; --on-acc:#2A1400;
   --good:#5FCC80; --good-d:#3A9A58; --warn:#F2C94C; --bad:#E05A5A; --bad-bg:#2E1A1A; --info:#5BA3E0;
 }
+[data-theme="ocean"]  { --bg:#0A1628; --bg-deep:#060F1A; --surface:#0F2030; --surface-2:#162B3E; --border:#1F3F58; --border-2:#27506E; --border-3:#356688; --text:#D8EEF8; --text-2:#88B4CC; --text-3:#6A94AC; --text-4:#527888; --text-5:#3C5C6A; --accent:#40E0FF; --accent-l:#A8F0FF; --accent-d:#2090C0; --on-acc:#02141E; --good:#50CC90; --good-d:#309A68; --warn:#F0C040; --bad:#E05858; --bad-bg:#2A1010; --info:#80A8E0; }
 [data-theme="forge"]  { --bg:#111318; --bg-deep:#0C0E12; --surface:#191C23; --surface-2:#21252F; --border:#2E3340; --border-2:#373D4D; --border-3:#464E61; --text:#E4E7F0; --text-2:#9AA3B8; --text-3:#7A8299; --text-4:#626A80; --text-5:#4A5066; --accent:#F28C38; --accent-l:#FFD4A8; --accent-d:#C06820; --on-acc:#2A1400; --good:#5FCC80; --good-d:#3A9A58; --warn:#F2C94C; --bad:#E05A5A; --bad-bg:#2E1A1A; --info:#5BA3E0; }
 [data-theme="resin"]  { --bg:#0F0E18; --bg-deep:#09080F; --surface:#17162A; --surface-2:#1F1D38; --border:#2E2B52; --border-2:#3A3668; --border-3:#4E4980; --text:#E8E4FF; --text-2:#A89EC8; --text-3:#8A80AA; --text-4:#6E6490; --text-5:#524A70; --accent:#B07EFF; --accent-l:#DCCAFF; --accent-d:#8050D0; --on-acc:#1A0840; --good:#5FCCA0; --good-d:#3A9A78; --warn:#E8C050; --bad:#E05880; --bad-bg:#2A1020; --info:#60C0F0; }
 [data-theme="laser"]  { --bg:#0E1A10; --bg-deep:#090F0A; --surface:#142018; --surface-2:#1C2E20; --border:#273D2B; --border-2:#324E38; --border-3:#426548; --text:#DFF2E2; --text-2:#96BB9C; --text-3:#7A9E80; --text-4:#617F67; --text-5:#496250; --accent:#3EE870; --accent-l:#AAFFC4; --accent-d:#28B84E; --on-acc:#04180C; --good:#60D880; --good-d:#3AAA58; --warn:#D4E040; --bad:#E06050; --bad-bg:#2A1810; --info:#50C0A0; }
@@ -208,11 +209,41 @@ select option{background:var(--surface-2);color:var(--text)}
 
 <!-- NAV -->
 <header class="topbar">
-  <div class="topbar-logo">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="12 2 2 7 12 12 22 7"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
+  <div class="topbar-logo" title="Maker Services">
+    <svg width="180" height="56" viewBox="0 0 680 210" role="img" aria-label="Maker Services logo">
+      <!-- honeycomb cluster -->
+      <g transform="translate(100,100)">
+        <g transform="translate(-46,0)">
+          <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#0E7EC4" stroke="none"/>
+          <polygon points="0,-43 37,-22 37,22 0,43 -37,22 -37,-22" fill="#0A4F80" stroke="none"/>
+          <line x1="33" y1="-22" x2="33" y2="22" stroke="#7FFFEF" stroke-width="3" stroke-linecap="round"/>
+          <line x1="2" y1="39" x2="-35" y2="18" stroke="#7FFFEF" stroke-width="3" stroke-linecap="round"/>
+          <line x1="-35" y1="-18" x2="2" y2="-39" stroke="#7FFFEF" stroke-width="3" stroke-linecap="round"/>
+          <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="none" stroke="#40E0FF" stroke-width="3"/>
+        </g>
+        <g transform="translate(46,0)">
+          <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#0BBFB0" stroke="none"/>
+          <polygon points="0,-43 37,-22 37,22 0,43 -37,22 -37,-22" fill="#077A74" stroke="none"/>
+          <line x1="33" y1="-22" x2="33" y2="22" stroke="#7FFFEF" stroke-width="3" stroke-linecap="round"/>
+          <line x1="2" y1="39" x2="-35" y2="18" stroke="#7FFFEF" stroke-width="3" stroke-linecap="round"/>
+          <line x1="-35" y1="-18" x2="2" y2="-39" stroke="#7FFFEF" stroke-width="3" stroke-linecap="round"/>
+          <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="none" stroke="#40E0FF" stroke-width="3"/>
+        </g>
+        <g transform="translate(0,78)">
+          <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#06304A" stroke="none"/>
+          <polygon points="0,-43 37,-22 37,22 0,43 -37,22 -37,-22" fill="#0A4A6A" stroke="none"/>
+          <line x1="33" y1="-22" x2="33" y2="22" stroke="#7FFFEF" stroke-width="3" stroke-linecap="round"/>
+          <line x1="2" y1="39" x2="-35" y2="18" stroke="#7FFFEF" stroke-width="3" stroke-linecap="round"/>
+          <line x1="-35" y1="-18" x2="2" y2="-39" stroke="#7FFFEF" stroke-width="3" stroke-linecap="round"/>
+          <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="none" stroke="#40E0FF" stroke-width="3"/>
+        </g>
+      </g>
+      <!-- 3 positioned absolutely at cell C center -->
+      <text x="100" y="194" font-family="system-ui,sans-serif" font-size="46" font-weight="700" fill="#40E0FF" text-anchor="middle">3</text>
+      <!-- wordmark -->
+      <text x="276" y="106" font-family="system-ui,sans-serif" font-size="52" font-weight="700" fill="#D8EEF8" text-anchor="middle" dominant-baseline="middle">Maker</text>
+      <text x="276" y="172" font-family="system-ui,sans-serif" font-size="52" font-weight="700" fill="#40E0FF" text-anchor="middle" dominant-baseline="middle">Services</text>
     </svg>
-    Maker Services
   </div>
   <nav class="topbar-nav">
     <button class="nav-btn active" onclick="goTo('quote')">💰 Quote</button>
@@ -597,7 +628,7 @@ function load(){
   if(!DB.machines.length) seedMachines();
   if(!DB.materials.length) seedMaterials();
 }
-function getTheme(){ try{ return localStorage.getItem('ms_theme')||'forge'; }catch(e){ return 'forge'; } }
+function getTheme(){ try{ return localStorage.getItem('ms_theme')||'ocean'; }catch(e){ return 'ocean'; } }
 function setTheme(id){
   try{ localStorage.setItem('ms_theme',id); }catch(e){}
   document.documentElement.setAttribute('data-theme',id);
@@ -651,6 +682,7 @@ function goTo(page){
 
 /* ═══ THEME ═══ */
 const THEMES=[
+  {id:'ocean',    label:'Ocean',     bg:'#0A1628',acc:'#40E0FF'},
   {id:'forge',    label:'Forge',     bg:'#111318',acc:'#F28C38'},
   {id:'resin',    label:'Resin',     bg:'#0F0E18',acc:'#B07EFF'},
   {id:'laser',    label:'Laser',     bg:'#0E1A10',acc:'#3EE870'},
