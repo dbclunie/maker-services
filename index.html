@@ -1172,7 +1172,21 @@ td:last-child{text-align:right;font-weight:600}
 function saveQuote(){
   const c=recalc();
   const name=$('q-name').value.trim()||'Unnamed Job';
-  DB.quotes.unshift({id:uid(),name,customer:$('q-customer').value.trim(),qty:c.qty,final:c.final,subtotal:c.subtotal,mult:c.mult,margin:QS.margin,date:new Date().toLocaleDateString(),ts:Date.now()});
+  DB.quotes.unshift({
+    id:uid(), name, customer:$('q-customer').value.trim(),
+    qty:c.qty, final:c.final, subtotal:c.subtotal, mult:c.mult,
+    margin:QS.margin, date:new Date().toLocaleDateString(), ts:Date.now(),
+    // full state for reopening
+    machineRows:QS.machineRows.map(r=>({machineId:r.machineId,hrs:r.hrs})),
+    materialRows:QS.materialRows.map(r=>({materialId:r.materialId,qty:r.qty})),
+    uvCoverage:QS.uvCoverage, filesource:$('q-filesource').value,
+    laborHrs:$('q-labor-hrs').value, laborRate:$('q-labor-rate').value,
+    waiveLaber:$('q-waive-labor').checked,
+    designHrs:$('q-design-hrs').value, designRate:$('q-design-rate').value,
+    waiveDesign:$('q-waive-design').checked,
+    complexity:$('q-complexity').value, tax:$('q-tax').value,
+    customMult:$('q-custom-mult').value
+  });
   save(); toast(`"${name}" saved — ${fmtMoney(c.final)}`,'good');
 }
 function clearQuote(){
@@ -1472,11 +1486,53 @@ function renderHistory(){
         <div class="history-name">${q.name}</div>
         <div class="history-meta">${q.date}${q.customer?' · '+q.customer:''} · qty ${q.qty||1} · ${q.margin||'standard'} (${q.mult?.toFixed(2)||'?'}×)</div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
         <div class="history-price">${fmtMoney(q.final)}</div>
+        <button class="btn btn-secondary btn-sm" onclick="reopenQuote(${i})" title="Reopen in calculator">✏ Edit</button>
+        <button class="btn btn-ghost btn-sm" onclick="duplicateQuote(${i})" title="Duplicate this quote">⧉</button>
         <button class="btn btn-danger btn-sm" onclick="deleteQuote(${i})">✕</button>
       </div>
     </div>`).join('');
+}
+function reopenQuote(idx){
+  const q=DB.quotes[idx];
+  if(!q){ toast('Quote data not available','bad'); return; }
+  // restore fields
+  $('q-name').value=q.name||'';
+  $('q-customer').value=q.customer||'';
+  $('q-qty').value=q.qty||1;
+  $('q-complexity').value=q.complexity||0;
+  $('q-tax').value=q.tax||0;
+  $('q-labor-hrs').value=q.laborHrs||0;
+  $('q-labor-rate').value=q.laborRate||DB.settings.laborRate;
+  $('q-waive-labor').checked=q.waiveLaber||false;
+  $('q-design-hrs').value=q.designHrs||1;
+  $('q-design-rate').value=q.designRate||DB.settings.designRate;
+  $('q-waive-design').checked=q.waiveDesign||false;
+  $('q-filesource').value=q.filesource||'own';
+  $('q-custom-mult').value=q.customMult||'';
+  // restore rows
+  if(q.machineRows?.length){
+    QS.machineRows=q.machineRows.map(r=>({rowId:uid(),machineId:r.machineId,hrs:r.hrs}));
+  }
+  if(q.materialRows?.length){
+    QS.materialRows=q.materialRows.map(r=>({rowId:uid(),materialId:r.materialId,qty:r.qty}));
+  }
+  QS.uvCoverage=q.uvCoverage||'standard';
+  document.querySelectorAll('.coverage-btn').forEach(b=>b.classList.toggle('active',b.dataset.cov===QS.uvCoverage));
+  setMargin(q.margin||'standard');
+  onFileSourceChange();
+  renderMachineRows(); renderMaterialRows(); checkUV(); recalc();
+  goTo('quote');
+  toast(`"${q.name}" reopened in calculator`,'good');
+}
+function duplicateQuote(idx){
+  const q=DB.quotes[idx];
+  if(!q) return;
+  const copy={...q, id:uid(), name:`${q.name} (copy)`, date:new Date().toLocaleDateString(), ts:Date.now()};
+  DB.quotes.unshift(copy);
+  save(); renderHistory();
+  toast(`Duplicated "${q.name}"`,'good');
 }
 function deleteQuote(idx){ DB.quotes.splice(idx,1); save(); renderHistory(); }
 function clearHistory(){ if(!confirm('Clear all quote history?')) return; DB.quotes=[]; save(); renderHistory(); }
