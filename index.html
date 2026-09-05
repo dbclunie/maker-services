@@ -46,7 +46,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
 /* ── LAYOUT ── */
 .app{display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 12px;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
 .topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
 .topbar-logo svg{flex-shrink:0}
 .topbar-logo .wordmark{display:flex;flex-direction:column;line-height:1.1}
@@ -58,7 +58,7 @@ select option{background:var(--surface-2);color:var(--text)}
 /* frozen top nav bar */
 .nav-bar{
   background:var(--surface);border-bottom:1px solid var(--border);
-  position:sticky;top:56px;z-index:99;
+  position:sticky;top:52px;z-index:99;
   display:flex;justify-content:space-around;
 }
 .nav-btn{
@@ -87,11 +87,11 @@ select option{background:var(--surface-2);color:var(--text)}
 .topbar-right{display:flex;gap:8px;align-items:center;margin-left:auto}
 .icon-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--text-2);font-size:0.8rem;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:6px}
 .icon-btn:hover{border-color:var(--accent);color:var(--accent)}
-.page{display:none;flex:1;padding:24px 20px;max-width:1200px;margin:0 auto;width:100%}
+.page{display:none;flex:1;padding:16px;max-width:1200px;margin:0 auto;width:100%}
 .page.active{display:block}
 
 /* ── CARDS ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
 .card+.card{margin-top:16px}
 .card-title{font-size:0.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);margin-bottom:16px;display:flex;align-items:center;gap:8px}
 .card-title.collapsible{cursor:pointer;user-select:none;margin-bottom:0;padding-bottom:0}
@@ -106,7 +106,7 @@ select option{background:var(--surface-2);color:var(--text)}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
 .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-@media(max-width:700px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+@media(max-width:700px){.grid-2,.grid-3{grid-template-columns:1fr}.grid-4{grid-template-columns:1fr 1fr}}
 .field{margin-bottom:12px}
 .row{display:flex;gap:12px;align-items:flex-end}
 .row .field{flex:1;margin-bottom:0}
@@ -118,7 +118,7 @@ select option{background:var(--surface-2);color:var(--text)}
 .btn-secondary{background:var(--surface-2);color:var(--text);border:1px solid var(--border-2)}
 .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
 .btn-danger{background:var(--bad-bg);color:var(--bad);border:1px solid var(--bad)}
-.btn-sm{padding:5px 12px;font-size:0.78rem}
+.btn-sm{padding:7px 12px;font-size:0.78rem}
 .btn-ghost{background:none;color:var(--text-3);border:1px solid var(--border)}
 .btn-ghost:hover{color:var(--text);border-color:var(--border-2)}
 
@@ -130,9 +130,9 @@ select option{background:var(--surface-2);color:var(--text)}
 .badge-accent{background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)}
 
 /* ── STAT TILES ── */
-.stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px}
+.stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
 .stat-label{font-size:0.72rem;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.stat-value{font-size:1.8rem;font-weight:800;color:var(--text);line-height:1}
+.stat-value{font-size:1.4rem;font-weight:800;color:var(--text);line-height:1}
 .stat-sub{font-size:0.75rem;color:var(--text-3);margin-top:4px}
 
 /* ── QUOTE ── */
@@ -140,7 +140,7 @@ select option{background:var(--surface-2);color:var(--text)}
 @media(max-width:900px){.quote-section{grid-template-columns:1fr}}
 .machine-row{display:flex;gap:10px;align-items:flex-end;padding:12px;background:var(--surface-2);border-radius:8px;border:1px solid var(--border);margin-bottom:8px}
 .machine-row .field{margin-bottom:0;flex:1}
-.price-panel{background:var(--bg-deep);border:1px solid var(--border);border-radius:10px;padding:20px;position:sticky;top:116px}
+.price-panel{background:var(--bg-deep);border:1px solid var(--border);border-radius:10px;padding:16px;position:sticky;top:108px}
 .price-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.85rem}
 .price-row:last-of-type{border-bottom:none}
 .price-row.total{font-size:1rem;font-weight:700;color:var(--text);border-top:2px solid var(--border-2);margin-top:4px;padding-top:12px;border-bottom:none}
@@ -322,7 +322,7 @@ select option{background:var(--surface-2);color:var(--text)}
     <button class="icon-btn" onclick="openSearch()" title="Search">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.9.0</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v2.0.0</span>
   </div>
 </header>
 
@@ -952,25 +952,65 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.9.0</span>
-          <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
+          <span class="badge badge-accent">v2.0.0</span>
+          <span style="font-size:0.75rem;color:var(--text-3)">Current — Production Release</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
-          <li>Multi-currency support — USD, CAD, EUR, GBP, AUD, MXN, JPY</li>
-          <li>Supplier/vendor tracker on materials — name, purchase URL, one-tap reorder link</li>
-          <li>Slicer settings per catalog item — layer height, infill, speed, supports, machine, print time</li>
-          <li>Slicer info shown on catalog cards</li>
+          <li>Comprehensive mobile polish pass — tighter padding, 2×2 stat grids, better touch targets</li>
+          <li>Collapsible quote calculator sections — Design, UV, Materials, Labor collapse to save scroll</li>
+          <li>Settings accordion — all sections collapsible, much cleaner on mobile</li>
+          <li>First-run onboarding wizard — branding → rates → first machine in 3 steps</li>
+          <li>Catalog sort — A–Z, Price ↑↓, In Stock first, Needs Reprice first</li>
+          <li>Quote history CSV export</li>
+          <li>Shareable quote — native share sheet on mobile, clean HTML page on desktop</li>
+          <li>Customer activity log — timeline of quotes + notes per customer, conversion rate</li>
+          <li>Print job log — History → Print Log tab, auto-logs completed quotes, manual entry</li>
+          <li>Starred/favorite templates — pin to top with ★</li>
+          <li>Quote expiry indicator — sent quotes show expired badge after validity period</li>
+          <li>Monthly revenue goal with progress bar on dashboard</li>
         </ul>
       </div>
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-info">v1.0.1</span>
+          <span class="badge badge-info">v1.8.0</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
-          <li>Bottom tab bar navigation (replaced squished top nav)</li>
-          <li>PWA icons and service worker improvements</li>
-          <li>Logo clipping fix attempt</li>
+          <li>Global search (Cmd+K) — quotes, catalog, customers, materials, machines</li>
+          <li>Cost breakdown donut chart live in price panel</li>
+          <li>Multi-currency — USD, CAD, EUR, GBP, AUD, MXN, JPY</li>
+          <li>Supplier/vendor tracker on materials with one-tap reorder</li>
+          <li>Slicer settings per catalog item — layer height, infill, speed, supports, print time</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v1.7.0</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>Bulk material cost updater — catalog items flagged stale when price changes</li>
+          <li>Job timer — floating widget, start from Machine Time, send hours to quote</li>
+          <li>Branded quote PDF — your name, business, contact, tagline</li>
+          <li>Stock alert red dot on Materials nav icon</li>
+          <li>Quote status tracking — Draft, Sent, Accepted, Declined, Completed</li>
+          <li>Customer activity log with notes</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v1.5.0</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>PWA — installable on iOS and Android, works fully offline</li>
+          <li>Revenue analytics chart on dashboard (week/month/year)</li>
+          <li>Material stock auto-deduction on quote save</li>
+          <li>Customer management CRM — quotes, activity, conversion tracking</li>
+          <li>Printable price list and quote PDFs</li>
+          <li>Quote duplication and reopen from history</li>
+          <li>Job templates with star/favorite pinning</li>
+          <li>Dashboard with stats, alerts, recent quotes, goal tracking</li>
         </ul>
       </div>
 
@@ -979,31 +1019,12 @@ select option{background:var(--surface-2);color:var(--text)}
           <span class="badge badge-info">v1.0.0</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
-          <li>PWA — installable on iOS and Android, works offline</li>
-          <li>Revenue analytics chart on dashboard (week/month/year)</li>
-          <li>Material consumption tracking — auto-deduct stock on quote save</li>
-          <li>Customer management CRM with quote linking and autocomplete</li>
-          <li>Printable price list PDF export from catalog</li>
-          <li>Quote duplication and reopen from history</li>
-          <li>Catalog CSV export</li>
-          <li>Dashboard home page with stats, alerts, recent quotes</li>
-          <li>Sales tax field on quote calculator</li>
-          <li>Job templates — save and reuse machine/material setups</li>
-          <li>Printable/shareable quote output</li>
-          <li>Material reorder threshold alerts</li>
-          <li>Base64 photo upload for catalog items</li>
-          <li>Ocean theme set as default</li>
-          <li>Honeycomb cluster logo with ocean palette</li>
-          <li>10 color themes with theme switcher</li>
-          <li>Quote calculator — machine time, UV ink, materials, labor, design, overhead, margin tiers, tax</li>
+          <li>Quote calculator — machine, UV ink, materials, labor, design, overhead, margin tiers, tax</li>
           <li>Multi-machine job support</li>
           <li>UV ink cost tracking by coverage mode (EufyMake E1)</li>
-          <li>Design time billing — $65/hr, 1hr minimum, 15-min blocks</li>
-          <li>Catalog with inventory states (on hand / on order / to make)</li>
-          <li>Machines rate card with auto-calculated depreciation + electricity</li>
-          <li>Materials library with per-unit cost and stock tracking</li>
-          <li>Quote history with stats</li>
-          <li>GitHub Pages deployment with push skill</li>
+          <li>10 color themes, ocean default, wireframe SVG icons throughout</li>
+          <li>Honeycomb 3-cell logo</li>
+          <li>GitHub Pages deployment</li>
         </ul>
       </div>
 
