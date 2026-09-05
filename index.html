@@ -206,6 +206,9 @@ select option{background:var(--surface-2);color:var(--text)}
 
 /* ── MISC ── */
 .divider{height:1px;background:var(--border);margin:14px 0}
+.chart-range-btn{background:var(--surface-2);color:var(--text-3);border:1px solid var(--border-2);padding:5px 14px;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.chart-range-btn:hover{border-color:var(--accent);color:var(--accent)}
+.chart-range-btn.active-range{background:var(--accent);color:var(--on-acc);border-color:var(--accent)}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:4px}
@@ -280,6 +283,18 @@ select option{background:var(--surface-2);color:var(--text)}
 
   <!-- alerts -->
   <div id="dash-alerts" style="margin-bottom:20px"></div>
+
+  <!-- revenue chart -->
+  <div class="card" style="margin-bottom:20px">
+    <div class="card-title">Quoted Revenue</div>
+    <div style="display:flex;gap:8px;margin-bottom:16px" id="chart-btns">
+      <button onclick="setChartRange('week')"  id="chart-btn-week"  class="chart-range-btn active-range">Week</button>
+      <button onclick="setChartRange('month')" id="chart-btn-month" class="chart-range-btn">Month</button>
+      <button onclick="setChartRange('year')"  id="chart-btn-year"  class="chart-range-btn">Year</button>
+    </div>
+    <canvas id="revenue-chart" height="160" style="width:100%;display:block"></canvas>
+    <div id="chart-empty" style="display:none;text-align:center;padding:40px 20px;color:var(--text-4);font-size:0.85rem">No quote data for this period yet.</div>
+  </div>
 
   <div class="grid-2">
     <!-- recent quotes -->
@@ -831,6 +846,122 @@ function goTo(page){
   if(page==='settings'){ renderThemePicker(); loadSettings(); }
 }
 
+/* ═══ REVENUE CHART ═══ */
+let chartRange='week';
+function setChartRange(range){
+  chartRange=range;
+  document.querySelectorAll('.chart-range-btn').forEach(b=>b.classList.remove('active-range'));
+  $(`chart-btn-${range}`).classList.add('active-range');
+  drawRevenueChart();
+}
+function drawRevenueChart(){
+  const canvas=$('revenue-chart');
+  const empty=$('chart-empty');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const now=new Date();
+  let labels=[], buckets=[];
+
+  if(chartRange==='week'){
+    // last 7 days
+    for(let i=6;i>=0;i--){
+      const d=new Date(now); d.setDate(d.getDate()-i);
+      labels.push(d.toLocaleDateString('en-US',{weekday:'short'}));
+      buckets.push(0);
+    }
+    DB.quotes.forEach(q=>{
+      const d=new Date(q.ts);
+      const diff=Math.floor((now-d)/(1000*60*60*24));
+      if(diff<=6) buckets[6-diff]+=q.final;
+    });
+  } else if(chartRange==='month'){
+    // last 4 weeks
+    for(let i=3;i>=0;i--){
+      const d=new Date(now); d.setDate(d.getDate()-i*7);
+      labels.push('Wk '+(4-i));
+      buckets.push(0);
+    }
+    DB.quotes.forEach(q=>{
+      const d=new Date(q.ts);
+      const diff=Math.floor((now-d)/(1000*60*60*24));
+      if(diff<=28){
+        const bucket=Math.min(3,Math.floor(diff/7));
+        buckets[3-bucket]+=q.final;
+      }
+    });
+  } else {
+    // last 12 months
+    for(let i=11;i>=0;i--){
+      const d=new Date(now); d.setMonth(d.getMonth()-i);
+      labels.push(d.toLocaleDateString('en-US',{month:'short'}));
+      buckets.push(0);
+    }
+    DB.quotes.forEach(q=>{
+      const d=new Date(q.ts);
+      const monthDiff=(now.getFullYear()-d.getFullYear())*12+(now.getMonth()-d.getMonth());
+      if(monthDiff>=0&&monthDiff<=11) buckets[11-monthDiff]+=q.final;
+    });
+  }
+
+  const maxVal=Math.max(...buckets,1);
+  if(buckets.every(b=>b===0)){
+    canvas.style.display='none'; empty.style.display='block'; return;
+  }
+  canvas.style.display='block'; empty.style.display='none';
+
+  // get accent color from CSS
+  const accent=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#40E0FF';
+  const text3=getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim()||'#7A8299';
+  const border=getComputedStyle(document.documentElement).getPropertyValue('--border').trim()||'#2E3340';
+
+  // scale canvas
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.parentElement.clientWidth-40||300;
+  const H=160;
+  canvas.width=W*dpr; canvas.height=H*dpr;
+  canvas.style.width=W+'px'; canvas.style.height=H+'px';
+  ctx.scale(dpr,dpr);
+
+  const pad={top:10,bottom:32,left:50,right:10};
+  const chartW=W-pad.left-pad.right;
+  const chartH=H-pad.top-pad.bottom;
+  const barW=Math.max(4,(chartW/buckets.length)*0.6);
+  const barGap=chartW/buckets.length;
+
+  ctx.clearRect(0,0,W,H);
+
+  // grid lines
+  ctx.strokeStyle=border; ctx.lineWidth=1;
+  [0,.25,.5,.75,1].forEach(pct=>{
+    const y=pad.top+chartH*(1-pct);
+    ctx.beginPath(); ctx.moveTo(pad.left,y); ctx.lineTo(W-pad.right,y); ctx.stroke();
+    if(pct>0){
+      ctx.fillStyle=text3; ctx.font=`10px system-ui`; ctx.textAlign='right';
+      ctx.fillText('$'+(maxVal*pct).toFixed(0), pad.left-4, y+4);
+    }
+  });
+
+  // bars
+  buckets.forEach((val,i)=>{
+    const x=pad.left+i*barGap+(barGap-barW)/2;
+    const barH=val>0?(val/maxVal)*chartH:0;
+    const y=pad.top+chartH-barH;
+    // bar
+    ctx.fillStyle=accent+'99';
+    ctx.beginPath();
+    ctx.roundRect(x,y,barW,barH,3);
+    ctx.fill();
+    // value label on hover — skip for now, draw if >0
+    if(val>0){
+      ctx.fillStyle=accent; ctx.font=`bold 9px system-ui`; ctx.textAlign='center';
+      ctx.fillText('$'+val.toFixed(0), x+barW/2, y-3);
+    }
+    // x label
+    ctx.fillStyle=text3; ctx.font=`10px system-ui`; ctx.textAlign='center';
+    ctx.fillText(labels[i], x+barW/2, H-6);
+  });
+}
+
 function renderDashboard(){
   const s=DB.settings;
   const quotes=DB.quotes;
@@ -900,6 +1031,8 @@ function renderDashboard(){
       </div>`;
     }).join('');
   }
+  // draw chart after DOM settles
+  setTimeout(drawRevenueChart, 50);
 }
 
 /* ═══ THEME ═══ */
