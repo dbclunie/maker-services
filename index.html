@@ -599,7 +599,22 @@ select option{background:var(--surface-2);color:var(--text)}
       <div class="field"><label>On Order (qty)</label><input type="number" id="ci-onorder" value="0" min="0"></div>
       <div class="field"><label>To Make (qty)</label><input type="number" id="ci-tomake" value="0" min="0"></div>
     </div>
-    <div class="field"><label>Photo URL (optional)</label><input type="text" id="ci-photo" placeholder="https://…"></div>
+    <div class="field">
+      <label>Photo</label>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="width:100%;height:120px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative" id="ci-photo-preview">
+          <span style="color:var(--text-4);font-size:2rem">📦</span>
+        </div>
+        <div style="display:flex;gap:8px">
+          <label style="flex:1;margin:0;display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:6px;cursor:pointer;font-size:0.82rem;font-weight:600;color:var(--text-2)">
+            📷 Upload Photo
+            <input type="file" id="ci-photo-file" accept="image/*" style="display:none" onchange="onPhotoUpload(event)">
+          </label>
+          <button class="btn btn-ghost btn-sm" onclick="clearPhoto()" style="flex-shrink:0">✕ Clear</button>
+        </div>
+        <input type="text" id="ci-photo" placeholder="Or paste image URL…" oninput="onPhotoUrl()" style="font-size:0.8rem">
+      </div>
+    </div>
     <div class="field"><label>Notes / Settings</label><textarea id="ci-notes" rows="2" style="resize:vertical" placeholder="Material, slicer settings, notes…"></textarea></div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-catalog')">Cancel</button>
@@ -619,7 +634,7 @@ let DB = {
     waste:{fdm:12,resin:18,laser:5,uv:8}
   }
 };
-let QS = { machineRows:[], materialRows:[], margin:'standard', uvCoverage:'standard', editMachineIdx:null, editMaterialIdx:null, editCatalogIdx:null };
+let QS = { machineRows:[], materialRows:[], margin:'standard', uvCoverage:'standard', editMachineIdx:null, editMaterialIdx:null, editCatalogIdx:null, pendingPhoto:null };
 
 /* ═══ PERSIST ═══ */
 const save = () => { try{ localStorage.setItem('ms_db', JSON.stringify(DB)); }catch(e){} };
@@ -1008,6 +1023,34 @@ function saveMaterial(){
 }
 function deleteMaterial(idx){ if(!confirm('Delete this material?')) return; DB.materials.splice(idx,1); save(); renderMaterials(); }
 
+/* ═══ PHOTO UPLOAD ═══ */
+function onPhotoUpload(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const data=ev.target.result;
+    $('ci-photo').value='';
+    updatePhotoPreview(data);
+    QS.pendingPhoto=data;
+  };
+  reader.readAsDataURL(file);
+}
+function onPhotoUrl(){
+  const url=$('ci-photo').value.trim();
+  if(url){ updatePhotoPreview(url); QS.pendingPhoto=url; }
+  else { clearPhoto(); }
+}
+function updatePhotoPreview(src){
+  const el=$('ci-photo-preview');
+  el.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<span style=color:var(--bad);font-size:0.8rem>Invalid image</span>'">`;
+}
+function clearPhoto(){
+  QS.pendingPhoto=null;
+  $('ci-photo').value='';
+  $('ci-photo-file').value='';
+  $('ci-photo-preview').innerHTML='<span style="color:var(--text-4);font-size:2rem">📦</span>';
+}
+
 /* ═══ CATALOG PAGE ═══ */
 function renderCatalog(){
   const search=$('cat-search')?.value.toLowerCase()||'';
@@ -1038,6 +1081,7 @@ function openCatalogModal(){
   $('ci-price').value=''; $('ci-onhand').value=0; $('ci-onorder').value=0; $('ci-tomake').value=0;
   $('modal-catalog-title').textContent='New Catalog Item';
   $('ci-delete-btn').style.display='none';
+  clearPhoto();
   openModal('modal-catalog');
 }
 function editCatalogItem(idx){
@@ -1045,13 +1089,16 @@ function editCatalogItem(idx){
   const item=DB.catalog[idx];
   $('ci-name').value=item.name; $('ci-type').value=item.type||'other'; $('ci-price').value=item.price;
   $('ci-onhand').value=item.onHand||0; $('ci-onorder').value=item.onOrder||0; $('ci-tomake').value=item.toMake||0;
-  $('ci-photo').value=item.photo||''; $('ci-notes').value=item.notes||'';
+  $('ci-photo').value=(item.photo&&!item.photo.startsWith('data:'))?item.photo:'';
+  $('ci-notes').value=item.notes||'';
+  QS.pendingPhoto=item.photo||null;
+  if(item.photo) updatePhotoPreview(item.photo); else clearPhoto();
   $('modal-catalog-title').textContent='Edit Item';
   $('ci-delete-btn').style.display='inline-flex';
   openModal('modal-catalog');
 }
 function saveCatalogItem(){
-  const item={id:QS.editCatalogIdx!==null?DB.catalog[QS.editCatalogIdx].id:uid(),name:$('ci-name').value.trim()||'Item',type:$('ci-type').value,price:parseFloat($('ci-price').value)||0,onHand:parseInt($('ci-onhand').value)||0,onOrder:parseInt($('ci-onorder').value)||0,toMake:parseInt($('ci-tomake').value)||0,photo:$('ci-photo').value.trim(),notes:$('ci-notes').value.trim()};
+  const item={id:QS.editCatalogIdx!==null?DB.catalog[QS.editCatalogIdx].id:uid(),name:$('ci-name').value.trim()||'Item',type:$('ci-type').value,price:parseFloat($('ci-price').value)||0,onHand:parseInt($('ci-onhand').value)||0,onOrder:parseInt($('ci-onorder').value)||0,toMake:parseInt($('ci-tomake').value)||0,photo:QS.pendingPhoto||'',notes:$('ci-notes').value.trim()};
   if(QS.editCatalogIdx!==null) DB.catalog[QS.editCatalogIdx]=item; else DB.catalog.push(item);
   save(); renderCatalog(); closeModal('modal-catalog'); toast('Item saved','good');
 }
