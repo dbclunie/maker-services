@@ -59,29 +59,24 @@ select option{background:var(--surface-2);color:var(--text)}
 .nav-bar{
   background:var(--surface);border-bottom:1px solid var(--border);
   position:sticky;top:56px;z-index:99;
-  display:flex;overflow-x:auto;scrollbar-width:none;
-  -webkit-overflow-scrolling:touch;
+  display:flex;justify-content:space-around;
 }
-.nav-bar::-webkit-scrollbar{display:none}
 .nav-btn{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer;
   color:var(--text-3);font-family:inherit;
-  padding:8px 14px;white-space:nowrap;
-  transition:all .15s;position:relative;flex-shrink:0;
+  padding:10px 0;flex:1;
+  transition:all .15s;position:relative;
   -webkit-tap-highlight-color:transparent;
 }
 .nav-btn:hover{color:var(--text);background:var(--surface-2)}
 .nav-btn.active{color:var(--accent)}
 .nav-btn.active::after{
-  content:'';position:absolute;bottom:0;left:10%;right:10%;
+  content:'';position:absolute;bottom:0;left:20%;right:20%;
   height:2px;background:var(--accent);border-radius:2px 2px 0 0;
 }
-.nav-icon{width:20px;height:20px;display:block;flex-shrink:0}
-.nav-label{font-size:0.6rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
-
-/* page bottom padding */
-.page{padding-bottom:24px}
+.nav-icon{width:22px;height:22px;display:block}
+.nav-label{display:none}
 .topbar-right{display:flex;gap:8px;align-items:center;margin-left:auto}
 .icon-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;cursor:pointer;color:var(--text-2);font-size:0.8rem;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:6px}
 .icon-btn:hover{border-color:var(--accent);color:var(--accent)}
@@ -286,7 +281,7 @@ select option{background:var(--surface-2);color:var(--text)}
     </div>
   </div>
   <div class="topbar-right">
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.0.4</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.0.5</span>
   </div>
 </header>
 
@@ -687,7 +682,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.0.4</span>
+          <span class="badge badge-accent">v1.0.5</span>
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
