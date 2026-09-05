@@ -311,7 +311,7 @@ select option{background:var(--surface-2);color:var(--text)}
     <button class="icon-btn" onclick="openSearch()" title="Search">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.5.0</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.6.0</span>
   </div>
 </header>
 
@@ -646,12 +646,32 @@ select option{background:var(--surface-2);color:var(--text)}
 
 <!-- ══════════ HISTORY ══════════ -->
 <main class="page" id="page-history">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-    <h2 style="font-size:1.4rem"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Quote History</h2>
-    <button class="btn btn-secondary btn-sm" onclick="clearHistory()">Clear All</button>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+    <h2 style="font-size:1.4rem"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:8px;flex-shrink:0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>History</h2>
+    <div style="display:flex;gap:6px">
+      <button class="chart-range-btn active-range" id="htab-quotes" onclick="switchHistoryTab('quotes')">Quotes</button>
+      <button class="chart-range-btn" id="htab-jobs" onclick="switchHistoryTab('jobs')">Print Log</button>
+    </div>
   </div>
-  <div class="grid-4" style="margin-bottom:20px" id="history-stats"></div>
-  <div class="card" id="history-list"></div>
+
+  <!-- quotes tab -->
+  <div id="htab-quotes-panel">
+    <div class="grid-4" style="margin-bottom:20px" id="history-stats"></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <button class="btn btn-ghost btn-sm" onclick="clearHistory()">Clear All</button>
+    </div>
+    <div class="card" id="history-list"></div>
+  </div>
+
+  <!-- print job log tab -->
+  <div id="htab-jobs-panel" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <p style="font-size:0.82rem;color:var(--text-3)">Jobs logged when a quote is marked Completed.</p>
+      <button class="btn btn-primary btn-sm" onclick="openLogJobModal()">+ Log Job</button>
+    </div>
+    <div class="grid-4" style="margin-bottom:20px" id="joblog-stats"></div>
+    <div class="card" id="joblog-list"></div>
+  </div>
 </main>
 
 <!-- ══════════ SETTINGS ══════════ -->
@@ -762,6 +782,29 @@ select option{background:var(--surface-2);color:var(--text)}
 
 </div><!-- /.app -->
 <div class="toast-rack" id="toasts"></div>
+<!-- ══ LOG JOB MODAL ══ -->
+<div class="modal-bg" id="modal-log-job">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Log Completed Job</div>
+      <button class="modal-close" onclick="closeModal('modal-log-job')">×</button>
+    </div>
+    <div class="grid-2">
+      <div class="field"><label>Job Name</label><input type="text" id="lj-name" placeholder="e.g. Phone Stand × 3"></div>
+      <div class="field"><label>Customer</label><input type="text" id="lj-customer" placeholder="Customer name" list="customer-list"></div>
+      <div class="field"><label>Machine</label><input type="text" id="lj-machine" placeholder="e.g. Bambu X1C"></div>
+      <div class="field"><label>Material</label><input type="text" id="lj-material" placeholder="e.g. PLA+ White"></div>
+      <div class="field"><label>Duration (hrs)</label><input type="number" id="lj-duration" placeholder="2.5" min="0" step="0.25"></div>
+      <div class="field"><label>Revenue</label><input type="number" id="lj-revenue" placeholder="0.00" min="0" step="0.50"></div>
+    </div>
+    <div class="field"><label>Notes</label><input type="text" id="lj-notes" placeholder="Any notes about this job…"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-log-job')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveJobLog()">Log Job</button>
+    </div>
+  </div>
+</div>
+
 <!-- ══ SEARCH MODAL ══ -->
 <div class="modal-bg" id="modal-search">
   <div class="modal" style="max-width:560px">
@@ -785,7 +828,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.5.0</span>
+          <span class="badge badge-accent">v1.6.0</span>
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
@@ -843,6 +886,40 @@ select option{background:var(--surface-2);color:var(--text)}
     </div>
     <div class="modal-footer">
       <button class="btn btn-secondary" onclick="closeModal('modal-changelog')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CUSTOMER DETAIL MODAL ══ -->
+<div class="modal-bg" id="modal-customer-detail">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div class="modal-title" id="cdet-name">Customer</div>
+      <button class="modal-close" onclick="closeModal('modal-customer-detail')">×</button>
+    </div>
+    <div id="cdet-contact" style="font-size:0.8rem;color:var(--text-3);margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap"></div>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <button class="btn btn-secondary btn-sm" onclick="editCurrentCustomer()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit
+      </button>
+      <button class="btn btn-primary btn-sm" onclick="newQuoteForCustomer()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New Quote
+      </button>
+    </div>
+
+    <!-- stats -->
+    <div class="grid-4" id="cdet-stats" style="margin-bottom:20px"></div>
+
+    <!-- activity log -->
+    <div style="margin-bottom:12px">
+      <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-3);margin-bottom:10px">Activity</div>
+      <div id="cdet-activity" style="max-height:45vh;overflow-y:auto"></div>
+    </div>
+
+    <!-- add note -->
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input type="text" id="cdet-note-input" placeholder="Add a note…" style="flex:1" onkeydown="if(event.key==='Enter')addCustomerNote()">
+      <button class="btn btn-secondary btn-sm" onclick="addCustomerNote()">Add Note</button>
     </div>
   </div>
 </div>
@@ -1042,7 +1119,7 @@ select option{background:var(--surface-2);color:var(--text)}
 <script>
 /* ═══ STATE ═══ */
 let DB = {
-  machines:[], materials:[], catalog:[], quotes:[], templates:[], customers:[],
+  machines:[], materials:[], catalog:[], quotes:[], templates:[], customers:[], joblog:[],
   settings:{
     designRate:65, laborRate:25, kwh:0.14, overhead:50, jobsPerMonth:20, minPrice:10, uvPerMl:0.50,
     margins:{sale:1.25,discount:1.5,standard:2.0,medium:2.5,high:3.0,premium:4.0},
@@ -1934,7 +2011,7 @@ function renderCustomers(){
   grid.innerHTML=DB.customers.map((c,i)=>{
     const cQuotes=DB.quotes.filter(q=>q.customer&&q.customer.toLowerCase()===c.name.toLowerCase());
     const total=cQuotes.reduce((a,q)=>a+q.final,0);
-    return `<div class="card" style="cursor:pointer" onclick="openCustomerModal(${i})">
+    return `<div class="card" style="cursor:pointer" onclick="openCustomerDetail(${i})">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
         <div>
           <div style="font-weight:700;font-size:1rem">${c.name}</div>
@@ -1956,6 +2033,98 @@ function populateCustomerDatalist(){
   const dl=$('customer-list');
   if(dl) dl.innerHTML=DB.customers.map(c=>`<option value="${c.name}">`).join('');
 }
+let currentCustomerIdx=null;
+
+function openCustomerDetail(idx){
+  currentCustomerIdx=idx;
+  const c=DB.customers[idx];
+  if(!c.notes_log) c.notes_log=[];
+  $('cdet-name').textContent=c.name;
+
+  // contact line
+  const contactParts=[];
+  if(c.email) contactParts.push(`<a href="mailto:${c.email}" style="color:var(--accent)">${c.email}</a>`);
+  if(c.phone) contactParts.push(`<a href="tel:${c.phone}" style="color:var(--accent)">${c.phone}</a>`);
+  if(c.contact) contactParts.push(`Prefers: ${c.contact}`);
+  $('cdet-contact').innerHTML=contactParts.join('<span style="color:var(--border-2)">·</span>');
+
+  // stats
+  const cQuotes=DB.quotes.filter(q=>q.customer&&q.customer.toLowerCase()===c.name.toLowerCase());
+  const total=cQuotes.reduce((a,q)=>a+q.final,0);
+  const accepted=cQuotes.filter(q=>q.status==='accepted'||q.status==='completed').length;
+  $('cdet-stats').innerHTML=`
+    <div class="stat-tile"><div class="stat-label">Quotes</div><div class="stat-value">${cQuotes.length}</div></div>
+    <div class="stat-tile"><div class="stat-label">Total Quoted</div><div class="stat-value">${fmtMoney(total)}</div></div>
+    <div class="stat-tile"><div class="stat-label">Accepted</div><div class="stat-value">${accepted}</div></div>
+    <div class="stat-tile"><div class="stat-label">Conv. Rate</div><div class="stat-value">${cQuotes.length?Math.round(accepted/cQuotes.length*100)+'%':'—'}</div></div>`;
+
+  renderCustomerActivity(idx);
+  openModal('modal-customer-detail');
+}
+
+function renderCustomerActivity(idx){
+  const c=DB.customers[idx];
+  if(!c.notes_log) c.notes_log=[];
+  const cQuotes=DB.quotes.filter(q=>q.customer&&q.customer.toLowerCase()===c.name.toLowerCase());
+  const STATUS_COLOR={draft:'var(--info)',sent:'var(--accent)',accepted:'var(--good)',declined:'var(--bad)',completed:'var(--good)'};
+
+  // build timeline: quotes + notes, sorted by date
+  const events=[
+    ...cQuotes.map(q=>({ts:q.ts,type:'quote',name:q.name,final:q.final,status:q.status||'draft'})),
+    ...c.notes_log.map(n=>({ts:n.ts,type:'note',text:n.text}))
+  ].sort((a,b)=>b.ts-a.ts);
+
+  if(!events.length){
+    $('cdet-activity').innerHTML='<p style="font-size:0.82rem;color:var(--text-4);padding:8px 0">No activity yet.</p>';
+    return;
+  }
+
+  $('cdet-activity').innerHTML=events.map(ev=>{
+    const date=new Date(ev.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    if(ev.type==='quote'){
+      return `<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div style="width:8px;height:8px;border-radius:50%;background:${STATUS_COLOR[ev.status]||'var(--info)'};margin-top:5px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:0.85rem;font-weight:600">${ev.name}</div>
+          <div style="font-size:0.72rem;color:var(--text-3)">${date} · ${fmtMoney(ev.final)} · <span style="color:${STATUS_COLOR[ev.status]||'var(--info)'}">${ev.status}</span></div>
+        </div>
+      </div>`;
+    } else {
+      return `<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--text-4);margin-top:5px;flex-shrink:0"></div>
+        <div>
+          <div style="font-size:0.85rem;color:var(--text-2)">${ev.text}</div>
+          <div style="font-size:0.72rem;color:var(--text-4)">${date}</div>
+        </div>
+      </div>`;
+    }
+  }).join('');
+}
+
+function addCustomerNote(){
+  const input=$('cdet-note-input');
+  const text=input.value.trim();
+  if(!text||currentCustomerIdx===null) return;
+  const c=DB.customers[currentCustomerIdx];
+  if(!c.notes_log) c.notes_log=[];
+  c.notes_log.push({ts:Date.now(),text});
+  input.value='';
+  save();
+  renderCustomerActivity(currentCustomerIdx);
+}
+
+function editCurrentCustomer(){
+  closeModal('modal-customer-detail');
+  setTimeout(()=>openCustomerModal(currentCustomerIdx),150);
+}
+
+function newQuoteForCustomer(){
+  const c=DB.customers[currentCustomerIdx];
+  closeModal('modal-customer-detail');
+  goTo('quote');
+  setTimeout(()=>{ $('q-customer').value=c.name; },100);
+}
+
 function openCustomerModal(idx){
   editCustomerIdx=idx??null;
   if(idx!==undefined){
@@ -2173,6 +2342,76 @@ function deleteCatalogCurrent(){
   save(); renderCatalog(); closeModal('modal-catalog'); toast('Item deleted');
 }
 
+/* ═══ HISTORY TABS ═══ */
+function switchHistoryTab(tab){
+  ['quotes','jobs'].forEach(t=>{
+    $(`htab-${t}-panel`).style.display=t===tab?'block':'none';
+    $(`htab-${t}`).classList.toggle('active-range',t===tab);
+  });
+  if(tab==='jobs') renderJobLog();
+}
+
+/* ═══ PRINT JOB LOG ═══ */
+function openLogJobModal(){
+  ['lj-name','lj-customer','lj-machine','lj-material','lj-notes'].forEach(id=>$(id).value='');
+  ['lj-duration','lj-revenue'].forEach(id=>$(id).value='');
+  openModal('modal-log-job');
+}
+function saveJobLog(){
+  if(!DB.joblog) DB.joblog=[];
+  const entry={
+    id:uid(),
+    name:$('lj-name').value.trim()||'Untitled Job',
+    customer:$('lj-customer').value.trim(),
+    machine:$('lj-machine').value.trim(),
+    material:$('lj-material').value.trim(),
+    duration:parseFloat($('lj-duration').value)||0,
+    revenue:parseFloat($('lj-revenue').value)||0,
+    notes:$('lj-notes').value.trim(),
+    ts:Date.now(),
+    fromQuote:false
+  };
+  DB.joblog.unshift(entry);
+  save(); closeModal('modal-log-job'); renderJobLog();
+  toast(`Job "${entry.name}" logged`,'good');
+}
+function renderJobLog(){
+  if(!DB.joblog) DB.joblog=[];
+  const list=$('joblog-list');
+  const stats=$('joblog-stats');
+  const totalRev=DB.joblog.reduce((a,j)=>a+(j.revenue||0),0);
+  const totalHrs=DB.joblog.reduce((a,j)=>a+(j.duration||0),0);
+  stats.innerHTML=`
+    <div class="stat-tile"><div class="stat-label">Jobs Logged</div><div class="stat-value">${DB.joblog.length}</div></div>
+    <div class="stat-tile"><div class="stat-label">Total Revenue</div><div class="stat-value">${fmtMoney(totalRev)}</div></div>
+    <div class="stat-tile"><div class="stat-label">Total Hours</div><div class="stat-value">${totalHrs.toFixed(1)}h</div></div>
+    <div class="stat-tile"><div class="stat-label">Avg/Job</div><div class="stat-value">${DB.joblog.length?fmtMoney(totalRev/DB.joblog.length):'—'}</div></div>`;
+  if(!DB.joblog.length){
+    list.innerHTML='<div class="empty"><p>No jobs logged yet. Mark a quote as Completed or tap + Log Job.</p></div>';
+    return;
+  }
+  list.innerHTML=DB.joblog.map((j,i)=>`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);gap:12px">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;font-size:0.9rem">${j.name}</div>
+        <div style="font-size:0.72rem;color:var(--text-3);margin-top:2px">
+          ${new Date(j.ts).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}
+          ${j.customer?' · '+j.customer:''}
+          ${j.machine?' · '+j.machine:''}
+          ${j.material?' · '+j.material:''}
+          ${j.duration?' · '+j.duration+'hr':''}
+        </div>
+        ${j.notes?`<div style="font-size:0.75rem;color:var(--text-3);margin-top:3px;font-style:italic">${j.notes}</div>`:''}
+        ${j.fromQuote?`<span style="font-size:0.65rem;color:var(--text-4);margin-top:4px;display:inline-block">Auto-logged from quote</span>`:''}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        ${j.revenue?`<span style="font-weight:700;color:var(--accent)">${fmtMoney(j.revenue)}</span>`:''}
+        <button class="btn btn-danger btn-sm" onclick="deleteJobLog(${i})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+    </div>`).join('');
+}
+function deleteJobLog(idx){ DB.joblog.splice(idx,1); save(); renderJobLog(); }
+
 /* ═══ HISTORY PAGE ═══ */
 function renderHistory(){
   const quotes=DB.quotes;
@@ -2252,7 +2491,15 @@ function duplicateQuote(idx){
   toast(`Duplicated "${q.name}"`,'good');
 }
 function setQuoteStatus(idx, status){
-  if(DB.quotes[idx]) DB.quotes[idx].status=status;
+  if(!DB.quotes[idx]) return;
+  DB.quotes[idx].status=status;
+  // auto-log when marked completed
+  if(status==='completed'){
+    const q=DB.quotes[idx];
+    if(!DB.joblog) DB.joblog=[];
+    DB.joblog.unshift({id:uid(),name:q.name,customer:q.customer||'',machine:'',material:'',duration:'',revenue:q.final,notes:'',ts:Date.now(),fromQuote:true});
+    toast(`"${q.name}" logged as completed job`,'good');
+  }
   save(); renderHistory();
 }
 function deleteQuote(idx){ DB.quotes.splice(idx,1); save(); renderHistory(); }
