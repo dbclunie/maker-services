@@ -311,7 +311,7 @@ select option{background:var(--surface-2);color:var(--text)}
     <button class="icon-btn" onclick="openSearch()" title="Search">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.7.0</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v1.8.0</span>
   </div>
 </header>
 
@@ -588,8 +588,8 @@ select option{background:var(--surface-2);color:var(--text)}
     <button class="btn btn-primary btn-sm" onclick="openCatalogModal()">+ New Item</button>
   </div>
   <div class="catalog-toolbar">
-    <input type="text" id="cat-search" placeholder="Search items…" oninput="renderCatalog()" style="max-width:220px">
-    <select id="cat-filter" onchange="renderCatalog()" style="max-width:160px">
+    <input type="text" id="cat-search" placeholder="Search items…" oninput="renderCatalog()" style="flex:1;min-width:120px;max-width:220px">
+    <select id="cat-filter" onchange="renderCatalog()">
       <option value="">All Types</option>
       <option value="fdm">FDM Print</option>
       <option value="resin">Resin Print</option>
@@ -597,6 +597,13 @@ select option{background:var(--surface-2);color:var(--text)}
       <option value="uv">UV Print</option>
       <option value="multi">Multi-Machine</option>
       <option value="other">Other</option>
+    </select>
+    <select id="cat-sort" onchange="renderCatalog()">
+      <option value="name">A–Z</option>
+      <option value="price-asc">Price ↑</option>
+      <option value="price-desc">Price ↓</option>
+      <option value="stock">In Stock</option>
+      <option value="stale">Needs Reprice</option>
     </select>
   </div>
   <div class="catalog-grid" id="catalog-grid"></div>
@@ -657,7 +664,10 @@ select option{background:var(--surface-2);color:var(--text)}
   <!-- quotes tab -->
   <div id="htab-quotes-panel">
     <div class="grid-4" style="margin-bottom:20px" id="history-stats"></div>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px;gap:8px">
+      <button class="btn btn-secondary btn-sm" onclick="exportQuotesCSV()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV
+      </button>
       <button class="btn btn-ghost btn-sm" onclick="clearHistory()">Clear All</button>
     </div>
     <div class="card" id="history-list"></div>
@@ -829,7 +839,7 @@ select option{background:var(--surface-2);color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v1.7.0</span>
+          <span class="badge badge-accent">v1.8.0</span>
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
@@ -2305,7 +2315,13 @@ ${groupHTML}
 function renderCatalog(){
   const search=$('cat-search')?.value.toLowerCase()||'';
   const filter=$('cat-filter')?.value||'';
-  const items=DB.catalog.filter(item=>(!search||item.name.toLowerCase().includes(search))&&(!filter||item.type===filter));
+  const sort=$('cat-sort')?.value||'name';
+  let items=DB.catalog.filter(item=>(!search||item.name.toLowerCase().includes(search))&&(!filter||item.type===filter));
+  if(sort==='name') items=[...items].sort((a,b)=>a.name.localeCompare(b.name));
+  else if(sort==='price-asc') items=[...items].sort((a,b)=>a.price-b.price);
+  else if(sort==='price-desc') items=[...items].sort((a,b)=>b.price-a.price);
+  else if(sort==='stock') items=[...items].sort((a,b)=>(b.onHand||0)-(a.onHand||0));
+  else if(sort==='stale') items=[...items].sort((a,b)=>(b.stale?1:0)-(a.stale?1:0));
   const grid=$('catalog-grid');
   if(!items.length){ grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><div class="empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;flex-shrink:0"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg></div><p>${DB.catalog.length?'No items match your filter.':'No catalog items yet.'}</p><button class="btn btn-primary btn-sm" onclick="openCatalogModal()">Add First Item</button></div>`; return; }
   grid.innerHTML=items.map(item=>{
@@ -2440,6 +2456,116 @@ function renderJobLog(){
 }
 function deleteJobLog(idx){ DB.joblog.splice(idx,1); save(); renderJobLog(); }
 
+/* ═══ QUOTES CSV EXPORT ═══ */
+function exportQuotesCSV(){
+  if(!DB.quotes.length){ toast('No quotes to export','bad'); return; }
+  const headers=['Date','Job Name','Customer','Qty','Subtotal','Multiplier','Final','Status','Margin'];
+  const rows=DB.quotes.map(q=>[
+    `"${q.date}"`,
+    `"${(q.name||'').replace(/"/g,'""')}"`,
+    `"${(q.customer||'').replace(/"/g,'""')}"`,
+    q.qty||1,
+    (q.subtotal||0).toFixed(2),
+    (q.mult||1).toFixed(2),
+    (q.final||0).toFixed(2),
+    `"${q.status||'draft'}"`,
+    `"${q.margin||'standard'}"`
+  ].join(','));
+  const csv=[headers.join(','),...rows].join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`maker-services-quotes-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('Quotes exported as CSV','good');
+}
+
+/* ═══ SHAREABLE QUOTE ═══ */
+function shareQuote(idx){
+  const q=DB.quotes[idx];
+  if(!q){ toast('Quote not found','bad'); return; }
+  const b=DB.settings.brand||{};
+  const bizName=b.biz||b.name||'Maker Services';
+  const date=new Date(q.ts).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const validity=b.validity||30;
+  const expires=new Date(q.ts+validity*24*60*60*1000).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const contactLine=[b.name,b.email,b.phone,b.web].filter(Boolean).join(' · ');
+
+  const html=`<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quote — ${q.name}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f4f7fb;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:24px 16px}
+.card{background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.1);max-width:560px;width:100%;padding:32px}
+.header{border-bottom:3px solid #0E7EC4;padding-bottom:20px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+.brand{font-size:22px;font-weight:800;color:#0E7EC4}
+.brand-sub{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+.brand-contact{font-size:12px;color:#555;margin-top:4px}
+.quote-ref{text-align:right}
+.quote-num{font-size:16px;font-weight:700}
+.quote-date{font-size:12px;color:#888;margin-top:2px}
+.section{margin-bottom:20px}
+.label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;font-weight:700;margin-bottom:6px}
+.job-name{font-size:22px;font-weight:800;color:#1a1a1a}
+.meta{font-size:13px;color:#555;margin-top:4px}
+.total-box{background:#0A1628;border-radius:12px;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;margin:24px 0}
+.total-label{color:#88B4CC;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.total-price{color:#40E0FF;font-size:36px;font-weight:800}
+.total-unit{color:#88B4CC;font-size:12px;margin-top:4px}
+.validity{background:#f8f8f8;border-radius:8px;padding:12px 16px;font-size:12px;color:#666;line-height:1.6}
+.footer{margin-top:24px;text-align:center;font-size:11px;color:#aaa}
+.status-pill{display:inline-block;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;background:#e8f4ff;color:#0E7EC4;margin-top:8px}
+</style></head><body>
+<div class="card">
+  <div class="header">
+    <div>
+      <div class="brand">${bizName}</div>
+      <div class="brand-sub">Custom Fabrication</div>
+      ${contactLine?`<div class="brand-contact">${contactLine}</div>`:''}
+    </div>
+    <div class="quote-ref">
+      <div class="quote-num">Quote #${q.id.slice(-6).toUpperCase()}</div>
+      <div class="quote-date">${date}</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label">Job Details</div>
+    <div class="job-name">${q.name}</div>
+    ${q.customer?`<div class="meta">Prepared for: <strong>${q.customer}</strong></div>`:''}
+    ${(q.qty||1)>1?`<div class="meta">Quantity: <strong>${q.qty} units</strong></div>`:''}
+    <span class="status-pill">${q.status||'draft'}</span>
+  </div>
+
+  <div class="total-box">
+    <div>
+      <div class="total-label">Total Quote</div>
+      ${(q.qty||1)>1?`<div class="total-unit">${q.qty} units · ${fmtMoney(q.final/q.qty)}/unit</div>`:''}
+    </div>
+    <div class="total-price">${fmtMoney(q.final)}</div>
+  </div>
+
+  <div class="validity">
+    Valid until <strong>${expires}</strong>. ${b.tagline||'Thank you for your business!'}
+  </div>
+
+  <div class="footer">Generated by Maker Services Pricing Studio</div>
+</div>
+</body></html>`;
+
+  // try Web Share API first (mobile), fall back to new window
+  const blob=new Blob([html],{type:'text/html'});
+  const file=new File([blob],`quote-${q.name.replace(/\s+/g,'-')}.html`,{type:'text/html'});
+  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[file]})){
+    navigator.share({title:`Quote — ${q.name}`,files:[file]}).catch(()=>{});
+  } else {
+    const win=window.open('','_blank');
+    win.document.write(html);
+    win.document.close();
+  }
+}
+
 /* ═══ HISTORY PAGE ═══ */
 function renderHistory(){
   const quotes=DB.quotes;
@@ -2478,6 +2604,9 @@ function renderHistory(){
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;padding-top:2px">
         <div class="history-price">${fmtMoney(q.final)}</div>
         <button class="btn btn-secondary btn-sm" onclick="reopenQuote(${i})" title="Edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+        <button class="btn btn-ghost btn-sm" onclick="shareQuote(${i})" title="Share quote">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
         <button class="btn btn-ghost btn-sm" onclick="duplicateQuote(${i})" title="Duplicate"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         <button class="btn btn-danger btn-sm" onclick="deleteQuote(${i})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="flex-shrink:0"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
       </div>
