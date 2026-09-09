@@ -1876,6 +1876,7 @@ function printQuote(){
   const validity=b.validity||30;
   const tagline=b.tagline||'Thank you for your business!';
   const contactLine=[b.name,b.email,b.phone,b.web].filter(Boolean).join(' · ');
+  const rows=[
     ['Machine time',$('pr-machine').textContent],
     ['UV ink',$('pr-uv').textContent],
     ['Materials',$('pr-mat').textContent],
