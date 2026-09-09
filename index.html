@@ -325,7 +325,7 @@ input,textarea,select{color:var(--text)}
     <button class="icon-btn" onclick="openSearch()" title="Search">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </button>
-    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v2.0.0</span>
+    <span class="version-badge" onclick="openModal('modal-changelog')" style="cursor:pointer" title="View changelog">v2.0.5</span>
   </div>
 </header>
 
@@ -954,8 +954,61 @@ input,textarea,select{color:var(--text)}
 
       <div style="margin-bottom:20px">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <span class="badge badge-accent">v2.0.0</span>
-          <span style="font-size:0.75rem;color:var(--text-3)">Current — Production Release</span>
+          <span class="badge badge-accent">v2.0.5</span>
+          <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>Fixed settings section div leak — UV Ink section no longer bleeds onto Dashboard</li>
+          <li>Settings accordion structure corrected — all 7 sections properly contained</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v2.0.4</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>Fixed JS crash — drawCostChart called with undefined variable</li>
+          <li>UV ink ml/in² values corrected to realistic flatbed UV printer rates</li>
+          <li>Auto-save customer — typing a new name on a quote adds them to Customers</li>
+          <li>Machines page — replaced overflowing table with responsive cards</li>
+          <li>Dashboard init timing fixed — all sections render correctly on load</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v2.0.3</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>JS syntax error fix — missing const rows= declaration in printQuote</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v2.0.2</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>--hint CSS variable added to all 10 themes for consistent hint/placeholder text</li>
+          <li>Placeholder text now theme-aware across all inputs</li>
+          <li>Copyright footer uses --hint variable</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v2.0.1</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>Copyright notice added — source code comment + dashboard footer</li>
+          <li>Copyright footer made brighter and more visible</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v2.0.0</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
           <li>Comprehensive mobile polish pass — tighter padding, 2×2 stat grids, better touch targets</li>
