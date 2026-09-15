@@ -958,8 +958,38 @@ input,textarea,select{color:var(--text)}
           <span style="font-size:0.75rem;color:var(--text-3)">Current</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
-          <li>Fixed settings section div leak — UV Ink section no longer bleeds onto Dashboard</li>
-          <li>Settings accordion structure corrected — all 7 sections properly contained</li>
+          <li>Wordmark "Maker / Services" text centered horizontally in topbar</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v2.0.7</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>Topbar logo SVG and wordmark vertically centered against each other</li>
+          <li>Logo size adjusted to fit cleanly in 52px topbar without clipping</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v2.0.6</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>Fixed settings page structure — UV Ink and Data sections no longer bleed onto Dashboard</li>
+          <li>Material Waste Factors section restored with proper accordion wrapper</li>
+          <li>All 7 settings sections now properly contained with matching open/close divs</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span class="badge badge-info">v2.0.5</span>
+        </div>
+        <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
+          <li>Version badge and changelog catch-up — v2.0.1 through v2.0.5 documented</li>
+          <li>--hint CSS variable applied to copyright footer</li>
         </ul>
       </div>
 
@@ -971,7 +1001,7 @@ input,textarea,select{color:var(--text)}
           <li>Fixed JS crash — drawCostChart called with undefined variable</li>
           <li>UV ink ml/in² values corrected to realistic flatbed UV printer rates</li>
           <li>Auto-save customer — typing a new name on a quote adds them to Customers</li>
-          <li>Machines page — replaced overflowing table with responsive cards</li>
+          <li>Machines page — replaced overflowing wide table with responsive cards</li>
           <li>Dashboard init timing fixed — all sections render correctly on load</li>
         </ul>
       </div>
@@ -981,7 +1011,7 @@ input,textarea,select{color:var(--text)}
           <span class="badge badge-info">v2.0.3</span>
         </div>
         <ul style="font-size:0.82rem;color:var(--text-2);line-height:1.8;padding-left:18px">
-          <li>JS syntax error fix — missing const rows= declaration in printQuote</li>
+          <li>JS syntax error fix — missing const rows= in printQuote broke entire app</li>
         </ul>
       </div>
 
